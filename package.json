@@ -1,0 +1,34 @@
+{
+  "name": "deshmukhmayur.github.io",
+  "version": "2.0.0",
+  "description": "My Personal portfolio website (v2)",
+  "scripts": {
+    "start": "eleventy --serve --watch",
+    "build": "eleventy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deshmukhmayur/deshmukhmayur.github.io.git"
+  },
+  "keywords": [
+    "portfolio-website",
+    "eleventy",
+    "static-site"
+  ],
+  "author": {
+    "name": "Mayur Deshmukh",
+    "email": "deshmukhmayur@outlook.com",
+    "url": "https://deshmukhmayur.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deshmukhmayur/deshmukhmayur.github.io/issues"
+  },
+  "homepage": "https://github.com/deshmukhmayur/deshmukhmayur.github.io#readme",
+  "devDependencies": {
+    "@11ty/eleventy": "^0.12.1",
+    "@11ty/eleventy-cache-assets": "^2.1.0"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,48 @@
+---
+layout: base
+---
+<main>
+  <section id="about">
+    <!-- <picture>
+      <img src="/img/hero-img.png" alt="That's me!">
+    </picture> -->
+    <div>
+      <p>Hello, my name is</p>
+      <h1>Mayur Deshmukh</h1>
+      <p>I'm a web developer and artist based in Pune.</p>
+      <div>
+        <button type="button">resume.</button><a href="#contact">get in touch.</a>
+      </div>
+    </div>
+  </section>
+  <section id="work">
+    <h2>my work.</h2>
+    <p>Currently, I work as an engineer in Red Hat<br>
+      focused on building Web Platforms.</p>
+  </section>
+  <section id="projects">
+    <h2>my projects.</h2>
+  </section>
+  <section id="art">
+    <h2>my art.</h2>
+  </section>
+  <section id="blog">
+    <h2>my blog.</h2>
+  </section>
+  <aside id="contact">
+    <h2>get in touch.</h2>
+    <p>I'm currently not looking for new career opportunities,<br>
+    but my inbox is open for any queries or just to make new friends.</p>
+    <a class="cta-button" href="mailto:deshmukhmayur@outlook.com">say hello!</a>
+    <ul class="socials">
+      {% for social in site.socials %}
+      <li><a href="{{social.url}}">
+        <custom-icon name="{{ social.name }}" data-alt="{{ social.name }}"/>
+      </a></li>
+      {% endfor %}
+    </ul>
+  </aside>
+</main>
+<footer>
+  <p>Designed and built by Mayur Deshmukh</p>
+</footer>
