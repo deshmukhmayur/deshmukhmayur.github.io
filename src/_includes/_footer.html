@@ -1,0 +1,17 @@
+<aside id="contact">
+  <h2>get in touch.</h2>
+  <p>I'm currently not looking for new career opportunities,<br>
+  but my inbox is open for any queries or just to make new friends.</p>
+  <a class="cta-button" href="mailto:deshmukhmayur@outlook.com">say hello!</a>
+  <ul class="socials">
+    {% for social in site.socials %}
+    <li><a href="{{social.url}}">
+      <custom-icon name="{{ social.name }}" data-alt="{{ social.name }}"/>
+    </a></li>
+    {% endfor %}
+  </ul>
+</aside>
+
+<footer>
+  <p>Designed and built by Mayur Deshmukh</p>
+</footer>

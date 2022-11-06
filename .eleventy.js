@@ -3,6 +3,8 @@ module.exports = (config) => {
   config.addPassthroughCopy('src/styles')
   config.addPassthroughCopy('src/scripts')
 
+  config.addWatchTarget('src/**/*.html');
+
   return {
     htmlTemplateEngine: 'njk',
     dir: {
