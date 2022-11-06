@@ -1,0 +1,34 @@
+{
+  "title": "Mayur Deshmukh",
+  "description": "Web Developer and Artist based in Pune, India.",
+  "url": "https://deshmukhmayur.com",
+  "logo": "/img/logo.svg",
+  "socials": {
+    "youtube": {
+      "username": "@deshmukhmayur",
+      "url": "https://www.youtube.com/@deshmukhmayur"
+    },
+    "instagram": {
+      "username": "@deshmukhmayur",
+      "url": "https://instagra.com/deshmukhmayur"
+    },
+    "twitter": {
+      "username": "@deshmukhmayur_",
+      "url": "https://twitter.com/deshmukhmayur_"
+    },
+    "linkedin": {
+      "username": "deshmukhmayur204",
+      "url": "https://www.linkedin.com/in/deshmukhmayur204/"
+    }
+  },
+  "tags": [
+    "Mayur Deshmukh",
+    "portfolio website",
+    "personal website",
+    "User Experience Designer",
+    "Web Developer",
+    "Machine Learning Enthusiast",
+    "Mayur Deshmukh Aurangabad",
+    "Deshmukh Mayur"
+  ]
+}

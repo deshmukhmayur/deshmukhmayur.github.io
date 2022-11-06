@@ -6,11 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <title>{{ title or site.title }}</title>
 
-  {% include '_head.html' %}
+  {% include 'partials/_head.html' %}
 </head>
 <body>
-  {% include '_sidenav.html' %}
-
+  {% include 'partials/_sidenav.html' %}
+  
   {{ content | safe }}
+  
+  {% include 'partials/_footer.html' %}
 </body>
 </html>
