@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
+@import url('./styles/sidenav.css');
+@import url('./styles/main.css');
+
+:root {
+  --sidenav-width: 5.5rem;
+  --color-accent: #51dcf9;
+  --color-primary: #0a77af;
+  --color-light: #f2f9ff;
+  --color-highlight: #7D51F9;
+  --bg-color: #f2f9ff;
+
+  font-size: 12px;
+  font-weight: 400;
+}
+
+@media screen and (min-width: 800px) {
+  :root {
+    font-size: 16px;
+  }
+}
+
+/* for Firefox */
+::-moz-selection {
+  background-color: var(--color-highlight);
+  color: #fff;
+}
+/* for Safari and Chrome */
+::selection {
+  background-color: var(--color-highlight);
+  color: #fff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-light);
+  margin: 0;
+  padding: 0;
+
+  font-family: 'Open Sans', sans-serif;
+  color: rgba(0,0,0,.87);
+  background-color: var(--bg-color);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: all 120ms ease;
+}
+a:hover {
+  color: var(--color-accent);
+}
+
+@media screen and (orientation: landscape) and (min-width: 800px) {
+  body {
+    padding-top: 0;
+    padding-left: var(--sidenav-width);
+  }
+}

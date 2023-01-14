@@ -1,5 +1,6 @@
 {
   "title": "Mayur Deshmukh",
+  "shortName": "deshmukhmayur",
   "description": "Web Developer and Artist based in Pune, India.",
   "url": "https://deshmukhmayur.com",
   "logo": "/img/logo.svg",
@@ -19,7 +20,8 @@
     "linkedin": {
       "username": "deshmukhmayur204",
       "url": "https://www.linkedin.com/in/deshmukhmayur204/"
-    }
+    },
+    "email": "deshmukhmayur@outlook.com"
   },
   "tags": [
     "Mayur Deshmukh",
@@ -29,6 +31,7 @@
     "Web Developer",
     "Machine Learning Enthusiast",
     "Mayur Deshmukh Aurangabad",
+    "Mayur Deshmukh Pune",
     "Deshmukh Mayur"
   ]
 }
