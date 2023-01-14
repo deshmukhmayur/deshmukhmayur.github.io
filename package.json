@@ -3,7 +3,8 @@
   "version": "2.0.0",
   "description": "My Personal portfolio website (v2)",
   "scripts": {
-    "start": "eleventy --serve --watch",
+    "start": "eleventy --serve",
+    "prebuild": "rimraf build/",
     "build": "eleventy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,8 +28,17 @@
   },
   "homepage": "https://github.com/deshmukhmayur/deshmukhmayur.github.io#readme",
   "devDependencies": {
-    "@11ty/eleventy": "^1.0.2",
+    "@11ty/eleventy": "^2.0.0-canary.16",
     "@11ty/eleventy-cache-assets": "^2.1.0",
-    "html-minifier": "^4.0.0"
+    "@11ty/eleventy-plugin-vite": "^1.0.0",
+    "autoprefixer": "^10.4.13",
+    "esbuild": "^0.17.0",
+    "html-minifier": "^4.0.0",
+    "postcss": "^8.4.21",
+    "postcss-csso": "^6.0.1",
+    "postcss-import": "^15.1.0",
+    "postcss-media-minmax": "^5.0.0",
+    "rimraf": "^4.0.4",
+    "terser": "^5.15.1"
   }
 }

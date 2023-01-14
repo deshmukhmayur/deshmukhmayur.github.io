@@ -1,14 +1,14 @@
-FROM node:lts
+# Builder
+FROM node:lts-alpine as build
 
-ENV NODE_ENV=production
 WORKDIR /usr/src/app
 
-COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install --silent && mv node_modules ../
 
-COPY . .
+# Final image
+FROM bitnami/nginx:latest
 
-# USER node
+COPY --from=build /usr/src/app/build /app
+
 EXPOSE 8080
-
-CMD ["npm", "start"]
