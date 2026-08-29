@@ -1,0 +1,164 @@
+.scratch/portfolio-spec/spec.md
+  h_3b6020e5d77ef8 1-183
+.scratch/portfolio-tickets/01-foundation.md
+  h_3b6020e5d77ef8 1-23
+.scratch/portfolio-tickets/02-content-layer.md
+  h_3b6020e5d77ef8 1-23
+.scratch/portfolio-tickets/03-layout-shell.md
+  h_3b6020e5d77ef8 1-27
+.scratch/portfolio-tickets/04-static-pages.md
+  h_3b6020e5d77ef8 1-43
+.scratch/portfolio-tickets/05-projects-section.md
+  h_3b6020e5d77ef8 1-30
+.scratch/portfolio-tickets/06-art-gallery.md
+  h_3b6020e5d77ef8 1-39
+.scratch/portfolio-tickets/07-contact-form-api.md
+  h_3b6020e5d77ef8 1-27
+.scratch/portfolio-tickets/08-analytics.md
+  h_3b6020e5d77ef8 1-27
+.scratch/portfolio-tickets/09-polish-a11y-perf.md
+  h_3b6020e5d77ef8 1-51
+AGENTS.md
+  h_3b6020e5d77ef8 1-22
+CONTEXT.md
+  h_3b6020e5d77ef8 1-71
+docs/adr/0001-core-tech-stack.md
+  h_3b6020e5d77ef8 1-58
+docs/adr/0002-mvp-scope.md
+  h_3b6020e5d77ef8 1-67
+docs/adr/0003-art-integration.md
+  h_3b6020e5d77ef8 1-88
+docs/adr/0004-content-collections.md
+  h_3b6020e5d77ef8 1-111
+docs/adr/0005-styling-architecture.md
+  h_3b6020e5d77ef8 1-206
+docs/adr/0006-image-optimization.md
+  h_3b6020e5d77ef8 1-120
+docs/adr/0007-contact-form-analytics.md
+  h_3b6020e5d77ef8 1-149
+docs/adr/0008-island-hydration.md
+  h_3b6020e5d77ef8 1-125
+docs/adr/0009-font-strategy.md
+  h_3b6020e5d77ef8 1-112
+docs/adr/0010-color-palette.md
+  h_3b6020e5d77ef8 1-96
+docs/adr/0011-home-hero.md
+  h_3b6020e5d77ef8 1-9
+docs/adr/0012-art-gallery-detail.md
+  h_3b6020e5d77ef8 1-9
+docs/adr/0013-mobile-nav.md
+  h_3b6020e5d77ef8 1-9
+docs/adr/0014-project-card.md
+  h_3b6020e5d77ef8 1-9
+docs/adr/0015-contact-notification.md
+  h_3b6020e5d77ef8 1-112
+docs/adr/0016-turnstile-lazy.md
+  h_3b6020e5d77ef8 1-143
+docs/adr/0017-state-management.md
+  h_3b6020e5d77ef8 1-146
+docs/adr/0018-build-scripts.md
+  h_3b6020e5d77ef8 1-170
+docs/agents/domain.md
+  h_3b6020e5d77ef8 1-40
+docs/agents/issue-tracker.md
+  h_3b6020e5d77ef8 1-40
+docs/agents/triage-labels.md
+  h_3b6020e5d77ef8 1-19
+mockup/_footer.html
+  h_3b6020e5d77ef8 1-25
+mockup/_head.html
+  h_3b6020e5d77ef8 1-9
+mockup/_header.html
+  h_3b6020e5d77ef8 1-32
+mockup/about.html
+  h_3b6020e5d77ef8 1-138
+mockup/art-cyberpunk-samurai.html
+  h_3b6020e5d77ef8 1-104
+mockup/art-desert-rouge.html
+  h_3b6020e5d77ef8 1-104
+mockup/art-hanami-fox.html
+  h_3b6020e5d77ef8 1-104
+mockup/art-neon-hauler.html
+  h_3b6020e5d77ef8 1-104
+mockup/art-spirit-guardian.html
+  h_3b6020e5d77ef8 1-104
+mockup/art-starlight-cruiser.html
+  h_3b6020e5d77ef8 1-104
+mockup/art.html
+  h_3b6020e5d77ef8 1-125
+mockup/contact.html
+  h_3b6020e5d77ef8 1-142
+mockup/css/components.css
+  h_3b6020e5d77ef8 1-151
+mockup/css/layout.css
+  h_3b6020e5d77ef8 1-228
+mockup/css/reset.css
+  h_3b6020e5d77ef8 1-159
+mockup/css/tokens.css
+  h_3b6020e5d77ef8 1-126
+mockup/img/mock/art-cruiser-full.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-cruiser.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-cyberpunk-full.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-cyberpunk.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-fox-full.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-fox.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-hauler-full.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-hauler.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-rouge-full.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-rouge-p1.svg
+  h_3b6020e5d77ef8 1-15
+mockup/img/mock/art-rouge-p2.svg
+  h_3b6020e5d77ef8 1-15
+mockup/img/mock/art-rouge.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-spirit-full.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/art-spirit.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/hero-illustrated.svg
+  h_3b6020e5d77ef8 1-16
+mockup/img/mock/project-atlas.svg
+  h_3b6020e5d77ef8 1-15
+mockup/img/mock/project-flowforge.svg
+  h_3b6020e5d77ef8 1-15
+mockup/img/mock/project-mosaic.svg
+  h_3b6020e5d77ef8 1-15
+mockup/img/mock/project-pulse.svg
+  h_3b6020e5d77ef8 1-15
+mockup/img/mock/project-shiplog.svg
+  h_3b6020e5d77ef8 1-15
+mockup/img/mock/project-sketchpad.svg
+  h_3b6020e5d77ef8 1-15
+mockup/index.html
+  h_3b6020e5d77ef8 1-167
+mockup/js/app.js
+  h_3b6020e5d77ef8 1-53
+mockup/js/contact.js
+  h_3b6020e5d77ef8 1-44
+mockup/js/data.js
+  h_3b6020e5d77ef8 1-112
+mockup/projects.html
+  h_3b6020e5d77ef8 1-164
+mockup/prototype/home.html
+  h_3b6020e5d77ef8 1-326
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "9885ec5d02fe4adc845b8ef5886823d52a5e40b1",
+  "prompts": {},
+  "humans": {
+    "h_3b6020e5d77ef8": {
+      "author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
