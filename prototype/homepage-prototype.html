@@ -1,0 +1,464 @@
+<!doctype html>
+<!-- PROTOTYPE, throwaway: three homepage takes for deshmukhmayur.com, switchable via ?variant=a|b|c.
+     Question it answers: "What should the homepage look like?" See .scratch/personal-site/issues/03-prototype-homepage-look.md -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Homepage prototype — Mayur Deshmukh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Inter:wght@400;500;600&family=Caveat:wght@500;700&family=Instrument+Serif&family=Fredoka:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #1c1e21;
+    --muted: #6b7076;
+    --line: #e7e8ea;
+    --paper: #f6f7f8;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- theme toggle ---------- */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 60;
+    border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+    font: 500 13px "Inter", sans-serif;
+    padding: 7px 12px; border-radius: 999px; cursor: pointer;
+  }
+  body.dark {
+    --bg: #141518; --ink: #eceef0; --muted: #9aa0a6; --line: #2a2d31; --paper: #1c1e22;
+  }
+
+  /* ---------- shared small bits ---------- */
+  .eyebrow { font: 600 12px "Inter", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .squiggle { display: block; width: 220px; max-width: 60%; height: 14px; margin-top: 6px; }
+
+  /* =================== VARIANT A — THE WORKSHOP =================== */
+  .va { --accent: #2b5fd9; --tint: #f0f4fd; --tint2: #fdf6e9; --tint3: #f1faf3; }
+  .va.dark-override { --tint: #1b2333; --tint2: #2a2419; --tint3: #16241a; }
+  .va .hero { padding: 96px 0 64px; }
+  .va h1 {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 800; font-size: clamp(44px, 8vw, 88px);
+    line-height: 1.02; letter-spacing: -0.02em; max-width: 14ch;
+  }
+  .va .hero p { margin-top: 20px; max-width: 46ch; color: var(--muted); font-size: 18px; }
+  .va .sticky {
+    position: absolute; right: 8%; top: 120px;
+    background: #fff3b8; color: #5c4a00;
+    font-family: "Caveat", cursive; font-size: 21px; line-height: 1.25;
+    padding: 18px 20px 26px; width: 200px; transform: rotate(4deg);
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  }
+  .va .sticky::before { content: ""; position: absolute; top: -7px; left: 50%; margin-left: -5px; width: 10px; height: 14px; background: rgba(90,80,20,.35); }
+  body.dark .va .sticky { background: #4a4210; color: #f4e9a8; }
+  .va .hero { position: relative; }
+  .va section.room { border-top: 1px solid var(--line); padding: 64px 0; }
+  .va .room-inner { display: grid; grid-template-columns: 88px 1fr 1fr; gap: 32px; align-items: start; }
+  .va .room .glyph { font-size: 44px; line-height: 1; }
+  .va h2 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 600; font-size: 30px; letter-spacing: -0.01em; }
+  .va .room p { color: var(--muted); }
+  .va .room ul { list-style: none; margin-top: 10px; }
+  .va .room li { padding: 10px 0; border-bottom: 1px dashed var(--line); display: flex; justify-content: space-between; gap: 16px; }
+  .va .room li:last-child { border-bottom: 0; }
+  .va .room li .meta { color: var(--muted); font-size: 13px; white-space: nowrap; }
+  .va .room.tint { background: var(--tint); }
+  .va .room.tint2 { background: var(--tint2); }
+  .va .room.tint3 { background: var(--tint3); }
+  .va .more { font-weight: 600; color: var(--accent); text-decoration: none; }
+  .va .more::after { content: " →"; }
+  .va footer { border-top: 1px solid var(--line); padding: 40px 0 96px; color: var(--muted); font-size: 14px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  @media (max-width: 760px) {
+    .va .sticky { display: none; }
+    .va .room-inner { grid-template-columns: 1fr; gap: 10px; }
+    .va .room .glyph { font-size: 34px; }
+  }
+
+  /* =================== VARIANT B — INDEX =================== */
+  .vb { --accent: #0f766e; }
+  .vb .page { max-width: 880px; margin: 0 auto; padding: 96px 24px 120px; }
+  .vb .masthead { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 14px; }
+  .vb .masthead .name { font-family: "Instrument Serif", serif; font-size: 22px; }
+  .vb .masthead .tag { font: 500 12px "Inter", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .vb .intro { font-family: "Instrument Serif", serif; font-size: clamp(28px, 4.6vw, 46px); line-height: 1.15; margin: 56px 0 72px; max-width: 24ch; }
+  .vb .intro em { color: var(--accent); font-style: italic; }
+  .vb ul.toc { list-style: none; }
+  .vb ul.toc li { border-top: 1px solid var(--line); }
+  .vb ul.toc li:last-child { border-bottom: 1px solid var(--line); }
+  .vb ul.toc a {
+    display: flex; align-items: baseline; gap: 24px; text-decoration: none;
+    padding: 26px 4px;
+  }
+  .vb .toc .word {
+    font-family: "Instrument Serif", serif; font-size: clamp(38px, 7vw, 64px); line-height: 1;
+    transition: transform .18s ease, color .18s ease;
+  }
+  .vb .toc .desc { color: var(--muted); font-size: 14px; margin-left: auto; text-align: right; max-width: 30ch; }
+  .vb .toc .doodle { width: 34px; text-align: center; opacity: 0; transform: translateY(6px); transition: all .18s ease; font-size: 24px; }
+  .vb .toc a:hover .word, .vb .toc a:focus-visible .word { transform: translateX(10px); color: var(--accent); }
+  .vb .toc a:hover .doodle, .vb .toc a:focus-visible .doodle { opacity: 1; transform: translateY(0) rotate(-8deg); }
+  .vb .marginalia {
+    position: relative;
+    font-family: "Caveat", cursive; font-size: 19px; color: var(--accent);
+    margin: 60px 0 0 4px; max-width: 30ch; transform: rotate(-1.5deg);
+  }
+  .vb .marginalia::before { content: "↳"; margin-right: 8px; }
+  @media (max-width: 700px) {
+    .vb .toc a { flex-wrap: wrap; gap: 8px; }
+    .vb .toc .desc { margin-left: 58px; text-align: left; }
+  }
+
+  /* =================== VARIANT D — TERMINAL =================== */
+  .vd { --term-bg: #0f1317; --term-panel: #141a20; --term-edge: #262f38; --term-ink: #c9d4dc; --term-dim: #6d7a84; --term-accent: #58c470; --term-cyan: #5ac8d8; --term-amber: #e0b45e; --term-pink: #e07a9a; }
+  .vd .page { min-height: 100vh; background: var(--term-bg); color: var(--term-ink); font-family: "JetBrains Mono", monospace; font-size: 15px; line-height: 1.7; padding: 0 0 96px; }
+  .vd .term { max-width: 1100px; margin: 0 auto; padding: 56px 40px 0; }
+  .vd .screen { padding: 0; }
+  .vd .motd { color: var(--term-dim); margin-bottom: 40px; max-width: 60ch; }
+  .vd .motd b { color: var(--term-cyan); font-weight: 400; }
+  .vd .motd .cmd { color: var(--term-accent); }
+  .vd .panes { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+  .vd .pane { border: 1px solid var(--term-edge); border-radius: 8px; background: var(--term-panel); padding: 22px 24px 24px; }
+  .vd .pane h2 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .vd .pane h2 .slash { color: var(--term-dim); font-weight: 400; }
+  .vd .pane .desc { color: var(--term-dim); font-size: 13px; margin-bottom: 14px; }
+  .vd .pane ul { list-style: none; }
+  .vd .pane li { border: 0; padding: 6px 0 0; }
+  .vd .pane li a { text-decoration: none; display: block; padding: 6px 10px; margin: 0 -10px; border-radius: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vd .pane li a:hover, .vd .pane li a:focus-visible { background: #1d262f; }
+  .vd .pane li a::before { content: "- "; color: var(--term-dim); }
+  .vd .pane li .meta { color: var(--term-dim); font-size: 12px; margin-left: 10px; }
+  .vd .pane { position: relative; }
+  .vd .pane .pane-link { position: absolute; top: 20px; right: 24px; font-size: 12.5px; color: var(--term-dim); text-decoration: none; }
+  .vd .pane .pane-link:hover, .vd .pane .pane-link:focus-visible { color: var(--term-cyan); }
+  .vd .pane .pane-links { position: absolute; top: 20px; right: 24px; display: flex; gap: 14px; font-size: 12.5px; }
+  .vd .pane .pane-links a { color: var(--term-dim); text-decoration: none; }
+  .vd .pane .pane-links a:hover, .vd .pane .pane-links a:focus-visible { color: var(--term-cyan); }
+  .vd .p-work { grid-column: span 8; }
+  .vd .p-work h2 { color: var(--term-cyan); }
+  .vd .p-art { grid-column: span 6; }
+  .vd .p-art h2 { color: var(--term-pink); }
+  .vd .p-prints { grid-column: span 6; }
+  .vd .p-prints h2 { color: var(--term-accent); }
+  .vd .p-sol { grid-column: span 4; }
+  .vd .p-sol h2 { color: var(--term-amber); }
+  .vd .p-stu { grid-column: span 8; }
+  .vd .p-stu h2 { color: var(--term-cyan); }
+  .vd .latest { margin-top: 36px; color: var(--term-dim); font-size: 12.5px; opacity: .8; }
+  .vd .latest .logline { color: var(--term-dim); }
+  .vd .latest .logline::before { content: "soliloquy of the day — "; color: var(--term-amber); }
+  .vd .footer { max-width: 1100px; margin: 72px auto 0; text-align: center; color: var(--term-dim); font-size: 13px; padding: 0 24px; }
+  .vd .fetch { margin: 0 0 44px; display: flex; gap: 40px; align-items: center; }
+  .vd .fetch pre { font-size: 11px; line-height: 1.3; color: var(--term-cyan); margin: 0; user-select: none; }
+  .vd .fetch-right { flex: 1; }
+  .vd .fetch-right h2 { font-size: 15px; font-weight: 700; color: var(--term-amber); }
+  .vd .fetch-right h2 .slash { color: var(--term-dim); font-weight: 400; }
+  .vd .whoami { color: var(--term-ink); font-size: 13.5px; margin: 4px 0 0; }
+  .vd .whoami a { color: var(--term-cyan); }
+  .vd .whoami .bio { color: var(--term-dim); display: block; margin-top: 4px; }
+  .vd .whoami .workline { color: var(--term-ink); display: block; margin-top: 10px; }
+  .vd .whoami .workline::before { content: "now → "; color: var(--term-accent); }
+  .vd .whoami .workline .meta { color: var(--term-dim); }
+  .vd .whoami .bio { color: var(--term-dim); display: block; margin-top: 4px; }
+  .vd dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-content: center; }
+  .vd dt { color: var(--term-amber); font-weight: 700; white-space: nowrap; }
+  .vd dt::after { content: ":"; }
+  .vd dd { margin: 0; color: var(--term-ink); }
+  .vd dd .sep { color: var(--term-dim); }
+  .vd .p-skills { grid-column: span 4; }
+  .vd .p-skills h2 { color: var(--term-amber); }
+  .vd .p-skills .desc { margin-bottom: 10px; }
+  .vd .p-skills dl { grid-template-columns: auto 1fr; }
+  .vd .p-skills dt { font-size: 13px; }
+  .vd .p-skills dd { font-size: 13px; color: var(--term-dim); }
+  .vd .fetch-note { color: var(--term-dim); font-size: 12.5px; margin-top: 10px; }
+  .vd .footer pre { font-size: 11px; line-height: 1.35; color: #46535e; margin: 0 auto 14px; user-select: none; text-align: left; display: inline-block; }
+  .vd .footer a { color: var(--term-dim); text-decoration: none; border-bottom: 1px dotted #3a464f; }
+  .vd .footer a:hover, .vd .footer a:focus-visible { color: var(--term-cyan); }
+  .vd .socials { display: flex; justify-content: flex-end; gap: 18px; margin-bottom: 28px; font-size: 13px; }
+  .vd .socials a { color: var(--term-dim); text-decoration: none; }
+  .vd .socials a:hover, .vd .socials a:focus-visible { color: var(--term-cyan); }
+  .vd.light { --term-bg: #f4f6f7; --term-panel: #ffffff; --term-edge: #d9dfe4; --term-ink: #2a3238; --term-dim: #6d7a84; --term-accent: #1c8a48; --term-cyan: #0d7d8e; --term-amber: #a06f14; --term-pink: #b0446c; }
+  .vd.light .pane li a:hover, .vd.light .pane li a:focus-visible { background: #eef1f3; }
+  .vd.light .footer pre { color: #b3bcc2; }
+  @media (max-width: 760px) {
+    .vd .term { padding: 28px 20px 0; }
+    .vd .panes > * { grid-column: span 12 !important; }
+    .vd .p-sol ul { flex-direction: column; gap: 0; }
+    .vd .p-sol { display: block; }
+    .vd .fetch { flex-direction: column; align-items: flex-start; gap: 20px; padding: 22px; }
+    .vd .fetch pre { font-size: 7px; }
+    .vd .footer pre { font-size: 8px; }
+  }
+
+  /* ---------- prototype switcher (never part of the design) ---------- */
+  .proto-bar {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 100;
+    display: flex; align-items: center; gap: 10px;
+    background: #111; color: #fff; border-radius: 999px; padding: 8px 10px;
+    font: 600 13px "Inter", sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  .proto-bar button { background: none; border: 0; color: #fff; font: inherit; cursor: pointer; padding: 4px 10px; }
+  .proto-bar .label { min-width: 190px; text-align: center; }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle">🌙 Dark</button>
+
+<!-- ================= VARIANT A — THE WORKSHOP ================= -->
+<div id="variant-a" class="va">
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">Mayur Deshmukh</p>
+      <h1>A playground, not a portfolio.<svg class="squiggle" viewBox="0 0 220 14" fill="none" aria-hidden="true"><path d="M2 8 C 20 2, 40 14, 60 8 S 100 2, 120 8 S 160 14, 180 8 S 210 4, 218 7" stroke="#2b5fd9" stroke-width="3.5" stroke-linecap="round"/></svg></h1>
+      <div class="sticky" aria-hidden="true">latest soliloquy:<br>“the printer finally printed”<br>— 3:12 am</div>
+      <p>I build software, draw anime-style illustrations, and print small plastic things that occasionally solve real problems. Wander around.</p>
+    </header>
+
+    <section class="room">
+      <div class="room-inner">
+        <div class="glyph">🛠️</div>
+        <div><h2>Work</h2><p>Programming, open source, and the projects that pay the bills.</p></div>
+        <ul>
+          <li><a href="#">Some project</a><span class="meta">TypeScript · 2025</span></li>
+          <li><a href="#">Another thing I shipped</a><span class="meta">Go · 2024</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="room tint">
+      <div class="room-inner">
+        <div class="glyph">🎨</div>
+        <div><h2>Art</h2><p>Anime-style illustrations, sketches, and car doodles.</p></div>
+        <ul>
+          <li><a href="#">Collection: evening skies</a><span class="meta">8 pieces</span></li>
+          <li><a href="#">Inktober survivors</a><span class="meta">12 pieces</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="room tint2">
+      <div class="room-inner">
+        <div class="glyph">🖨️</div>
+        <div><h2>Prints</h2><p>Things I make with a 3D printer — settings and failures included.</p></div>
+        <ul>
+          <li><a href="#">A print with a build log</a><span class="meta">PETG · 0.2mm</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="room tint3">
+      <div class="room-inner">
+        <div class="glyph">✏️</div>
+        <div><h2>Writing</h2><p>Two flavors: quick thoughts and proper studies.</p></div>
+        <ul>
+          <li><a href="#">Soliloquy: small thought</a><span class="meta">casual</span></li>
+          <li><a href="#">Studies: a real write-up</a><span class="meta">longform</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      <span>© Mayur Deshmukh</span>
+      <a href="#">About + résumé</a>
+    </footer>
+  </div>
+</div>
+
+<!-- ================= VARIANT B — INDEX ================= -->
+<div id="variant-b" class="vb" hidden>
+  <div class="page">
+    <header class="masthead">
+      <span class="name">Mayur Deshmukh</span>
+      <span class="tag">personal playground</span>
+    </header>
+    <p class="intro">Software, drawings, plastic things, and words — <em>kept in one place</em> because I like it that way.</p>
+    <nav>
+      <ul class="toc">
+        <li><a href="#"><span class="doodle">🛠️</span><span class="word">Work</span><span class="desc">Projects, open source, and shipped things</span></a></li>
+        <li><a href="#"><span class="doodle">🎨</span><span class="word">Art</span><span class="desc">Illustrations, sketches, car doodles</span></a></li>
+        <li><a href="#"><span class="doodle">🖨️</span><span class="word">Prints</span><span class="desc">3D printing, with maker logs</span></a></li>
+        <li><a href="#"><span class="doodle">🫧</span><span class="word">Soliloquy</span><span class="desc">Small casual thoughts</span></a></li>
+        <li><a href="#"><span class="doodle">📚</span><span class="word">Studies</span><span class="desc">Case studies, findings, experiments</span></a></li>
+        <li><a href="#"><span class="doodle">👋</span><span class="word">About</span><span class="desc">Who I am + résumé</span></a></li>
+      </ul>
+    </nav>
+    <p class="marginalia">yes, the whole site is basically this list, with doors</p>
+  </div>
+</div>
+
+<!-- ================= VARIANT D — TERMINAL ================= -->
+<div id="variant-d" class="vd" hidden>
+  <div class="page">
+    <div class="term">
+      <div class="screen">
+        <section class="fetch" aria-label="About">
+          <pre aria-hidden="true"> __  __    _ __   ____  ____
+|  \/  |  / \\ \ / |  _ \|  _ \
+| |\/| | / _ \ V / | |_) | |_) |
+| |  | |/ ___ \| | |  _ &lt;|  _ &lt;
+|_|  |_/_/   \_\_| |_| \_\_| \_\</pre>
+          <div class="fetch-right">
+            <h2>about<span class="slash">/</span></h2>
+            <p class="whoami">whoami → mayur deshmukh · <a href="#">résumé.pdf</a>
+              <span class="bio">software by day, drawings and plastic by night</span>
+              <span class="workline">software engineer at <a href="#">acme corp</a><span class="meta"> · 2022–present</span></span>
+            </p>
+          </div>
+        </section>
+        <div class="panes">
+          <section class="pane p-work">
+            <h2>work<span class="slash">/</span></h2>
+            <p class="desc">projects &amp; open source</p>
+            <ul>
+              <li><a href="#">some-project<span class="meta">ts · 2025</span></a></li>
+              <li><a href="#">another-shipped-thing<span class="meta">go · 2024</span></a></li>
+            </ul>
+          </section>
+          <section class="pane p-skills">
+            <h2>skills<span class="slash">/</span></h2>
+            <p class="desc">things i reach for</p>
+            <dl>
+              <dt>languages</dt><dd>typescript · python · go</dd>
+              <dt>web</dt><dd>astro · react · node</dd>
+              <dt>tools</dt><dd>docker · cloudflare · linux</dd>
+              <dt>extras</dt><dd>fusion 360 · clip studio</dd>
+            </dl>
+          </section>
+          <section class="pane p-art">
+            <h2>art<span class="slash">/</span></h2>
+            <p class="desc">illustrations &amp; sketches</p>
+            <ul>
+              <li><a href="#">evening-skies<span class="meta">8</span></a></li>
+              <li><a href="#">inktober<span class="meta">12</span></a></li>
+            </ul>
+          </section>
+          <section class="pane p-prints">
+            <h2>prints<span class="slash">/</span></h2>
+            <p class="desc">3D printing builds</p>
+            <ul>
+              <li><a href="#">a-print-with-log<span class="meta">petg</span></a></li>
+            </ul>
+          </section>
+          <section class="pane p-stu">
+            <h2>studies<span class="slash">/</span></h2>
+            <p class="desc">write-ups &amp; experiments</p>
+            <ul>
+              <li><a href="#">a-real-write-up<span class="meta">12 min</span></a></li>
+            </ul>
+          </section>
+          <section class="pane p-sol">
+            <h2>soliloquy<span class="slash">/</span></h2>
+            <p class="desc">small casual thoughts</p>
+            <ul>
+              <li><a href="#">on-naming-things</a></li>
+              <li><a href="#">why-is-css-like-this</a></li>
+            </ul>
+          </section>
+        </div>
+        <div class="latest">
+          <p class="logline">the printer finally printed — 3:12 am</p>
+        </div>
+      </div>
+    </div>
+    <footer class="footer" aria-label="footer">
+<pre aria-hidden="true">  /\_/\
+ ( o.o )   no trackers were harmed
+  &gt; ^ &lt;    in the making of this site</pre>
+      <p>© 2026 mayur deshmukh · <a href="#">rss</a></p>
+    </footer>
+  </div>
+</div>
+
+<!-- prototype switcher -->
+<div class="proto-bar" role="navigation" aria-label="Prototype variant switcher">
+  <button id="prev" aria-label="Previous variant">←</button>
+  <span class="label" id="vlabel">A (The Workshop)</span>
+  <button id="next" aria-label="Next variant">→</button>
+</div>
+
+<script>
+  const VARIANTS = [
+    { key: 'a', el: document.getElementById('variant-a'), name: 'A (The Workshop)' },
+    { key: 'b', el: document.getElementById('variant-b'), name: 'B (Index)' },
+    { key: 'd', el: document.getElementById('variant-d'), name: 'D (Terminal)' },
+  ];
+  const params = new URLSearchParams(location.search);
+
+  function render() {
+    VARIANTS.forEach((v, idx) => v.el.hidden = idx !== i);
+    document.getElementById('vlabel').textContent = VARIANTS[i].name;
+    const url = new URL(location);
+    url.searchParams.set('variant', VARIANTS[i].key);
+    history.replaceState(null, '', url);
+  }
+  function cycle(d) { i = (i + d + VARIANTS.length) % VARIANTS.length; render(); }
+
+  document.getElementById('prev').onclick = () => cycle(-1);
+  document.getElementById('next').onclick = () => cycle(1);
+  addEventListener('keydown', e => {
+    if (/input|textarea/i.test(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+
+  const toggle = document.getElementById('themeToggle');
+  let dark = false;
+  toggle.onclick = () => {
+    dark = !dark;
+    document.body.classList.toggle('dark', dark);
+    // terminal variant is dark by default: invert for it
+    document.querySelectorAll('.vd').forEach(el => el.classList.toggle('light', !dark));
+    document.getElementById('variant-a').classList.toggle('dark-override', dark);
+    toggle.textContent = dark ? '☀️ Light' : '🌙 Dark';
+  };
+
+  // variant F: clone of D with social links inside their panes
+  const d = document.getElementById('variant-d');
+  const f = d.cloneNode(true);
+  f.id = 'variant-f';
+  f.hidden = true;
+  const flinks = {
+    'p-work': '<a href="#">github</a><a href="#">linkedin</a>',
+    'p-art': '<a href="#">cara</a><a href="#">instagram</a>',
+    'p-prints': '<a href="#">printables</a>',
+    'p-stu': null,
+    'p-sol': null,
+    'p-skills': null,
+  };
+  for (const [cls, links] of Object.entries(flinks)) {
+    if (!links) continue;
+    const pane = f.querySelector('.' + cls);
+    const span = document.createElement('span');
+    span.className = 'pane-links';
+    span.innerHTML = links;
+    pane.appendChild(span);
+  }
+  d.after(f);
+  VARIANTS.push({ key: 'f', el: f, name: 'F (links in panes)' });
+
+  let i = Math.max(0, VARIANTS.findIndex(v => v.key === params.get('variant')));
+  render();
+</script>
+</body>
+</html>
