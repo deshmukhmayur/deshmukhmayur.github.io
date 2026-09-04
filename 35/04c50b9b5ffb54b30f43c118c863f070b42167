@@ -1,0 +1,19 @@
+prototype/art-gallery-prototype.html
+  s_8ef3bd4277d28a::t_8e4dae0efc48ec 81,86-87,253,255,258,260,263,265,268,270,273,275,278,280,396
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "3504c50b9b5ffb54b30f43c118c863f070b42167",
+  "prompts": {},
+  "sessions": {
+    "s_8ef3bd4277d28a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f935cba15ffebVkrlGT39Xwvbn",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
