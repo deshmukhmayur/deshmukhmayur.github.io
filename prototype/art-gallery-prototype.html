@@ -1,0 +1,567 @@
+<!doctype html>
+<!-- PROTOTYPE, throwaway: art gallery grid + artwork detail page for deshmukhmayur.com, switchable via ?page=gallery|detail and ?variant=a|b|c.
+     Question it answers: "How does the terminal/TUI homepage direction extend to the art gallery and detail page?"
+     See .scratch/personal-site/issues/14-prototype-art-gallery-detail.md -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Art gallery prototype — Mayur Deshmukh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1317; --panel: #141a20; --edge: #262f38; --ink: #c9d4dc;
+    --dim: #6d7a84; --accent: #58c470; --cyan: #5ac8d8; --amber: #e0b45e; --pink: #e07a9a;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "JetBrains Mono", monospace; font-size: 14px; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.light {
+    --bg: #f4f6f7; --panel: #ffffff; --edge: #d9dfe4; --ink: #2a3238;
+    --dim: #6d7a84; --accent: #1c8a48; --cyan: #0d7d8e; --amber: #a06f14; --pink: #b0446c;
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 2px; }
+  .page { min-height: 100vh; padding-bottom: 120px; }
+  .term { max-width: 1160px; margin: 0 auto; padding: 48px 40px 0; }
+
+  /* ---------- shared header ---------- */
+  .crumb { margin-bottom: 8px; font-size: 13px; color: var(--dim); }
+  .crumb a { color: var(--dim); text-decoration: none; }
+  .crumb a:hover, .crumb a:focus-visible { color: var(--cyan); }
+  .crumb .here { color: var(--amber); }
+  .crumb::before { content: "~/art $ "; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 22px 0 34px; font-size: 13px; }
+  .filters .lbl { color: var(--dim); }
+  .filters .lbl::before { content: "$ "; color: var(--accent); }
+  .filters button {
+    background: none; border: 0; padding: 2px 4px; cursor: pointer;
+    font: inherit; color: var(--ink);
+  }
+  .filters button::before { content: "--tag="; color: var(--dim); }
+  .filters button.on { color: var(--pink); text-decoration: underline; text-underline-offset: 4px; }
+  .filters button:hover, .filters button:focus-visible { color: var(--pink); }
+  .filters .count { color: var(--dim); margin-left: auto; }
+  .filters .count::before { content: "# "; color: var(--amber); }
+  .countline { color: var(--dim); font-size: 12.5px; margin-bottom: 20px; }
+  .countline b { color: var(--ink); font-weight: 400; }
+
+  /* ---------- placeholder artwork ---------- */
+  .ph { width: 100%; display: block; position: relative; overflow: hidden; background: var(--panel); }
+  .ph::after {
+    content: attr(data-name); position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.85); font-size: 12px; letter-spacing: .08em; text-shadow: 0 1px 4px rgba(0,0,0,.4);
+  }
+  body.light .ph::after { color: rgba(0,0,0,.55); text-shadow: none; }
+  .ph.g1 { background: linear-gradient(160deg, #2c3e6b, #6b4a7a 60%, #c98ba3); }
+  .ph.g2 { background: linear-gradient(200deg, #d8a25a, #a05a3a 70%, #5a3428); }
+  .ph.g3 { background: linear-gradient(140deg, #4a6b5a, #7a9a6b 55%, #d8d0a2); }
+  .ph.g4 { background: linear-gradient(170deg, #3a3f4a, #6b7484 60%, #c4ccd8); }
+  .ph.g5 { background: linear-gradient(150deg, #7a3a4a, #c46b7a 60%, #f0c4c4); }
+  .ph.g6 { background: linear-gradient(190deg, #2a4a5a, #4a8a9a 65%, #a2d8dc); }
+  .ph.paper { background: #efe9dc; }
+  .ph.paper::after { color: rgba(0,0,0,.4); text-shadow: none; }
+
+  /* =================== GALLERY A — WINDOWED MASONRY =================== */
+  .ga .masonry { columns: 3 280px; column-gap: 22px; }
+  .ga .cell { break-inside: avoid; margin-bottom: 26px; }
+  .ga .win { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .ga .titlebar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px; font-size: 11.5px; color: var(--dim);
+    border-bottom: 1px solid var(--edge); background: var(--panel);
+  }
+  .ga .titlebar .dots { letter-spacing: 2px; color: var(--edge); }
+  .ga .titlebar .fn { color: var(--cyan); }
+  .ga .win a { display: block; text-decoration: none; line-height: 0; }
+  .ga .win a:hover .ph, .ga .win a:focus-visible .ph { filter: brightness(1.08); }
+  .ga .cap { display: flex; gap: 10px; padding: 8px 12px; font-size: 11.5px; color: var(--dim); border-top: 1px solid var(--edge); }
+  .ga .cap .tag { color: var(--pink); }
+  .ga .cap .med { margin-left: auto; color: var(--amber); }
+
+  /* =================== GALLERY B — UNFRAMED =================== */
+  .gb .masonry { columns: 3 260px; column-gap: 18px; }
+  .gb .cell { break-inside: avoid; margin-bottom: 18px; position: relative; }
+  .gb a.tile { display: block; text-decoration: none; border-radius: 10px; overflow: hidden; position: relative; }
+  .gb .ph { border-radius: 10px; }
+  .gb .meta {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 26px 14px 10px; font-size: 12px; color: #fff;
+    background: linear-gradient(transparent, rgba(0,0,0,.72));
+    opacity: 0; transform: translateY(6px); transition: all .18s ease;
+  }
+  .gb a.tile:hover .meta, .gb a.tile:focus-visible .meta { opacity: 1; transform: none; }
+  .gb .meta .t { color: #fff; }
+  .gb .meta .d { color: rgba(255,255,255,.75); font-size: 11.5px; }
+  .gb .meta { text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+
+  /* =================== GALLERY C — CONTACT SHEET =================== */
+  .gc .sheet { display: grid; grid-template-columns: 200px 1fr; gap: 32px; align-items: start; }
+  .gc .tree { font-size: 13px; color: var(--dim); position: sticky; top: 24px; }
+  .gc .tree h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 10px; }
+  .gc .tree h2::before { content: "$ "; color: var(--accent); }
+  .gc .tree ul { list-style: none; }
+  .gc .tree li { padding: 4px 0 4px 14px; border-left: 1px solid var(--edge); }
+  .gc .tree button { background: none; border: 0; padding: 0; font: inherit; color: var(--dim); cursor: pointer; }
+  .gc .tree button::before { content: "· "; }
+  .gc .tree button.on, .gc .tree button:hover, .gc .tree button:focus-visible { color: var(--pink); }
+  .gc .tree .tree .n { color: var(--cyan); font-size: 11.5px; margin-left: 6px; }
+  .gc .ls { list-style: none; }
+  .gc .ls li { display: flex; align-items: center; gap: 14px; padding: 9px 10px; border-radius: 6px; font-size: 12.5px; }
+  .gc .ls li:hover { background: var(--panel); }
+  .gc .ls a { display: flex; align-items: center; gap: 14px; text-decoration: none; flex: 1; min-width: 0; }
+  .gc .ls .th { flex: 0 0 84px; height: 56px; border-radius: 4px; }
+  .gc .ls .fn { color: var(--cyan); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gc .ls .perm { color: var(--dim); }
+  .gc .ls .perm b { color: var(--pink); font-weight: 400; }
+  .gc .ls .size { margin-left: auto; color: var(--dim); white-space: nowrap; }
+
+  /* =================== DETAIL A — NEOFETCH =================== */
+  .da .detail { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 36px; align-items: start; }
+  .da .figure { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .da .figure .titlebar { display: flex; justify-content: space-between; padding: 7px 12px; font-size: 11.5px; color: var(--dim); border-bottom: 1px solid var(--edge); }
+  .da .figure .titlebar .fn { color: var(--cyan); }
+  .da .figure .titlebar .res { color: var(--dim); }
+  .da .process { display: flex; gap: 10px; margin-top: 12px; }
+  .da .process .p { flex: 1; aspect-ratio: 4/3; border-radius: 6px; border: 1px solid var(--edge); cursor: pointer; }
+  .da .process .p:hover { border-color: var(--cyan); }
+  .da .process .p::after { content: ""; }
+  .da .fetch dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 18px; font-size: 13.5px; }
+  .da .fetch dt { color: var(--amber); font-weight: 700; white-space: nowrap; }
+  .da .fetch dt::after { content: ":"; }
+  .da .fetch dd { color: var(--ink); }
+  .da .fetch dd .d { color: var(--dim); }
+  .da .fetch dd.tags a { color: var(--pink); text-decoration: none; }
+  .da .fetch dd.tags a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .da .fetch dd.tags a::before { content: "#"; }
+  .da .fetch .sep { color: var(--dim); }
+  .da .desc { margin-top: 18px; color: var(--ink); font-size: 14px; max-width: 44ch; }
+  .da .related { margin-top: 34px; border-top: 1px dashed var(--edge); padding-top: 20px; }
+  .da .related h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 14px; }
+  .da .related h2::before { content: "$ "; color: var(--accent); }
+  .da .related ul { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .da .related a { display: block; text-decoration: none; }
+  .da .related .ph { border-radius: 6px; border: 1px solid var(--edge); }
+  .da .related .rn { font-size: 11.5px; color: var(--dim); margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .da .related a:hover .rn, .da .related a:focus-visible .rn { color: var(--cyan); }
+
+  /* =================== DETAIL B — CONSOLE OUTPUT =================== */
+  .db .stack { max-width: 860px; }
+  .db .figure { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; }
+  .db .termout { margin-top: 18px; font-size: 13.5px; }
+  .db .termout .cmd { color: var(--accent); }
+  .db .termout .cmd::before { content: "$ "; color: var(--dim); }
+  .db .termout .out { color: var(--ink); padding-left: 14px; }
+  .db .termout .out .k { color: var(--amber); }
+  .db .termout .out .v { color: var(--ink); }
+  .db .termout .out .d { color: var(--dim); }
+  .db .termout .out a { color: var(--pink); text-decoration: none; }
+  .db .termout .out a:hover { text-decoration: underline; }
+  .db .proc { margin-top: 22px; }
+  .db .proc h2 { font-size: 13px; color: var(--amber); margin-bottom: 10px; }
+  .db .proc h2::before { content: "$ "; color: var(--accent); }
+  .db .proc .thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .db .proc .thumbs .p { aspect-ratio: 4/3; border-radius: 6px; border: 1px solid var(--edge); }
+  .db .rel { margin-top: 26px; }
+  .db .rel h2 { font-size: 13px; color: var(--amber); margin-bottom: 10px; }
+  .db .rel h2::before { content: "$ "; color: var(--accent); }
+  .db .rel ul { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .db .rel a { text-decoration: none; display: block; }
+  .db .rel .ph { border-radius: 6px; border: 1px solid var(--edge); }
+  .db .rel .rn { font-size: 11.5px; color: var(--dim); margin-top: 5px; }
+
+  /* =================== DETAIL C — GALLERY WALL =================== */
+  .dc .wall { max-width: 980px; }
+  .dc .figure { border-radius: 12px; overflow: hidden; border: 1px solid var(--edge); }
+  .dc .capbar {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px;
+    padding: 14px 4px 0; font-size: 13px;
+  }
+  .dc .capbar .t { color: var(--ink); font-size: 15px; }
+  .dc .capbar .d { color: var(--dim); font-size: 12.5px; }
+  .dc .capbar .right { margin-left: auto; display: flex; gap: 14px; font-size: 12.5px; }
+  .dc .capbar .right .tag { color: var(--pink); text-decoration: none; }
+  .dc .capbar .right .tag::before { content: "#"; }
+  .dc .capbar .right .tag:hover { text-decoration: underline; }
+  .dc .capbar .right .med { color: var(--amber); }
+  .dc .desc { margin: 12px 4px 0; color: var(--dim); max-width: 62ch; font-size: 13.5px; }
+  .dc .film { display: flex; gap: 12px; margin-top: 26px; overflow-x: auto; padding-bottom: 8px; }
+  .dc .film .p { flex: 0 0 200px; aspect-ratio: 4/3; border-radius: 8px; border: 1px solid var(--edge); }
+  .dc .film .p::before { content: ""; }
+  .dc .rel { margin-top: 34px; }
+  .dc .rel h2 { font-size: 13px; color: var(--amber); margin-bottom: 12px; }
+  .dc .rel h2::before { content: "$ "; color: var(--accent); }
+  .dc .rel ul { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .dc .rel a { text-decoration: none; display: block; }
+  .dc .rel .ph { border-radius: 8px; border: 1px solid var(--edge); }
+  .dc .rel .rn { font-size: 11.5px; color: var(--dim); margin-top: 5px; }
+
+  /* ---------- theme toggle + prototype bar (not part of design) ---------- */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 60;
+    border: 1px solid var(--edge); background: var(--panel); color: var(--ink);
+    font: 700 13px "JetBrains Mono", monospace; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .proto-bar {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    background: #111; color: #fff; border-radius: 999px; padding: 8px 10px;
+    font: 600 13px "Inter", sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  .proto-bar button { background: none; border: 0; color: #fff; font: inherit; cursor: pointer; padding: 4px 10px; }
+  .proto-bar .label { min-width: 220px; text-align: center; }
+  .proto-bar .pagesep { color: #555; }
+
+  @media (max-width: 760px) {
+    .term { padding: 28px 20px 0; }
+    .da .detail, .gc .sheet { grid-template-columns: 1fr; }
+    .gc .tree { position: static; }
+    .da .related ul, .db .rel ul, .dc .rel ul { grid-template-columns: 1fr 1fr; }
+    .db .proc .thumbs { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle">☀️ light</button>
+
+<!-- ==================== GALLERY A — WINDOWED MASONRY ==================== -->
+<div id="page-gallery" data-page="gallery">
+<div id="variant-ga" class="ga page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">art</span></p>
+    <div class="filters">
+      <span class="lbl">ls art --tag</span>
+      <button class="on">all</button>
+      <button>anime</button>
+      <button>car</button>
+      <button>doodle</button>
+      <button>portrait</button>
+      <button>original</button>
+      <span class="count">12 pieces</span>
+    </div>
+    <div class="masonry">
+      <div class="cell"><div class="win">
+        <div class="titlebar"><span class="fn">fox-girl.png</span><span class="dots">● ● ●</span></div>
+        <a href="#"><div class="ph g1" data-name="artwork" style="aspect-ratio: 3/4"></div></a>
+        <div class="cap"><span class="tag">#anime</span><span>2026-08-14</span><span class="med">digital</span></div>
+      </div></div>
+      <div class="cell"><div class="win">
+        <div class="titlebar"><span class="fn">rx7-sketch.jpg</span><span class="dots">● ● ●</span></div>
+        <a href="#"><div class="ph g2" data-name="artwork" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="tag">#car</span><span>2026-07-02</span><span class="med">pencil</span></div>
+      </div></div>
+      <div class="cell"><div class="win">
+        <div class="titlebar"><span class="fn">cafe-doodle.png</span><span class="dots">● ● ●</span></div>
+        <a href="#"><div class="ph paper" data-name="artwork" style="aspect-ratio: 1/1"></div></a>
+        <div class="cap"><span class="tag">#doodle</span><span>2026-05-19</span><span class="med">ink</span></div>
+      </div></div>
+      <div class="cell"><div class="win">
+        <div class="titlebar"><span class="fn">evening-sky.png</span><span class="dots">● ● ●</span></div>
+        <a href="#"><div class="ph g6" data-name="artwork" style="aspect-ratio: 16/9"></div></a>
+        <div class="cap"><span class="tag">#original</span><span>2026-04-30</span><span class="med">digital</span></div>
+      </div></div>
+      <div class="cell"><div class="win">
+        <div class="titlebar"><span class="fn">portrait-study.png</span><span class="dots">● ● ●</span></div>
+        <a href="#"><div class="ph g5" data-name="artwork" style="aspect-ratio: 4/5"></div></a>
+        <div class="cap"><span class="tag">#portrait</span><span>2026-03-11</span><span class="med">digital</span></div>
+      </div></div>
+      <div class="cell"><div class="win">
+        <div class="titlebar"><span class="fn">sketchbook-spread.jpg</span><span class="dots">● ● ●</span></div>
+        <a href="#"><div class="ph g3" data-name="artwork" style="aspect-ratio: 3/4"></div></a>
+        <div class="cap"><span class="tag">#doodle</span><span>2026-01-22</span><span class="med">pencil</span></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== GALLERY B — UNFRAMED MASONRY ==================== -->
+<div id="variant-gb" class="gb page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">art</span></p>
+    <div class="filters">
+      <span class="lbl">ls art --tag</span>
+      <button class="on">all</button>
+      <button>anime</button>
+      <button>car</button>
+      <button>doodle</button>
+      <button>portrait</button>
+      <button>original</button>
+      <span class="count">12 pieces</span>
+    </div>
+    <div class="masonry">
+      <div class="cell"><a class="tile" href="#">
+        <div class="ph g1" data-name="artwork" style="aspect-ratio: 3/4"></div>
+        <span class="meta"><span class="t">fox-girl</span><span class="d">2026-08-14 · digital · #anime</span></span>
+      </a></div>
+      <div class="cell"><a class="tile" href="#">
+        <div class="ph g6" data-name="artwork" style="aspect-ratio: 16/9"></div>
+        <span class="meta"><span class="t">evening-sky</span><span class="d">2026-04-30 · digital · #original</span></span>
+      </a></div>
+      <div class="cell"><a class="tile" href="#">
+        <div class="ph paper" data-name="artwork" style="aspect-ratio: 1/1"></div>
+        <span class="meta"><span class="t">cafe-doodle</span><span class="d">2026-05-19 · ink · #doodle</span></span>
+      </a></div>
+      <div class="cell"><a class="tile" href="#">
+        <div class="ph g2" data-name="artwork" style="aspect-ratio: 4/3"></div>
+        <span class="meta"><span class="t">rx7-sketch</span><span class="d">2026-07-02 · pencil · #car</span></span>
+      </a></div>
+      <div class="cell"><a class="tile" href="#">
+        <div class="ph g5" data-name="artwork" style="aspect-ratio: 4/5"></div>
+        <span class="meta"><span class="t">portrait-study</span><span class="d">2026-03-11 · digital · #portrait</span></span>
+      </a></div>
+      <div class="cell"><a class="tile" href="#">
+        <div class="ph g3" data-name="artwork" style="aspect-ratio: 3/4"></div>
+        <span class="meta"><span class="t">sketchbook-spread</span><span class="d">2026-01-22 · pencil · #doodle</span></span>
+      </a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== GALLERY C — CONTACT SHEET ==================== -->
+<div id="variant-gc" class="gc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">art</span></p>
+    <div class="sheet">
+      <nav class="tree" aria-label="tag filters">
+        <h2>find art/ -tag</h2>
+        <ul>
+          <li><button class="on">all</button><span class="n">12</span></li>
+          <li><button>anime</button><span class="n">3</span></li>
+          <li><button>car</button><span class="n">2</span></li>
+          <li><button>doodle</button><span class="n">4</span></li>
+          <li><button>portrait</button><span class="n">2</span></li>
+          <li><button>original</button><span class="n">1</span></li>
+        </ul>
+      </nav>
+      <ul class="ls">
+        <li><a href="#">
+          <span class="th ph g1" data-name=""></span>
+          <span class="fn">fox-girl</span>
+          <span class="perm">-rw-<b>#anime</b> digital</span>
+          <span class="size">2026-08-14</span>
+        </a></li>
+        <li><a href="#">
+          <span class="th ph g2" data-name=""></span>
+          <span class="fn">rx7-sketch</span>
+          <span class="perm">-rw-<b>#car</b> pencil</span>
+          <span class="size">2026-07-02</span>
+        </a></li>
+        <li><a href="#">
+          <span class="th ph paper" data-name=""></span>
+          <span class="fn">cafe-doodle</span>
+          <span class="perm">-rw-<b>#doodle</b> ink</span>
+          <span class="size">2026-05-19</span>
+        </a></li>
+        <li><a href="#">
+          <span class="th ph g6" data-name=""></span>
+          <span class="fn">evening-sky</span>
+          <span class="perm">-rw-<b>#original</b> digital</span>
+          <span class="size">2026-04-30</span>
+        </a></li>
+        <li><a href="#">
+          <span class="th ph g5" data-name=""></span>
+          <span class="fn">portrait-study</span>
+          <span class="perm">-rw-<b>#portrait</b> digital</span>
+          <span class="size">2026-03-11</span>
+        </a></li>
+        <li><a href="#">
+          <span class="th ph g3" data-name=""></span>
+          <span class="fn">sketchbook-spread</span>
+          <span class="perm">-rw-<b>#doodle</b> pencil</span>
+          <span class="size">2026-01-22</span>
+        </a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== DETAIL A — NEOFETCH ==================== -->
+<div id="page-detail" data-page="detail" hidden>
+<div id="variant-da" class="da page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">art</a> / <span class="here">fox-girl</span></p>
+    <div class="detail">
+      <div>
+        <figure class="figure">
+          <div class="titlebar"><span class="fn">fox-girl.png</span><span class="res">1600 × 2133</span></div>
+          <div class="ph g1" data-name="artwork" style="aspect-ratio: 3/4"></div>
+        </figure>
+        <div class="process" aria-label="process shots">
+          <button class="p ph g1" data-name="wip-1" style="aspect-ratio: 4/3"></button>
+          <button class="p ph g4" data-name="wip-2" style="aspect-ratio: 4/3"></button>
+          <button class="p ph g6" data-name="wip-3" style="aspect-ratio: 4/3"></button>
+        </div>
+      </div>
+      <section class="fetch" aria-label="artwork metadata">
+        <h2 style="font-size:17px; color: var(--pink); margin-bottom: 16px;">fox-girl</h2>
+        <dl>
+          <dt>date</dt><dd>2026-08-14</dd>
+          <dt>collection</dt><dd><span class="d">evening-skies</span></dd>
+          <dt>tags</dt><dd class="tags"><a href="#">anime</a> <span class="sep">·</span> <a href="#">original</a></dd>
+          <dt>medium</dt><dd>digital</dd>
+          <dt>tools</dt><dd><span class="d">clip studio paint</span></dd>
+        </dl>
+        <p class="desc">A quiet study in dusk palettes. Third pass at the ears finally clicked.</p>
+        <div class="related">
+          <h2>related — same collection</h2>
+          <ul>
+            <li><a href="#"><span class="ph g6" data-name="artwork" style="aspect-ratio: 4/3; display:block"></span><span class="rn">evening-sky.png</span></a></li>
+            <li><a href="#"><span class="ph g4" data-name="artwork" style="aspect-ratio: 4/3; display:block"></span><span class="rn">dusk-train.png</span></a></li>
+            <li><a href="#"><span class="ph g3" data-name="artwork" style="aspect-ratio: 4/3; display:block"></span><span class="rn">lantern-walk.png</span></a></li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DETAIL B — CONSOLE OUTPUT ==================== -->
+<div id="variant-db" class="db page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">art</a> / <span class="here">fox-girl</span></p>
+    <div class="stack">
+      <figure class="figure">
+        <div class="ph g1" data-name="artwork" style="aspect-ratio: 16/10"></div>
+      </figure>
+      <div class="termout">
+        <p class="cmd">identify fox-girl.png</p>
+        <p class="out"><span class="k">date</span>=<span class="v">2026-08-14</span> <span class="d">·</span> <span class="k">collection</span>=<span class="v">evening-skies</span></p>
+        <p class="out"><span class="k">tags</span>=<a href="#">#anime</a> <a href="#">#original</a> <span class="d">·</span> <span class="k">medium</span>=<span class="v">digital</span> <span class="d">·</span> <span class="k">tools</span>=<span class="v">clip studio paint</span></p>
+        <p class="out" style="max-width:60ch">A quiet study in dusk palettes. Third pass at the ears finally clicked.</p>
+      </div>
+      <div class="proc">
+        <h2>process/</h2>
+        <div class="thumbs">
+          <span class="p ph g1" data-name="wip-1"></span>
+          <span class="p ph g4" data-name="wip-2"></span>
+          <span class="p ph g6" data-name="wip-3"></span>
+          <span class="p ph g5" data-name="wip-4"></span>
+        </div>
+      </div>
+      <div class="rel">
+        <h2>related — same collection</h2>
+        <ul>
+          <li><a href="#"><span class="ph g6" data-name="artwork" style="aspect-ratio: 4/3; display:block"></span><span class="rn">evening-sky.png</span></a></li>
+          <li><a href="#"><span class="ph g4" data-name="artwork" style="aspect-ratio: 4/3; display:block"></span><span class="rn">dusk-train.png</span></a></li>
+          <li><a href="#"><span class="ph g3" data-name="artwork" style="aspect-ratio: 4/3; display:block"></span><span class="rn">lantern-walk.png</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DETAIL C — GALLERY WALL ==================== -->
+<div id="variant-dc" class="dc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">art</a> / <span class="here">fox-girl</span></p>
+    <div class="wall">
+      <figure class="figure">
+        <div class="ph g1" data-name="artwork" style="aspect-ratio: 16/9"></div>
+      </figure>
+      <div class="capbar">
+        <span class="t">fox-girl</span>
+        <span class="d">2026-08-14</span>
+        <span class="right">
+          <span class="med">digital · clip studio paint</span>
+          <a class="tag" href="#">anime</a>
+          <a class="tag" href="#">original</a>
+        </span>
+      </div>
+      <p class="desc">A quiet study in dusk palettes. Third pass at the ears finally clicked.</p>
+      <div class="film" aria-label="process shots">
+        <span class="p ph g1" data-name="wip-1"></span>
+        <span class="p ph g4" data-name="wip-2"></span>
+        <span class="p ph g6" data-name="wip-3"></span>
+        <span class="p ph g5" data-name="wip-4"></span>
+      </div>
+      <div class="rel">
+        <h2>related — same collection</h2>
+        <ul>
+          <li><a href="#"><span class="ph g6" data-name="artwork" style="aspect-ratio: 4/3; display:block"></span><span class="rn">evening-sky.png</span></a></li>
+          <li><a href="#"><span class="ph g4" data-name="artwork" style="aspect-ratio: 4/3; display:block"></span><span class="rn">dusk-train.png</span></a></li>
+          <li><a href="#"><span class="ph g3" data-name="artwork" style="aspect-ratio: 4/3; display:block"></span><span class="rn">lantern-walk.png</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- prototype switcher (never part of the design) -->
+<div class="proto-bar" role="navigation" aria-label="Prototype variant switcher">
+  <button id="pageBtn" aria-label="Toggle page">gallery ⇄ detail</button>
+  <span class="pagesep">|</span>
+  <button id="prev" aria-label="Previous variant">←</button>
+  <span class="label" id="vlabel">gallery · A (Windowed masonry)</span>
+  <button id="next" aria-label="Next variant">→</button>
+</div>
+
+<script>
+  // gallery: 3 variants, detail: 3 variants — cycled within the current page
+  const PAGES = {
+    gallery: [
+      { key: 'a', el: document.getElementById('variant-ga'), name: 'A (Windowed masonry)' },
+      { key: 'b', el: document.getElementById('variant-gb'), name: 'B (Unframed masonry)' },
+      { key: 'c', el: document.getElementById('variant-gc'), name: 'C (Contact sheet)' },
+    ],
+    detail: [
+      { key: 'a', el: document.getElementById('variant-da'), name: 'A (Neofetch metadata)' },
+      { key: 'b', el: document.getElementById('variant-db'), name: 'B (Console output)' },
+      { key: 'c', el: document.getElementById('variant-dc'), name: 'C (Gallery wall)' },
+    ],
+  };
+  const params = new URLSearchParams(location.search);
+  let page = PAGES[params.get('page')] ? params.get('page') : 'gallery';
+  let i = 0;
+
+  document.getElementById('page-detail').hidden = page !== 'detail';
+  document.getElementById('page-gallery').hidden = page !== 'gallery';
+
+  function render() {
+    PAGES[page].forEach((v, idx) => v.el.hidden = idx !== i);
+    document.getElementById('vlabel').textContent = page + ' · ' + PAGES[page][i].name;
+    const url = new URL(location);
+    url.searchParams.set('page', page);
+    url.searchParams.set('variant', PAGES[page][i].key);
+    history.replaceState(null, '', url);
+    scrollTo(0, 0);
+  }
+  function cycle(d) { i = (i + d + PAGES[page].length) % PAGES[page].length; render(); }
+  function flip() {
+    page = page === 'gallery' ? 'detail' : 'gallery';
+    document.getElementById('page-detail').hidden = page !== 'detail';
+    document.getElementById('page-gallery').hidden = page !== 'gallery';
+    i = Math.max(0, PAGES[page].findIndex(v => v.key === params.get('variant')));
+    render();
+  }
+
+  document.getElementById('prev').onclick = () => cycle(-1);
+  document.getElementById('next').onclick = () => cycle(1);
+  document.getElementById('pageBtn').onclick = flip;
+  addEventListener('keydown', e => {
+    if (/input|textarea/i.test(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+
+  const toggle = document.getElementById('themeToggle');
+  toggle.onclick = () => {
+    document.body.classList.toggle('light');
+    toggle.textContent = document.body.classList.contains('light') ? '🌙 dark' : '☀️ light';
+  };
+
+  const startPage = PAGES[page].findIndex(v => v.key === params.get('variant'));
+  i = Math.max(0, startPage);
+  render();
+</script>
+</body>
+</html>
