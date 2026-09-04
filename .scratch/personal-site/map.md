@@ -26,7 +26,7 @@ A fully rebuilt personal website for Mayur Deshmukh at deshmukhmayur.com, hosted
 
 ## Decisions so far
 
-- [Prototype: Homepage look and feel](issues/03-prototype-homepage-look.md): Winner = terminal/TUI variant F — full-bleed dark terminal, neofetch-style about header (figlet + whoami + now→employer line), panes (work+skills, art+prints, studies+soliloquy) with social links top-right inside their relevant pane, soliloquy-of-the-day line, ASCII-cat footer, light/dark toggle. Prototype: `prototype/homepage-prototype.html`.
+- [Prototype: Homepage look and feel](issues/03-prototype-homepage-look.md): Winner = terminal/TUI variant F — full-bleed dark terminal, neofetch-style about header (own illustration + whoami + now→employer line), panes (work+skills, art+prints, studies+soliloquy) with social links top-right inside their relevant pane, soliloquy-of-the-day line, ASCII-cat footer, light/dark toggle. Prototype: `prototype/homepage-prototype.html` on branch `prototype/homepage-look`.
 - [Research: Cloudflare static hosting](issues/01-research-cloudflare-hosting.md): Workers static assets works with a minimal `wrangler.jsonc` (no adapter); free-tier static requests unlimited; 20k files/version, 25 MiB/file limits; use `404-page` not SPA fallback; custom domain via `routes` + separate www redirect; CI via `wrangler-action@v3` or Workers Builds.
 - [Research: Umami on Cloudflare](issues/02-research-umami-on-cloudflare.md): No official Umami Workers/D1 path — it's Node/Postgres; better fits are Cloudflare Web Analytics (free, trivial) or GoatCounter (free non-commercial, easy self-host); analytics tool choice moved to a grilling ticket.
 

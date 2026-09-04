@@ -1,7 +1,7 @@
 # Grilling: Art section content model
 
 Type: grilling
-Status: open
+Status: claimed
 
 ## Question
 
