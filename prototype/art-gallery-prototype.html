@@ -82,7 +82,7 @@
   .ga .titlebar .fn { color: var(--cyan); }
   .ga .win a { display: block; text-decoration: none; line-height: 0; }
   .ga .win a:hover .ph, .ga .win a:focus-visible .ph { filter: brightness(1.08); }
-  .ga .cap { display: flex; gap: 10px; padding: 8px 12px; font-size: 11.5px; color: var(--dim); border-top: 1px solid var(--edge); }
+  .ga .cap { display: flex; flex-wrap: wrap; column-gap: 10px; row-gap: 2px; padding: 8px 12px; font-size: 11.5px; color: var(--dim); border-top: 1px solid var(--edge); }
   .ga .cap .col { color: var(--cyan); }
   .ga .cap .med { margin-left: auto; color: var(--pink); }
   .ga .cap .med { margin-left: auto; color: var(--amber); }
@@ -249,6 +249,11 @@
       <span class="count">12 pieces</span>
     </div>
     <div class="masonry">
+      <div class="cell"><div class="win">
+        <div class="titlebar"><span class="fn">matsuri-night.png</span><span class="res">digital</span></div>
+        <a href="#"><div class="ph g5" data-name="artwork" style="aspect-ratio: 1/1"></div></a>
+        <div class="cap"><span class="col">festival-series</span><span>2026-08-28</span><span class="med">#anime · #original · #portrait · #fanart · #night</span></div>
+      </div></div>
       <div class="cell"><div class="win">
         <div class="titlebar"><span class="fn">fox-girl.png</span><span class="res">digital</span></div>
         <a href="#"><div class="ph g1" data-name="artwork" style="aspect-ratio: 3/4"></div></a>
