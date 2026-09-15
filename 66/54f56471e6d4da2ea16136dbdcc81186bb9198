@@ -1,0 +1,37 @@
+prototype/fonts-prototype.html
+  s_4e63df71a65aa1::t_e4375944e14e80 64
+  s_4e63df71a65aa1::t_7cccd74ae683f0 57
+  s_4e63df71a65aa1::t_fe037960ad7d5e 117
+  s_4e63df71a65aa1::t_9276903444d3ca 81
+  s_4e63df71a65aa1::t_4b049cbdd52660 95
+  s_4e63df71a65aa1::t_2290ad0984b734 151-155,158-162
+  s_4e63df71a65aa1::t_6bfdf17fce71e0 178
+  s_4e63df71a65aa1::t_ef6b6896997fda 163-165
+  s_4e63df71a65aa1::t_46b340dbd474b0 9,11-22
+  s_4e63df71a65aa1::t_154b5a6e102b7c 138
+  s_4e63df71a65aa1::t_6f1d8334949141 1-8,10,23-56,58-63,65-80,82-94,96-116,118-137,139-150,156-157,166-177,179-198
+prototype/fonts-duel.html
+  s_4e63df71a65aa1::t_97d436029f0892 159-181
+  s_4e63df71a65aa1::t_809e56a6435274 80-94
+  s_4e63df71a65aa1::t_e0418283295174 117
+  s_4e63df71a65aa1::t_30e51b793e6761 1-8,10-79,95-116,118-158,182-197
+  s_4e63df71a65aa1::t_2214ab9f062908 9
+docs/adr/0006-space-mono-spectral.md
+  s_4e63df71a65aa1::t_5b1600c1aed4e4 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "6654f56471e6d4da2ea16136dbdcc81186bb9198",
+  "prompts": {},
+  "sessions": {
+    "s_4e63df71a65aa1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5a1b9d9fffe1ePhbtW0gTnxMQ",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
