@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PROTOTYPE — mono duel: Space vs Kode vs Martian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Kode+Mono:wght@400;500&family=Martian+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #16181d;
+    --bg-raised: #1d2027;
+    --fg: #cdd2da;
+    --dim: #7b8290;
+    --green: #7fd18c;
+    --cyan: #6ec7d8;
+    --amber: #d9b36c;
+    --pink: #d97fa6;
+    --border: #2a2e37;
+  }
+  html[data-theme="light"] {
+    --bg: #f4f3ef;
+    --bg-raised: #eae8e1;
+    --fg: #2b2f36;
+    --dim: #6b7180;
+    --green: #2e7d43;
+    --cyan: #1f6e80;
+    --amber: #946a1a;
+    --pink: #b04a72;
+    --border: #d5d2c8;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); padding: 3rem 1.5rem 6rem; transition: background .2s, color .2s; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  /* editorial prose — Spectral, fixed for this duel */
+  article { font-family: 'Spectral', serif; font-size: 1.18rem; line-height: 1.65; }
+  article h1 { font-size: 1.9rem; font-weight: 500; line-height: 1.2; margin: 0 0 .5rem; }
+  article .summary { font-style: italic; color: var(--dim); font-size: 1.05rem; margin: 0 0 2.5rem; }
+  article p { margin: 0 0 1.2rem; }
+  article code { font-size: .8em; background: var(--bg-raised); border: 1px solid var(--border); padding: .08em .35em; border-radius: 3px; }
+
+  /* three mono candidates, stacked */
+  .duel { margin-top: 3rem; }
+  .candidate { margin-bottom: 3.5rem; }
+  .candidate > .who {
+    font-family: 'Spectral', serif; font-style: italic;
+    color: var(--dim); font-size: .95rem; margin-bottom: .8rem;
+  }
+  .candidate > .who b { color: var(--cyan); font-style: normal; }
+
+  /* the chrome sample every candidate renders */
+  .sample { font-family: var(--m); font-size: .82rem; line-height: 1.7; }
+  .tile {
+    border: 1px solid var(--border); display: inline-block; max-width: 100%;
+  }
+  .tile .titlebar {
+    display: flex; justify-content: space-between; gap: 2rem;
+    padding: .35rem .8rem; border-bottom: 1px solid var(--border);
+    background: var(--bg-raised); color: var(--dim);
+  }
+  .tile .titlebar b { color: var(--cyan); font-weight: 500; }
+  .tile img-slot {
+    display: block; width: 280px; height: 150px;
+    background: linear-gradient(135deg, #2b3140, #3d3348);
+  }
+  html[data-theme="light"] .tile img-slot { background: linear-gradient(135deg, #d9d5ca, #cfc4cf); }
+  .caption {
+    display: flex; gap: .75rem; padding: .35rem .8rem; flex-wrap: wrap;
+  }
+  .caption .col { color: var(--cyan); }
+  .caption .med { color: var(--amber); }
+  .caption .tags { color: var(--pink); margin-left: auto; }
+  .filter { color: var(--dim); margin: 1rem 0; }
+  .filter b { color: var(--green); font-weight: 500; }
+  .filter .chip { border: 1px solid var(--border); padding: .05rem .5rem; border-radius: 3px; margin-left: .35rem; }
+  .filter .chip.on { border-color: var(--pink); color: var(--pink); }
+  .stamp { color: var(--pink); margin-top: .8rem; }
+  /* accent voice: titlebars + timestamps + breadcrumbs ride Space Mono */
+  .accent { font-family: 'Space Mono', monospace; }
+  .identify {
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    font-size: .82rem;
+    line-height: 1.7;
+    margin: 1rem 0;
+  }
+  .identify .cmd { color: var(--dim); }
+  .identify .cmd b { color: var(--cyan); font-weight: 500; }
+  .identify dl { display: grid; grid-template-columns: max-content 1fr; gap: .1rem 1.5rem; margin: .5rem 0 0; }
+  .identify dt { color: var(--dim); }
+  .identify dd { margin: 0; }
+  .crumb { color: var(--dim); font-size: .8rem; margin-bottom: 1rem; }
+
+  .bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg-raised); border-top: 1px solid var(--border);
+    display: flex; gap: .5rem; align-items: center;
+    padding: .6rem 1rem; font-size: .78rem; z-index: 10;
+    font-family: monospace;
+  }
+  .bar button {
+    font-family: inherit; font-size: .78rem;
+    background: none; color: var(--fg);
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: .3rem .7rem; cursor: pointer;
+  }
+  .bar .tag { color: var(--pink); margin-left: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <article>
+    <h1>The mono duel: three faces for the chrome</h1>
+    <p class="summary">Spectral is locked for Studies/Soliloquy. Below, the same terminal chrome — tile, filter row, timestamp — rendered in Space Mono, Kode Mono, and Martian Mono. Same content, three voices.</p>
+    <p>What to look for in each candidate: the <em>titlebar</em> (does the filename read cleanly at small sizes?), the filter row (do the <code>--flag</code> chips stay crisp?), and the pink timestamp line (does the italic-ish color work with that face's rhythm?). Space Mono is quirky with wide spacing; Kode is blocky and techy; Martian is wide and heavy — notice how it dominates. Candidate 4 is the hybrid: JetBrains carries the working text (captions, chips, identify data), Space Mono carries the <em>voice lines</em> — breadcrumbs, titlebars, timestamps.</p>
+  </article>
+
+  <div class="duel">
+    <div class="candidate" style="--m:'Space Mono', monospace">
+      <p class="who"><b>1 · Space Mono</b> — retro-quirky, generous spacing, distinctive italic</p>
+      <div class="sample">
+        <div class="tile">
+          <div class="titlebar"><span><b>matsuri-night.png</b></span><span>2026-08-14</span></div>
+          <img-slot></img-slot>
+          <div class="caption"><span class="col">matsuri</span><span class="med">digital</span><span class="tags">#anime #festival</span></div>
+        </div>
+        <p class="filter"><b>$ ls art --tag</b><span class="chip on">--tag=anime</span><span class="chip">--tag=car</span><span class="chip">--tag=doodle</span></p>
+        <p class="stamp">[2026-09-14 · 23:41] a small thought, typed late</p>
+      </div>
+    </div>
+
+    <div class="candidate" style="--m:'Kode Mono', monospace">
+      <p class="who"><b>2 · Kode Mono</b> — blocky, contemporary, slightly compressed</p>
+      <div class="sample">
+        <div class="tile">
+          <div class="titlebar"><span><b>matsuri-night.png</b></span><span>2026-08-14</span></div>
+          <img-slot></img-slot>
+          <div class="caption"><span class="col">matsuri</span><span class="med">digital</span><span class="tags">#anime #festival</span></div>
+        </div>
+        <p class="filter"><b>$ ls art --tag</b><span class="chip on">--tag=anime</span><span class="chip">--tag=car</span><span class="chip">--tag=doodle</span></p>
+        <p class="stamp">[2026-09-14 · 23:41] a small thought, typed late</p>
+      </div>
+    </div>
+
+    <div class="candidate" style="--m:'Martian Mono', monospace">
+      <p class="who"><b>3 · Martian Mono</b> — wide, chunky, maximal presence</p>
+      <div class="sample">
+        <div class="tile">
+          <div class="titlebar"><span><b>matsuri-night.png</b></span><span>2026-08-14</span></div>
+          <img-slot></img-slot>
+          <div class="caption"><span class="col">matsuri</span><span class="med">digital</span><span class="tags">#anime #festival</span></div>
+        </div>
+        <p class="filter"><b>$ ls art --tag</b><span class="chip on">--tag=anime</span><span class="chip">--tag=car</span><span class="chip">--tag=doodle</span></p>
+        <p class="stamp">[2026-09-14 · 23:41] a small thought, typed late</p>
+      </div>
+    </div>
+
+    <div class="candidate" style="--m:'JetBrains Mono', monospace">
+      <p class="who"><b>4 · Hybrid</b> — JetBrains Mono as the working face, <span style="font-family:'Space Mono',monospace">Space Mono</span> as the accent voice (titlebars, breadcrumbs, timestamps)</p>
+      <div class="sample">
+        <p class="crumb"><span class="accent">~/art $ home / art / matsuri-night</span></p>
+        <div class="tile">
+          <div class="titlebar accent"><span><b>matsuri-night.png</b></span><span>2026-08-14</span></div>
+          <img-slot></img-slot>
+          <div class="caption"><span class="col">matsuri</span><span class="med">digital</span><span class="tags">#anime #festival</span></div>
+        </div>
+        <p class="filter"><b>$ ls art --tag</b><span class="chip on">--tag=anime</span><span class="chip">--tag=car</span><span class="chip">--tag=doodle</span></p>
+        <div class="identify">
+          <div class="cmd">$ <b>identify</b> matsuri-night.png</div>
+          <dl>
+            <dt>date</dt><dd>2026-08-14</dd>
+            <dt>collection</dt><dd class="crumb accent" style="margin:0">matsuri</dd>
+            <dt>medium</dt><dd>digital · clip studio</dd>
+            <dt>tags</dt><dd>#anime #festival #original</dd>
+          </dl>
+        </div>
+        <p class="stamp accent">[2026-09-14 · 23:41] a small thought, typed late</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <button id="themeBtn">light</button>
+  <span class="tag">PROTOTYPE — throwaway</span>
+</div>
+<script>
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    const light = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = light ? '' : 'light';
+    this.textContent = light ? 'light' : 'dark';
+  });
+</script>
+</body>
+</html>

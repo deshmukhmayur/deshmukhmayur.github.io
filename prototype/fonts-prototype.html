@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PROTOTYPE — font pairing workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Geist+Mono:wght@400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Monaspace+Radon:wght@400;500&family=Monaspace+Xenon:ital,wght@0,400;1,400&family=Kode+Mono:wght@400;500&family=Martian+Mono:wght@400;500&family=VT323&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&family=Spectral:ital,wght@0,400;0,500;1,400&family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;1,14..32,400&family=Source+Sans+3:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;1,400&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* fun monos not on Google Fonts, via CDNs — fallback silently if unreachable */
+  @font-face {
+    font-family: 'Departure Mono';
+    src: url('https://cdn.jsdelivr.net/fontsource/fonts/departure-mono@latest/latin-400-normal.woff2') format('woff2');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Comic Mono';
+    src: url('https://cdn.jsdelivr.net/gh/dtinth/comic-mono-font@master/ComicMono.ttf') format('truetype');
+    font-display: swap;
+  }
+
+  :root {
+    --mono: 'JetBrains Mono', monospace;
+    --serif: 'Newsreader', serif;
+    --bg: #16181d;
+    --bg-raised: #1d2027;
+    --fg: #cdd2da;
+    --dim: #7b8290;
+    --green: #7fd18c;
+    --cyan: #6ec7d8;
+    --amber: #d9b36c;
+    --pink: #d97fa6;
+    --border: #2a2e37;
+  }
+  html[data-theme="light"] {
+    --bg: #f4f3ef;
+    --bg-raised: #eae8e1;
+    --fg: #2b2f36;
+    --dim: #6b7180;
+    --green: #2e7d43;
+    --cyan: #1f6e80;
+    --amber: #946a1a;
+    --pink: #b04a72;
+    --border: #d5d2c8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--mono);
+    padding: 3rem 1.5rem 6rem;
+    transition: background .2s, color .2s;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .crumb { color: var(--dim); font-size: calc(.8rem * var(--mscale,1)); margin-bottom: 2.5rem; }
+  .crumb b { color: var(--green); font-weight: 500; }
+
+  /* --- mono chrome sample: $ identify block --- */
+  .identify {
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    font-size: calc(.82rem * var(--mscale,1));
+    line-height: 1.7;
+    margin: 2rem 0;
+  }
+  .identify .cmd { color: var(--dim); }
+  .identify .cmd b { color: var(--cyan); font-weight: 500; }
+  .identify dl { display: grid; grid-template-columns: max-content 1fr; gap: .1rem 1.5rem; margin: .5rem 0 0; }
+  .identify dt { color: var(--dim); }
+  .identify dd { margin: 0; }
+  .identify dd.pink { color: var(--pink); }
+  .identify dd.amber { color: var(--amber); }
+
+  /* --- ledger row sample (mono) --- */
+  .ledger { border-top: 1px solid var(--border); }
+  .ledger-row {
+    display: flex; gap: 1.25rem; align-items: baseline;
+    padding: .8rem 0; border-bottom: 1px solid var(--border);
+    font-size: calc(.82rem * var(--mscale,1));
+  }
+  .ledger-row .date { color: var(--dim); flex: 0 0 6.5rem; }
+  .ledger-row .title { color: var(--cyan); }
+  .ledger-row .sum { color: var(--dim); font-style: italic; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ledger-row .tags { color: var(--pink); }
+
+  /* --- editorial prose sample (serif) --- */
+  article { font-family: var(--serif); font-size: 1.18rem; line-height: 1.65; }
+  article h1 { font-size: 1.9rem; font-weight: 500; line-height: 1.2; margin: 1.8rem 0 .5rem; }
+  article .summary { font-style: italic; color: var(--dim); font-size: 1.05rem; margin: 0 0 2.2rem; }
+  article p { margin: 0 0 1.2rem; }
+  article em { font-style: italic; }
+  article .meta {
+    font-family: var(--mono); font-size: calc(.78rem * var(--mscale,1)); color: var(--dim);
+    margin-bottom: 1rem;
+  }
+  article code {
+    font-family: var(--mono); font-size: .8em;
+    background: var(--bg-raised); border: 1px solid var(--border);
+    padding: .08em .35em; border-radius: 3px;
+  }
+  article blockquote {
+    margin: 1.5rem 0; padding-left: 1.25rem;
+    border-left: 2px solid var(--cyan); color: var(--dim);
+  }
+
+  /* --- bottom control bar --- */
+  .bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg-raised); border-top: 1px solid var(--border);
+    display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+    padding: .6rem 1rem; font-size: .78rem; z-index: 10;
+  }
+  .bar .label { color: var(--dim); margin-right: .25rem; }
+  .bar button {
+    font-family: var(--mono); font-size: calc(.78rem * var(--mscale,1));
+    background: none; color: var(--fg);
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: .3rem .7rem; cursor: pointer;
+  }
+  .bar button.on { border-color: var(--cyan); color: var(--cyan); }
+  .bar .tag { color: var(--pink); margin-left: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="crumb">~/studies $ home / studies / <b>pairing-workshop.md</b></p>
+
+  <article>
+    <p class="meta">2026-09-12 · study · #fonts #typography · <span style="color:var(--pink)">projects: personal-site</span></p>
+    <h1>Choosing a typeface pairing for a terminal site</h1>
+    <p class="summary">The chrome speaks in monospace; the prose needs a different voice. Same page, four candidate serifs.</p>
+    <p>Everything you see above and below this paragraph — the breadcrumb, the <code>$ identify</code> block, the ledger rows — is set in the mono face. This paragraph, and everything inside the article, is set in the candidate serif. Read a few paragraphs here: if your eyes relax, the pairing works; if you keep noticing the face, it doesn't.</p>
+    <p>The test for an editorial face inside a terminal aesthetic is <em>quiet contrast</em>: the serif should feel like paper laid inside the machine, not a second machine. Weight matters more than family — at 1.18rem with a 1.65 line height, most OFL serifs become readable; the difference shows up in the italics, the dark-background rendering, and how the x-height sits against the mono's taller one.</p>
+    <blockquote>The mono is the machine's voice. The serif is yours. They share a page without sharing a tone — that's the whole pairing argument.</blockquote>
+    <p>Check the italics in this sentence and the summary line above — Soliloquy and Studies lean on italic summaries, so a serif with a lazy or cramped italic fails here even if its roman is fine. Then check <code>inline code</code> and numbers: 1,240 requests, 42 files, 0.82rem — the serif and mono digits should not fight.</p>
+    <p>Round two: the serif bar now also carries sans candidates for the editorial voice, and the mono bar carries the fun round — Space Mono (retro-quirky), Monaspace Radon (handwriting-flavored mono) and Xenon (serif-mono), Kode, Martian (wide, chunky), VT323 and Departure (pixel terminals), Comic Mono. Fun faces are titlebar/accent candidates — judge whether the chrome stays readable with them, not whether you'd read a book in them.</p>
+  </article>
+
+  <div class="ledger">
+    <div class="ledger-row"><span class="date">2026-08-14</span><span class="title">fox-girl.png</span><span class="sum">caption sample for mono size comparison</span><span class="tags">#anime</span></div>
+  </div>
+</div>
+
+<div class="bar">
+  <span class="label">serif:</span>
+  <button data-serif="'Newsreader', serif" class="on">Newsreader</button>
+  <button data-serif="'Literata', serif">Literata</button>
+  <button data-serif="'Spectral', serif">Spectral</button>
+  <span class="label">sans:</span>
+  <button data-serif="'Inter', sans-serif">Inter</button>
+  <button data-serif="'Source Sans 3', sans-serif">Source Sans 3</button>
+  <button data-serif="'IBM Plex Sans', sans-serif">IBM Plex Sans</button>
+  <button data-serif="'Atkinson Hyperlegible', sans-serif">Atkinson</button>
+  <span class="label">mono:</span>
+  <button data-mono="'JetBrains Mono', monospace" class="on">JetBrains</button>
+  <button data-mono="'Space Mono', monospace">Space Mono</button>
+  <button data-mono="'Monaspace Radon', monospace">Mona Radon</button>
+  <button data-mono="'Monaspace Xenon', monospace">Mona Xenon</button>
+  <button data-mono="'Kode Mono', monospace">Kode</button>
+  <button data-mono="'Martian Mono', monospace">Martian</button>
+  <button data-mono="'VT323', monospace" data-scale="1.45">VT323</button>
+  <button data-mono="'Departure Mono', monospace" data-scale="1.2">Departure</button>
+  <button data-mono="'Comic Mono', monospace" data-scale="1.05">Comic Mono</button>
+  <span class="label">theme:</span>
+  <button id="themeBtn">light</button>
+  <span class="tag">PROTOTYPE — throwaway</span>
+</div>
+
+<script>
+  const root = document.documentElement;
+  function bind(sel, attr, cssVar) {
+    document.querySelectorAll(sel).forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll(sel).forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      root.style.setProperty(cssVar, btn.dataset[attr]);
+      root.style.setProperty('--mscale', btn.dataset.scale || 1);
+      const p = new URLSearchParams(location.search);
+      p.set(sel.includes('serif') ? 'serif' : 'mono', btn.textContent.trim().toLowerCase());
+      history.replaceState(null, '', '?' + p);
+    }));
+  }
+  bind('[data-serif]', 'serif', '--serif');
+  bind('[data-mono]', 'mono', '--mono');
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.addEventListener('click', () => {
+    const light = root.dataset.theme === 'light';
+    root.dataset.theme = light ? '' : 'light';
+    themeBtn.textContent = light ? 'light' : 'dark';
+  });
+  const p = new URLSearchParams(location.search);
+  const serif = p.get('serif'), mono = p.get('mono');
+  if (serif) document.querySelector(`[data-serif*="${serif.split(' ')[0]}"]`)?.click();
+  if (mono) document.querySelector(`[data-mono*="${mono.split(' ')[0]}"]`)?.click();
+</script>
+</body>
+</html>
