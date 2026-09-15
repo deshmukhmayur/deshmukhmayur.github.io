@@ -130,7 +130,14 @@
   .lc .rosterhead::before { content: "$ "; color: var(--accent); }
 
   /* =================== LISTING D — FEATURED + UNBOXED LEDGER =================== */
-  .ld .hero { border: 1px solid var(--edge); border-radius: 10px; overflow: hidden; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); background: var(--panel); margin-bottom: 38px; }
+  .ld .hero { border: 1px solid var(--edge); border-radius: 10px; overflow: hidden; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); grid-template-rows: auto 1fr; background: var(--panel); margin-bottom: 38px; }
+  .ld .hero .titlebar {
+    grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px; font-size: 11.5px; color: var(--dim);
+    border-bottom: 1px solid var(--edge); background: var(--panel);
+  }
+  .ld .hero .titlebar .fn { color: var(--cyan); }
+  .ld .hero .titlebar .st::before { content: "● "; color: var(--accent); }
   .ld .hero a.shot { display: block; line-height: 0; text-decoration: none; }
   .ld .hero .ph { height: 100%; min-height: 260px; }
   .ld .hero .body { padding: 22px 24px; display: flex; flex-direction: column; gap: 10px; }
@@ -140,12 +147,16 @@
   .ld .hero h2::after { content: " →"; color: var(--dim); font-weight: 400; }
   .ld .hero p { font-size: 13px; color: var(--dim); max-width: 52ch; }
   .ld .hero .te { font-size: 11.5px; color: var(--amber); margin-top: auto; }
+  .ld .rowshead { font-size: 13px; color: var(--amber); margin-bottom: 6px; }
+  .ld .rowshead::before { content: "$ "; color: var(--accent); }
+  .ld .rowshead::after { content: " --all"; color: var(--dim); }
   .ld .row { display: grid; grid-template-columns: 190px minmax(0, 1fr) auto; gap: 22px; align-items: center; padding: 16px 10px; }
   .ld .row a { text-decoration: none; display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; align-items: center; gap: 22px; }
   .ld .row:hover { background: #161d24; border-radius: 8px; }
   body.light .ld .row:hover { background: #e9edf0; }
   .ld .row .th { width: 150px; aspect-ratio: 16/10; border-radius: 4px; }
   .ld .row .nm { color: var(--cyan); font-weight: 700; }
+  .ld .row .nm::before { content: "./"; color: var(--dim); font-weight: 400; }
   .ld .row .nm::after { content: " ·"; color: var(--dim); }
   .ld .row .sum { color: var(--dim); font-size: 12.5px; }
   .ld .row .rl { text-align: right; font-size: 11.5px; color: var(--dim); line-height: 1.9; }
@@ -241,6 +252,13 @@
 
   /* =================== DETAIL D — README + NEOFETCH SPLIT =================== */
   .dd .detail { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 40px; align-items: start; }
+  .dd .readme, .dd .side .panel { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .dd .readme .titlebar, .dd .side .panel .titlebar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px; font-size: 11.5px; color: var(--dim); border-bottom: 1px solid var(--edge);
+  }
+  .dd .readme .titlebar .fn, .dd .side .panel .titlebar .fn { color: var(--cyan); }
+  .dd .readme .body { padding: 24px 28px; }
   .dd .readme h1 { font-size: 20px; color: var(--ink); margin-bottom: 4px; }
   .dd .readme .badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0 18px; font-size: 11.5px; }
   .dd .readme .badges span { border: 1px solid var(--edge); border-radius: 4px; padding: 2px 9px; color: var(--dim); }
@@ -251,6 +269,7 @@
   .dd .readme h3::before { content: "## "; color: var(--dim); }
   .dd .readme p { max-width: 62ch; font-size: 13.5px; }
   .dd .side { position: sticky; top: 24px; }
+  .dd .side .panel .body { padding: 18px 20px; }
   .dd .side dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 18px; font-size: 13.5px; }
   .dd .side dt { color: var(--amber); font-weight: 700; white-space: nowrap; }
   .dd .side dt::after { content: ":"; }
@@ -259,7 +278,7 @@
   .dd .side dd.kd { color: var(--pink); }
   .dd .side dd a { color: var(--pink); text-decoration: none; }
   .dd .side dd a:hover { text-decoration: underline; }
-  .dd .rel { margin-top: 26px; border-top: 1px dashed var(--edge); padding-top: 18px; }
+  .dd .rel { margin-top: 26px; }
   .dd .rel h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 12px; }
   .dd .rel h2::before { content: "$ "; color: var(--accent); }
   .dd .rel ul { list-style: none; display: grid; gap: 10px; }
@@ -456,6 +475,7 @@
       <span class="count">8 projects</span>
     </div>
     <div class="hero">
+      <div class="titlebar"><span class="fn">atlas-tracer/</span><span class="st">featured</span></div>
       <a class="shot" href="#"><div class="ph sh1" data-name="screenshot"></div></a>
       <div class="body">
         <span class="eyebrow">featured</span>
@@ -464,6 +484,7 @@
         <span class="te">go · clickhouse · otel · 2024-03 →</span>
       </div>
     </div>
+    <p class="rowshead">ls projects/</p>
     <div class="rows">
       <div class="row"><a href="#">
         <span class="th ph sh4" data-name=""></span>
@@ -601,23 +622,31 @@
     <p class="crumb"><a href="#">home</a> / <a href="#">projects</a> / <span class="here">atlas-tracer</span></p>
     <div class="detail">
       <div class="readme">
-        <h1>atlas-tracer</h1>
-        <p>atlas-tracer takes raw distributed traces from a fleet of services and reassembles them into one readable flamegraph — a request's whole journey, honestly rendered even under aggressive sampling.</p>
-        <div class="shot ph sh1" data-name="screenshot" style="aspect-ratio: 16/8"></div>
-        <h3>why it exists</h3>
-        <p>Sampling dropped the interesting 2% of spans. Rebuilding the path deterministically from ClickHouse keeps the trace view honest even at 1% sampling rates.</p>
-        <h3>screenshots</h3>
-        <div class="shot ph sh2" data-name="flamegraph" style="aspect-ratio: 16/8"></div>
+        <div class="titlebar"><span class="fn">atlas-tracer/README.md</span><span class="res">rendered</span></div>
+        <div class="body">
+          <h1>atlas-tracer</h1>
+          <p>atlas-tracer takes raw distributed traces from a fleet of services and reassembles them into one readable flamegraph — a request's whole journey, honestly rendered even under aggressive sampling.</p>
+          <div class="shot ph sh1" data-name="screenshot" style="aspect-ratio: 16/8"></div>
+          <h3>why it exists</h3>
+          <p>Sampling dropped the interesting 2% of spans. Rebuilding the path deterministically from ClickHouse keeps the trace view honest even at 1% sampling rates.</p>
+          <h3>screenshots</h3>
+          <div class="shot ph sh2" data-name="flamegraph" style="aspect-ratio: 16/8"></div>
+        </div>
       </div>
       <aside class="side">
-        <dl>
-          <dt>kinds</dt><dd class="kd">work</dd>
-          <dt>status</dt><dd>● active</dd>
-          <dt>dates</dt><dd>2024-03 →</dd>
-          <dt>role</dt><dd>tech lead</dd>
-          <dt>tech</dt><dd>go · clickhouse · otel</dd>
-          <dt>links</dt><dd><a href="#">github ↗</a> · <a href="#">demo ↗</a></dd>
-        </dl>
+        <div class="panel">
+          <div class="titlebar"><span class="fn">atlas-tracer.meta</span><span class="res">identify</span></div>
+          <div class="body">
+            <dl>
+              <dt>kinds</dt><dd class="kd">work</dd>
+              <dt>status</dt><dd>● active</dd>
+              <dt>dates</dt><dd>2024-03 →</dd>
+              <dt>role</dt><dd>tech lead</dd>
+              <dt>tech</dt><dd>go · clickhouse · otel</dd>
+              <dt>links</dt><dd><a href="#">github ↗</a> · <a href="#">demo ↗</a></dd>
+            </dl>
+          </div>
+        </div>
         <div class="rel">
           <h2>related studies</h2>
           <ul>
