@@ -269,13 +269,26 @@
 
   /* =================== STUDIES DETAIL C — SPLIT + RELATED STUDIES =================== */
   .dsc .detail { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 36px; align-items: start; }
-  .dsc .docwrap { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; }
-  .dsc .doc { padding: 20px 24px; }
+  .dsc .doc { padding: 4px 0 0; }
   .dsc .doc h1 { font-size: 19px; }
   .dsc .doc h1::before { content: "# "; color: var(--dim); }
   .dsc .doc .sum { color: var(--dim); font-size: 13.5px; margin-top: 6px; }
   .dsc .doc p { font-size: 13.5px; max-width: 64ch; margin-bottom: 10px; }
   .dsc .doc code { background: var(--bg); border: 1px solid var(--edge); border-radius: 4px; padding: 1px 6px; font-size: 12.5px; color: var(--amber); }
+  .dsc .sheet .win { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); position: sticky; top: 24px; }
+  .dsc .sheet .titlebar { display: flex; justify-content: space-between; padding: 7px 12px; font-size: 11.5px; color: var(--dim); border-bottom: 1px solid var(--edge); }
+  .dsc .sheet .titlebar .fn { color: var(--cyan); }
+  .dsc .sheet table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .dsc .sheet td { padding: 8px 14px; border-bottom: 1px dashed var(--edge); vertical-align: top; }
+  .dsc .sheet td:first-child { color: var(--amber); width: 40%; }
+  .dsc .sheet tr:last-child td { border-bottom: 0; }
+  .dsc .sheet td { color: var(--ink); }
+  .dsc .sheet a { color: var(--cyan); text-decoration: none; }
+  .dsc .sheet a:hover { text-decoration: underline; }
+  .dsc .sheet a::before { content: "→ "; color: var(--dim); }
+  .dsc .sheet td.tags a { color: var(--pink); }
+  .dsc .sheet td.tags a::before { content: "#"; }
+  .dsc .sheet .sep { color: var(--dim); }
   .dsc .fetch dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 18px; font-size: 13.5px; }
   .dsc .fetch dt { color: var(--amber); font-weight: 700; white-space: nowrap; }
   .dsc .fetch dt::after { content: ":"; }
@@ -993,23 +1006,23 @@
   <div class="term">
     <p class="crumb"><a href="#">home</a> / <a href="#">studies</a> / <span class="here">shipping-static-workers</span></p>
     <div class="detail">
-      <div class="docwrap">
-        <div class="titlebar"><span class="fn">studies/shipping-static-workers.md</span><span>9 min read</span></div>
-        <article class="doc">
-          <h1>Shipping a static site on Workers</h1>
-          <p class="sum">Workers static assets over Pages: no adapter, unlimited free requests, and one wrangler.jsonc.</p>
-          <hr>
-          <p>Every guide said Pages. Pages was the answer for three years — then Workers static assets quietly grew up, and the migration is one config file you can read aloud.</p>
-          <p>The surprise is that there isn't one: <code>wrangler.jsonc</code> with an <code>assets</code> block, a <code>404-page</code> (not SPA-fallback — ask me how I know), and routes for the apex plus a www redirect.</p>
-        </article>
-      </div>
-      <aside class="fetch">
-        <dl>
-          <dt>date</dt><dd>2026-09-12</dd>
-          <dt>status</dt><dd>published</dd>
-          <dt>tags</dt><dd class="tags"><a href="#">cloudflare</a> <span class="sep">·</span> <a href="#">astro</a></dd>
-          <dt>project</dt><dd><a href="#">personal-site</a></dd>
-        </dl>
+      <article class="doc">
+        <h1>Shipping a static site on Workers</h1>
+        <p class="sum">Workers static assets over Pages: no adapter, unlimited free requests, and one wrangler.jsonc.</p>
+        <hr>
+        <p>Every guide said Pages. Pages was the answer for three years — then Workers static assets quietly grew up, and the migration is one config file you can read aloud.</p>
+        <p>The surprise is that there isn't one: <code>wrangler.jsonc</code> with an <code>assets</code> block, a <code>404-page</code> (not SPA-fallback — ask me how I know), and routes for the apex plus a www redirect.</p>
+      </article>
+      <aside class="sheet">
+        <div class="win">
+          <div class="titlebar"><span class="fn">identify shipping-static-workers.md</span></div>
+          <table>
+            <tr><td>date</td><td>2026-09-12</td></tr>
+            <tr><td>status</td><td>published</td></tr>
+            <tr><td>tags</td><td class="tags"><a href="#">cloudflare</a> <span class="sep">·</span> <a href="#">astro</a></td></tr>
+            <tr><td>project</td><td><a href="#">personal-site</a></td></tr>
+          </table>
+        </div>
         <div class="related">
           <h2>ls studies --project=personal-site</h2>
           <div class="cards">
