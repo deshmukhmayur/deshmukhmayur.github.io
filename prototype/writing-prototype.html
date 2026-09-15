@@ -1,0 +1,819 @@
+<!doctype html>
+<!-- PROTOTYPE, throwaway: Soliloquy + Studies listings and detail pages for deshmukhmayur.com,
+     switchable via ?page=soliloquy|studies|s-detail|S-detail and ?variant=a|b|c.
+     Question it answers: "How do the two writing listings (journal-stream Soliloquy, report-style Studies)
+     and their detail pages extend the terminal/TUI vocabulary from tickets 03/14/15?"
+     See .scratch/personal-site/issues/16-prototype-writing-listings.md -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writing prototype — Mayur Deshmukh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1317; --panel: #141a20; --edge: #262f38; --ink: #c9d4dc;
+    --dim: #6d7a84; --accent: #58c470; --cyan: #5ac8d8; --amber: #e0b45e; --pink: #e07a9a;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "JetBrains Mono", monospace; font-size: 14px; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.light {
+    --bg: #f4f6f7; --panel: #ffffff; --edge: #d9dfe4; --ink: #2a3238;
+    --dim: #6d7a84; --accent: #1c8a48; --cyan: #0d7d8e; --amber: #a06f14; --pink: #b0446c;
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 2px; }
+  .page { min-height: 100vh; padding-bottom: 120px; }
+  .term { max-width: 1160px; margin: 0 auto; padding: 48px 40px 0; }
+
+  /* ---------- shared header chrome (same vocabulary as art/prints) ---------- */
+  .crumb { margin-bottom: 8px; font-size: 13px; color: var(--dim); }
+  .crumb a { color: var(--dim); text-decoration: none; }
+  .crumb a:hover, .crumb a:focus-visible { color: var(--cyan); }
+  .crumb .here { color: var(--amber); }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 22px 0 34px; font-size: 13px; }
+  .filters .lbl { color: var(--dim); }
+  .filters .lbl::before { content: "$ "; color: var(--accent); }
+  .filters button { background: none; border: 0; padding: 2px 4px; cursor: pointer; font: inherit; color: var(--ink); }
+  .filters button::before { content: "--"; color: var(--dim); }
+  .filters button.on { color: var(--pink); text-decoration: underline; text-underline-offset: 4px; }
+  .filters button:hover, .filters button:focus-visible { color: var(--pink); }
+  .filters .count { color: var(--dim); margin-left: auto; }
+  .filters .count::before { content: "# "; color: var(--amber); }
+
+  /* ---------- shared window + placeholder bits ---------- */
+  .win { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .titlebar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px; font-size: 11.5px; color: var(--dim);
+    border-bottom: 1px solid var(--edge);
+  }
+  .titlebar .fn { color: var(--cyan); }
+  .ph { width: 100%; display: block; position: relative; overflow: hidden; background: var(--panel); }
+  .ph::after {
+    content: attr(data-name); position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.85); font-size: 12px; letter-spacing: .08em; text-shadow: 0 1px 4px rgba(0,0,0,.4);
+  }
+  body.light .ph::after { color: rgba(0,0,0,.55); text-shadow: none; }
+  .ph.g1 { background: linear-gradient(160deg, #2c3e6b, #6b4a7a 60%, #c98ba3); }
+  .ph.g2 { background: linear-gradient(200deg, #d8a25a, #a05a3a 70%, #5a3428); }
+  .ph.g3 { background: linear-gradient(140deg, #4a6b5a, #7a9a6b 55%, #d8d0a2); }
+  .ph.g4 { background: linear-gradient(170deg, #3a3f4a, #6b7484 60%, #c4ccd8); }
+  .ph.g5 { background: linear-gradient(150deg, #7a3a4a, #c46b7a 60%, #f0c4c4); }
+  .ph.g6 { background: linear-gradient(190deg, #2a4a5a, #4a8a9a 65%, #a2d8dc); }
+
+  /* ---------- shared soliloquy entry rendering ---------- */
+  .ts { color: var(--pink); font-size: 12px; white-space: nowrap; }
+  .tags a { color: var(--pink); text-decoration: none; }
+  .tags a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .tags a::before { content: "#"; }
+  .sep { color: var(--dim); }
+
+  /* =================== SOLILOQUY A — JOURNALCTL STREAM =================== */
+  .sa .stream { max-width: 820px; }
+  .sa .entry { display: grid; grid-template-columns: 128px 1fr; gap: 18px; padding: 14px 0; border-bottom: 1px dashed var(--edge); }
+  .sa .entry:last-child { border-bottom: 0; }
+  .sa .entry .ts { padding-top: 3px; }
+  .sa .entry .ts a { color: var(--pink); text-decoration: none; }
+  .sa .entry .ts a:hover { text-decoration: underline; }
+  .sa .t { color: var(--cyan); font-weight: 700; text-decoration: none; }
+  .sa .t:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .sa .t::before { content: "### "; color: var(--dim); font-weight: 400; }
+  .sa .body { color: var(--ink); font-size: 13.5px; max-width: 62ch; }
+  .sa .micro .body { color: var(--dim); }
+  .sa .micro .body a { color: var(--cyan); }
+  .sa .pics { display: flex; gap: 8px; margin-top: 8px; }
+  .sa .pics .p { flex: 0 0 148px; height: 96px; border-radius: 6px; border: 1px solid var(--edge); }
+  .sa .meta { margin-top: 4px; font-size: 11.5px; color: var(--dim); }
+  .sa .more { text-align: center; padding: 18px 0 0; }
+  .sa .more button { background: none; border: 1px dashed var(--edge); border-radius: 999px; color: var(--dim); font: 12.5px "JetBrains Mono", monospace; padding: 6px 18px; cursor: pointer; }
+  .sa .more button:hover { color: var(--pink); border-color: var(--pink); }
+
+  /* =================== SOLILOQUY B — DAY-GROUPED SESSIONS =================== */
+  .sb .day { margin-bottom: 30px; }
+  .sb .day .titlebar .fn::before { content: "session — "; color: var(--dim); }
+  .sb .line { display: grid; grid-template-columns: 52px 1fr; gap: 14px; padding: 10px 14px; border-bottom: 1px dashed var(--edge); font-size: 13.5px; }
+  .sb .line:last-child { border-bottom: 0; }
+  .sb .line .time { color: var(--pink); font-size: 12px; padding-top: 2px; }
+  .sb .line .t { color: var(--cyan); font-weight: 700; text-decoration: none; display: block; }
+  .sb .line .t:hover { text-decoration: underline; }
+  .sb .line .body { color: var(--ink); max-width: 66ch; }
+  .sb .line.micro .body { color: var(--dim); }
+  .sb .pics { display: flex; gap: 8px; margin-top: 8px; }
+  .sb .pics .p { flex: 0 0 132px; height: 84px; border-radius: 6px; border: 1px solid var(--edge); }
+  .sb .ord { color: var(--dim); font-size: 11px; }
+
+  /* =================== SOLILOQUY C — DATE RAIL =================== */
+  .sc .rail-grid { display: grid; grid-template-columns: 190px 1fr; gap: 40px; align-items: start; }
+  .sc .rail { position: sticky; top: 24px; font-size: 13px; color: var(--dim); }
+  .sc .rail h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 10px; }
+  .sc .rail h2::before { content: "$ "; color: var(--accent); }
+  .sc .rail a { display: block; padding: 4px 0 4px 14px; border-left: 1px solid var(--edge); color: var(--dim); text-decoration: none; }
+  .sc .rail a.on, .sc .rail a:hover { color: var(--pink); }
+  .sc .entries { max-width: 640px; }
+  .sc .entry { padding: 16px 0; border-bottom: 1px dashed var(--edge); }
+  .sc .entry .h { display: flex; align-items: baseline; gap: 12px; }
+  .sc .entry .t { color: var(--cyan); font-weight: 700; text-decoration: none; }
+  .sc .entry .t:hover { text-decoration: underline; }
+  .sc .entry .body { margin-top: 4px; font-size: 13.5px; color: var(--ink); max-width: 60ch; }
+  .sc .entry.micro .body { color: var(--dim); }
+  .sc .pics { display: flex; gap: 8px; margin-top: 8px; }
+  .sc .pics .p { flex: 0 0 140px; height: 88px; border-radius: 6px; border: 1px solid var(--edge); }
+
+  /* =================== STUDIES A — REPORT WINDOWS =================== */
+  .ta .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .ta .rep { text-decoration: none; display: block; }
+  .ta .rep:hover .ph-inline, .ta .rep:focus-visible { outline: none; }
+  .ta .rep:hover .titlebar .fn { color: var(--pink); }
+  .ta .rep .body { padding: 12px 14px; }
+  .ta .rep .cmd { color: var(--accent); font-size: 12.5px; }
+  .ta .rep .cmd::before { content: "$ "; color: var(--dim); }
+  .ta .rep .sum { margin-top: 4px; color: var(--dim); font-size: 13px; max-width: 58ch; }
+  .ta .rep .foot { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 8px 14px; font-size: 11.5px; color: var(--dim); border-top: 1px solid var(--edge); }
+  .ta .rep .foot .proj { color: var(--cyan); }
+  .ta .rep .foot .proj::before { content: "→ "; color: var(--dim); }
+  .ta .rep .foot .st { margin-left: auto; color: var(--amber); }
+  .ta .rep .foot .st::before { content: "status: "; color: var(--dim); }
+
+  /* =================== STUDIES B — MAN-PAGE INDEX =================== */
+  .tb .index { max-width: 860px; font-size: 13px; }
+  .tb .head, .tb .row { display: grid; grid-template-columns: 92px minmax(0, 2fr) 1.4fr 110px; gap: 16px; align-items: baseline; padding: 10px; }
+  .tb .head { color: var(--dim); font-size: 11.5px; border-bottom: 1px solid var(--edge); }
+  .tb .head .c { color: var(--amber); }
+  .tb .head .c::before { content: "$ "; color: var(--accent); }
+  .tb .row { border-bottom: 1px dashed var(--edge); border-radius: 6px; text-decoration: none; }
+  .tb .row:hover, .tb .row:focus-visible { background: var(--panel); }
+  .tb .date { color: var(--dim); }
+  .tb .t { color: var(--cyan); }
+  .tb .t::after { content: "(7)"; color: var(--dim); font-size: 11.5px; }
+  .tb .sum { color: var(--dim); }
+  .tb .proj { color: var(--pink); font-size: 12px; }
+
+  /* =================== STUDIES C — FEATURED SPREAD =================== */
+  .tc .feat { margin-bottom: 30px; }
+  .tc .feat a { display: block; text-decoration: none; }
+  .tc .feat .cols { display: grid; grid-template-columns: 1.1fr 1fr; }
+  .tc .feat .left { padding: 18px 20px; border-right: 1px solid var(--edge); }
+  .tc .feat .cmd { color: var(--accent); font-size: 13px; }
+  .tc .feat .cmd::before { content: "$ "; color: var(--dim); }
+  .tc .feat .sum { margin-top: 8px; color: var(--dim); font-size: 13.5px; max-width: 54ch; }
+  .tc .feat .right { padding: 18px 20px; font-size: 13px; }
+  .tc .feat .right .out { padding-left: 14px; color: var(--ink); font-size: 12.5px; }
+  .tc .feat .right .k { color: var(--amber); }
+  .tc .feat .right .v { color: var(--ink); }
+  .tc .feat .right .tags a { color: var(--pink); text-decoration: none; }
+  .tc .feat .right .tags a::before { content: "#"; }
+  .tc .rest { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  .tc .rest a { text-decoration: none; display: block; }
+  .tc .rest .body { padding: 10px 14px; }
+  .tc .rest .cmd { color: var(--accent); font-size: 12.5px; }
+  .tc .rest .cmd::before { content: "$ "; color: var(--dim); }
+  .tc .rest .sum { color: var(--dim); font-size: 12.5px; margin-top: 4px; }
+  .tc .rest .foot { padding: 6px 14px 10px; font-size: 11.5px; color: var(--dim); border-top: 1px solid var(--edge); }
+  .tc .rest .foot .proj { color: var(--cyan); }
+  .tc .rest .foot .proj::before { content: "→ "; color: var(--dim); }
+
+  /* =================== SOLILOQUY DETAIL A — IN CONTEXT =================== */
+  .dpa .sheet { max-width: 760px; }
+  .dpa .head { display: flex; justify-content: space-between; align-items: baseline; font-size: 12.5px; color: var(--dim); margin-bottom: 14px; }
+  .dpa .head .ord { color: var(--amber); }
+  .dpa .entry { padding: 20px 22px; }
+  .dpa .entry .t { color: var(--cyan); font-weight: 700; font-size: 17px; }
+  .dpa .entry .t::before { content: "### "; color: var(--dim); font-weight: 400; }
+  .dpa .entry .ts { display: block; margin-top: 2px; }
+  .dpa .entry .body { margin-top: 12px; font-size: 14px; max-width: 62ch; }
+  .dpa .entry .body p { margin-bottom: 12px; }
+  .dpa .entry .body .cap { color: var(--dim); font-size: 11.5px; }
+  .dpa .entry .pic { border: 1px solid var(--edge); border-radius: 8px; margin: 14px 0; }
+  .dpa .nav { display: flex; justify-content: space-between; margin-top: 18px; font-size: 13px; }
+  .dpa .nav a { color: var(--dim); text-decoration: none; }
+  .dpa .nav a:hover { color: var(--cyan); }
+  .dpa .nav a::before { content: "← "; }
+  .dpa .nav .nx::before { content: none; }
+  .dpa .nav .nx::after { content: " →"; }
+
+  /* =================== SOLILOQUY DETAIL B — ANCHORED IN STREAM =================== */
+  .dpb .stream { max-width: 820px; }
+  .dpb .ctx { color: var(--dim); font-size: 12.5px; }
+  .dpb .anchor { border: 1px solid var(--pink); border-radius: 8px; background: var(--panel); padding: 20px 22px; margin: 10px 0; }
+  .dpb .anchor .t { color: var(--cyan); font-weight: 700; font-size: 17px; }
+  .dpb .anchor .ts { display: block; margin-top: 2px; }
+  .dpb .anchor .body { margin-top: 12px; font-size: 14px; max-width: 62ch; }
+  .dpb .anchor .pic { border: 1px solid var(--edge); border-radius: 8px; margin: 14px 0; }
+  .dpb .row { display: grid; grid-template-columns: 128px 1fr; gap: 18px; padding: 12px 0; border-bottom: 1px dashed var(--edge); }
+  .dpb .row .body { font-size: 13px; max-width: 58ch; }
+  .dpb .row .body a { color: var(--cyan); }
+
+  /* =================== STUDIES DETAIL A — CONSOLE OUTPUT =================== */
+  .dsa .stack { max-width: 860px; }
+  .dsa .titlebar .fn { font-size: 13px; }
+  .dsa .doc { padding: 20px 24px; }
+  .dsa .doc h1 { font-size: 19px; color: var(--ink); font-weight: 700; }
+  .dsa .doc h1::before { content: "# "; color: var(--dim); }
+  .dsa .doc .sum { color: var(--dim); font-size: 13.5px; margin-top: 6px; max-width: 62ch; }
+  .dsa .doc hr { border: 0; border-top: 1px dashed var(--edge); margin: 18px 0; }
+  .dsa .doc h2 { font-size: 14.5px; color: var(--cyan); margin: 18px 0 6px; }
+  .dsa .doc h2::before { content: "## "; color: var(--dim); }
+  .dsa .doc p { font-size: 13.5px; max-width: 70ch; margin-bottom: 10px; }
+  .dsa .doc code { background: var(--bg); border: 1px solid var(--edge); border-radius: 4px; padding: 1px 6px; font-size: 12.5px; color: var(--amber); }
+  .dsa .termout { margin-top: 20px; font-size: 13px; }
+  .dsa .termout .cmd { color: var(--accent); }
+  .dsa .termout .cmd::before { content: "$ "; color: var(--dim); }
+  .dsa .termout .out { color: var(--ink); padding-left: 14px; }
+  .dsa .termout .k { color: var(--amber); }
+  .dsa .termout .v { color: var(--ink); }
+  .dsa .termout .d { color: var(--dim); }
+  .dsa .termout a { color: var(--pink); text-decoration: none; }
+  .dsa .termout a:hover { text-decoration: underline; }
+  .dsa .rel { margin-top: 26px; }
+  .dsa .rel h2 { font-size: 13px; color: var(--amber); margin-bottom: 10px; }
+  .dsa .rel h2::before { content: "$ "; color: var(--accent); }
+  .dsa .rel ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dsa .rel a { display: block; text-decoration: none; border: 1px solid var(--edge); border-radius: 8px; padding: 10px 14px; }
+  .dsa .rel a:hover { border-color: var(--cyan); }
+  .dsa .rel .rt { color: var(--cyan); font-size: 13px; }
+  .dsa .rel .rs { color: var(--dim); font-size: 12px; }
+
+  /* =================== STUDIES DETAIL B — NEOFETCH SPLIT =================== */
+  .dsb .detail { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 36px; align-items: start; }
+  .dsb .docwrap { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; }
+  .dsb .doc { padding: 20px 24px; }
+  .dsb .doc h1 { font-size: 19px; }
+  .dsb .doc h1::before { content: "# "; color: var(--dim); }
+  .dsb .doc .sum { color: var(--dim); font-size: 13.5px; margin-top: 6px; }
+  .dsb .doc h2 { font-size: 14.5px; color: var(--cyan); margin: 18px 0 6px; }
+  .dsb .doc h2::before { content: "## "; color: var(--dim); }
+  .dsb .doc p { font-size: 13.5px; max-width: 64ch; margin-bottom: 10px; }
+  .dsb .doc code { background: var(--bg); border: 1px solid var(--edge); border-radius: 4px; padding: 1px 6px; font-size: 12.5px; color: var(--amber); }
+  .dsb .fetch dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 18px; font-size: 13.5px; }
+  .dsb .fetch dt { color: var(--amber); font-weight: 700; white-space: nowrap; }
+  .dsb .fetch dt::after { content: ":"; }
+  .dsb .fetch dd { color: var(--ink); }
+  .dsb .fetch dd a { color: var(--cyan); text-decoration: none; }
+  .dsb .fetch dd a:hover { text-decoration: underline; }
+  .dsb .fetch dd a::before { content: "→ "; color: var(--dim); }
+  .dsb .fetch dd.tags a { color: var(--pink); }
+  .dsb .fetch dd.tags a::before { content: "#"; }
+  .dsb .fetch .sep { color: var(--dim); }
+  .dsb .projblurb { margin-top: 16px; border-top: 1px dashed var(--edge); padding-top: 14px; font-size: 12.5px; color: var(--dim); }
+  .dsb .projblurb a { color: var(--cyan); text-decoration: none; }
+  .dsb .projblurb a:hover { text-decoration: underline; }
+
+  /* ---------- theme toggle + prototype bar (not part of design) ---------- */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 60;
+    border: 1px solid var(--edge); background: var(--panel); color: var(--ink);
+    font: 700 13px "JetBrains Mono", monospace; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .proto-bar {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    background: #111; color: #fff; border-radius: 999px; padding: 8px 10px;
+    font: 600 13px "Inter", sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  .proto-bar button { background: none; border: 0; color: #fff; font: inherit; cursor: pointer; padding: 4px 10px; }
+  .proto-bar .label { min-width: 260px; text-align: center; }
+  .proto-bar .pagesep { color: #555; }
+
+  @media (max-width: 760px) {
+    .term { padding: 28px 20px 0; }
+    .sa .entry, .dpb .row { grid-template-columns: 1fr; gap: 4px; }
+    .ta .grid, .tc .rest, .dsa .rel ul { grid-template-columns: 1fr; }
+    .sc .rail-grid { grid-template-columns: 1fr; }
+    .sc .rail { position: static; }
+    .dsb .detail { grid-template-columns: 1fr; }
+    .tb .head { display: none; }
+    .tb .row { grid-template-columns: minmax(0,1fr); gap: 2px; }
+    .tb .row .date, .tb .row .sum, .tb .row .proj { display: none; }
+    .tc .feat .cols { grid-template-columns: 1fr; }
+    .tc .feat .left { border-right: 0; border-bottom: 1px solid var(--edge); }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle">☀️ light</button>
+
+<!-- ==================== PAGE: SOLILOQUY LISTING ==================== -->
+<div id="page-soliloquy" data-page="soliloquy">
+
+<!-- SOLILOQUY A — JOURNALCTL STREAM -->
+<div id="variant-sa" class="sa page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">soliloquy</span></p>
+    <div class="filters">
+      <span class="lbl">ls soliloquy --tag</span>
+      <button class="on">all</button>
+      <button>cats</button>
+      <button>process</button>
+      <button>printing</button>
+      <button>site</button>
+      <span class="count">214 entries</span>
+    </div>
+    <div class="stream">
+      <div class="entry micro">
+        <span class="ts"><a href="#">2026-09-14 · 23:41</a></span>
+        <div><p class="body">the cat distribution system delivered again. photos tomorrow. #cats</p></div>
+      </div>
+      <div class="entry">
+        <span class="ts"><a href="#">2026-09-14 · 09:12</a></span>
+        <div>
+          <a class="t" href="#">Morning pages, again</a>
+          <p class="body">Fifth rewrite of the homepage. This one is a terminal, which feels right for a site that started as a <a href="#">neofetch joke</a>.</p>
+          <div class="meta"><span class="tags"><a href="#">site</a> <span class="sep">·</span> <a href="#">process</a></span> <span class="sep">·</span> entry #47</div>
+        </div>
+      </div>
+      <div class="entry micro">
+        <span class="ts"><a href="#">2026-09-12 · 18:03</a></span>
+        <div><p class="body">fixed the extruder. it was the extruder all along. #printing</p></div>
+      </div>
+      <div class="entry micro">
+        <span class="ts"><a href="#">2026-09-12 · 08:47</a></span>
+        <div><p class="body">cold brew ratio experiment #4: 1:11 still wins. #process</p></div>
+      </div>
+      <div class="entry">
+        <span class="ts"><a href="#">2026-09-10 · 21:15</a></span>
+        <div>
+          <a class="t" href="#">On rewriting the homepage for the fifth time</a>
+          <p class="body">Each version was a correct answer to the wrong question. Notes on what finally stuck.</p>
+          <div class="pics">
+            <span class="p ph g4" data-name="wip-v4.png"></span>
+            <span class="p ph g6" data-name="wip-v5.png"></span>
+          </div>
+          <div class="meta"><span class="tags"><a href="#">site</a></span> <span class="sep">·</span> entry #46</div>
+        </div>
+      </div>
+      <div class="entry">
+        <span class="ts"><a href="#">2026-09-08 · 07:56</a></span>
+        <div>
+          <a class="t" href="#">Two printers, one shelf</a>
+          <p class="body">The Ender 3 is a project; the A1 mini is a tool. Both earned their spot.</p>
+          <div class="meta"><span class="tags"><a href="#">printing</a></span> <span class="sep">·</span> entry #45</div>
+        </div>
+      </div>
+      <div class="entry micro">
+        <span class="ts"><a href="#">2026-09-05 · 22:40</a></span>
+        <div><p class="body">shipped the art gallery. `alt` enforcement felt mean right up until it caught three blanks.</p></div>
+      </div>
+      <div class="more"><button>cat older.log — 208 more</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- SOLILOQUY B — DAY-GROUPED SESSIONS -->
+<div id="variant-sb" class="sb page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">soliloquy</span></p>
+    <div class="filters">
+      <span class="lbl">ls soliloquy --tag</span>
+      <button class="on">all</button>
+      <button>cats</button>
+      <button>process</button>
+      <button>printing</button>
+      <button>site</button>
+      <span class="count">214 entries</span>
+    </div>
+    <div class="day">
+      <div class="win">
+        <div class="titlebar"><span class="fn">2026-09-14</span><span class="ord">2 entries</span></div>
+        <div class="line micro">
+          <span class="time">23:41</span>
+          <p class="body">the cat distribution system delivered again. photos tomorrow. #cats</p>
+        </div>
+        <div class="line">
+          <span class="time">09:12</span>
+          <div><a class="t" href="#">Morning pages, again</a>
+            <p class="body">Fifth rewrite of the homepage. This one is a terminal, which feels right.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="day">
+      <div class="win">
+        <div class="titlebar"><span class="fn">2026-09-12</span><span class="ord">2 entries</span></div>
+        <div class="line micro">
+          <span class="time">18:03</span>
+          <p class="body">fixed the extruder. it was the extruder all along. #printing</p>
+        </div>
+        <div class="line micro">
+          <span class="time">08:47</span>
+          <p class="body">cold brew ratio experiment #4: 1:11 still wins. #process</p>
+        </div>
+      </div>
+    </div>
+    <div class="day">
+      <div class="win">
+        <div class="titlebar"><span class="fn">2026-09-10</span><span class="ord">1 entry</span></div>
+        <div class="line">
+          <span class="time">21:15</span>
+          <div><a class="t" href="#">On rewriting the homepage for the fifth time</a>
+            <p class="body">Each version was a correct answer to the wrong question.</p>
+            <div class="pics"><span class="p ph g4" data-name="wip-v4.png"></span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="more"><button>cat older.log — 208 more</button></div>
+  </div>
+</div>
+
+<!-- SOLILOQUY C — DATE RAIL -->
+<div id="variant-sc" class="sc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">soliloquy</span></p>
+    <div class="filters">
+      <span class="lbl">ls soliloquy --tag</span>
+      <button class="on">all</button>
+      <button>cats</button>
+      <button>process</button>
+      <button>printing</button>
+      <button>site</button>
+      <span class="count">214 entries</span>
+    </div>
+    <div class="rail-grid">
+      <nav class="rail" aria-label="jump to month">
+        <h2>tail -f by month</h2>
+        <a class="on" href="#">2026-09<span style="float:right">7</span></a>
+        <a href="#">2026-08<span style="float:right">9</span></a>
+        <a href="#">2026-07<span style="float:right">8</span></a>
+        <a href="#">2026-06<span style="float:right">11</span></a>
+      </nav>
+      <div class="entries">
+        <div class="entry micro">
+          <div class="h"><span class="ts">2026-09-14 · 23:41</span></div>
+          <p class="body">the cat distribution system delivered again. photos tomorrow. #cats</p>
+        </div>
+        <div class="entry">
+          <div class="h"><a class="t" href="#">Morning pages, again</a><span class="ts">09:12</span></div>
+          <p class="body">Fifth rewrite of the homepage. This one is a terminal, which feels right for a site that started as a neofetch joke.</p>
+        </div>
+        <div class="entry micro">
+          <div class="h"><span class="ts">2026-09-12 · 18:03</span></div>
+          <p class="body">fixed the extruder. it was the extruder all along. #printing</p>
+        </div>
+        <div class="entry">
+          <div class="h"><a class="t" href="#">On rewriting the homepage for the fifth time</a><span class="ts">2026-09-10 · 21:15</span></div>
+          <p class="body">Each version was a correct answer to the wrong question. Notes on what finally stuck.</p>
+          <div class="pics"><span class="p ph g4" data-name="wip-v4.png"></span><span class="p ph g6" data-name="wip-v5.png"></span></div>
+        </div>
+        <div class="entry micro">
+          <div class="h"><span class="ts">2026-09-05 · 22:40</span></div>
+          <p class="body">shipped the art gallery. `alt` enforcement felt mean right up until it caught three blanks.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== PAGE: STUDIES LISTING ==================== -->
+<div id="page-studies" data-page="studies" hidden>
+
+<!-- STUDIES A — REPORT WINDOWS -->
+<div id="variant-ta" class="ta page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">studies</span></p>
+    <div class="filters">
+      <span class="lbl">ls studies --tag</span>
+      <button class="on">all</button>
+      <button>astro</button>
+      <button>cloudflare</button>
+      <button>printing</button>
+      <button>process</button>
+      <span class="count">6 studies</span>
+    </div>
+    <div class="grid">
+      <a class="rep win" href="#">
+        <div class="titlebar"><span class="fn">shipping-static-workers.md</span><span>2026-09-12</span></div>
+        <div class="body">
+          <p class="cmd">cat shipping-static-workers.md --summary</p>
+          <p class="sum">Workers static assets over Pages: no adapter, unlimited free requests, and one wrangler.jsonc. What I'd tell past me.</p>
+        </div>
+        <div class="foot"><span class="proj">personal-site</span><span class="tags"><a href="#">cloudflare</a> <a href="#">astro</a></span><span class="st">published</span></div>
+      </a>
+      <a class="rep win" href="#">
+        <div class="titlebar"><span class="fn">fleet-dashboard-case-study.md</span><span>2026-08-28</span></div>
+        <div class="body">
+          <p class="cmd">cat fleet-dashboard-case-study.md --summary</p>
+          <p class="sum">Designing a dashboard 40 field engineers actually use: offline-first, two taps to anything, and the map is optional.</p>
+        </div>
+        <div class="foot"><span class="proj">fleet-dashboard</span><span class="tags"><a href="#">process</a></span><span class="st">published</span></div>
+      </a>
+      <a class="rep win" href="#">
+        <div class="titlebar"><span class="fn">a1-mini-noise.md</span><span>2026-08-02</span></div>
+        <div class="body">
+          <p class="cmd">cat a1-mini-noise.md --summary</p>
+          <p class="sum">Chasing a rhythmic click across six prints: fan shroud, belt tension, and the winner — a half-millimeter spool wobble.</p>
+        </div>
+        <div class="foot"><span class="tags"><a href="#">printing</a></span><span class="st">published</span></div>
+      </a>
+      <a class="rep win" href="#">
+        <div class="titlebar"><span class="fn">eleventy-to-astro.md</span><span>2026-07-19</span></div>
+        <div class="body">
+          <p class="cmd">cat eleventy-to-astro.md --summary</p>
+          <p class="sum">Porting a decade-old Eleventy site: content collections beat Nunjucks loops, and the image pipeline is worth the rewrite alone.</p>
+        </div>
+        <div class="foot"><span class="proj">personal-site</span><span class="tags"><a href="#">astro</a></span><span class="st">draft</span></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- STUDIES B — MAN-PAGE INDEX -->
+<div id="variant-tb" class="tb page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">studies</span></p>
+    <div class="filters">
+      <span class="lbl">ls studies --tag</span>
+      <button class="on">all</button>
+      <button>astro</button>
+      <button>cloudflare</button>
+      <button>printing</button>
+      <button>process</button>
+      <span class="count">6 studies</span>
+    </div>
+    <div class="index">
+      <div class="head"><span class="c">date</span><span class="c">name</span><span class="c">summary</span><span class="c">project</span></div>
+      <a class="row" href="#">
+        <span class="date">2026-09-12</span>
+        <span class="t">shipping-static-workers</span>
+        <span class="sum">Workers static assets over Pages: no adapter, unlimited free requests.</span>
+        <span class="proj">→ personal-site</span>
+      </a>
+      <a class="row" href="#">
+        <span class="date">2026-08-28</span>
+        <span class="t">fleet-dashboard-case-study</span>
+        <span class="sum">A dashboard 40 field engineers actually use: offline-first, two taps deep.</span>
+        <span class="proj">→ fleet-dashboard</span>
+      </a>
+      <a class="row" href="#">
+        <span class="date">2026-08-02</span>
+        <span class="t">a1-mini-noise</span>
+        <span class="sum">Chasing a rhythmic click across six prints until it was a spool wobble.</span>
+        <span class="proj">—</span>
+      </a>
+      <a class="row" href="#">
+        <span class="date">2026-07-19</span>
+        <span class="t">eleventy-to-astro</span>
+        <span class="sum">Content collections beat Nunjucks loops; the image pipeline is worth it.</span>
+        <span class="proj">→ personal-site</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- STUDIES C — FEATURED SPREAD -->
+<div id="variant-tc" class="tc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">studies</span></p>
+    <div class="filters">
+      <span class="lbl">ls studies --tag</span>
+      <button class="on">all</button>
+      <button>astro</button>
+      <button>cloudflare</button>
+      <button>printing</button>
+      <button>process</button>
+      <span class="count">6 studies</span>
+    </div>
+    <div class="feat">
+      <a class="win" href="#">
+        <div class="cols">
+          <div class="left">
+            <p class="cmd">cat shipping-static-workers.md --featured</p>
+            <p class="sum">Workers static assets over Pages: no adapter, unlimited free requests, and one wrangler.jsonc. What I'd tell past me — including the 404-page trap and the custom-domain routes dance.</p>
+          </div>
+          <div class="right">
+            <p class="out"><span class="k">date</span>=<span class="v">2026-09-12</span></p>
+            <p class="out"><span class="k">project</span>=<span class="v">→ personal-site</span></p>
+            <p class="out tags"><span class="tags"><a href="#">cloudflare</a> <a href="#">astro</a></span></p>
+            <p class="out"><span class="k">status</span>=<span class="v">published</span></p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="rest">
+      <a class="win" href="#">
+        <div class="titlebar"><span class="fn">fleet-dashboard-case-study.md</span><span>2026-08-28</span></div>
+        <div class="body"><p class="cmd">cat fleet-dashboard-case-study.md --summary</p>
+          <p class="sum">Offline-first, two taps to anything, and the map is optional.</p></div>
+        <div class="foot"><span class="proj">fleet-dashboard</span></div>
+      </a>
+      <a class="win" href="#">
+        <div class="titlebar"><span class="fn">a1-mini-noise.md</span><span>2026-08-02</span></div>
+        <div class="body"><p class="cmd">cat a1-mini-noise.md --summary</p>
+          <p class="sum">Six prints, one rhythmic click, one half-millimeter spool wobble.</p></div>
+        <div class="foot"><span class="tags"><a href="#">printing</a></span></div>
+      </a>
+      <a class="win" href="#">
+        <div class="titlebar"><span class="fn">eleventy-to-astro.md</span><span>2026-07-19</span></div>
+        <div class="body"><p class="cmd">cat eleventy-to-astro.md --summary</p>
+          <p class="sum">Content collections beat Nunjucks loops; the image pipeline alone is worth the rewrite.</p></div>
+        <div class="foot"><span class="proj">personal-site</span></div>
+      </a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== PAGE: SOLILOQUY DETAIL ==================== -->
+<div id="page-s-detail" data-page="s-detail" hidden>
+
+<!-- SOLILOQUY DETAIL A — IN CONTEXT -->
+<div id="variant-dpa" class="dpa page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">soliloquy</a> / <span class="here">morning-pages-again</span></p>
+    <div class="sheet">
+      <div class="head"><span class="ord">entry #47 of 214</span><span>2026-09-14</span></div>
+      <div class="entry win">
+        <span class="t">Morning pages, again</span>
+        <span class="ts">2026-09-14 · 09:12</span>
+        <div class="body">
+          <p>Fifth rewrite of the homepage. Each version was a correct answer to the wrong question: portfolio-first, bio-first, card grid, no grid — all fine, none mine.</p>
+          <p>This one is a terminal, which feels right for a site that started as a neofetch joke. The test: if a stranger can't tell it's a terminal in three seconds, it's decoration.</p>
+          <div class="pic"><div class="ph g6" data-name="homepage-v5.png" style="aspect-ratio: 16/9"></div></div>
+          <p class="cap">fig 1 — v5, the one that stuck</p>
+        </div>
+      </div>
+      <div class="nav">
+        <a href="#">entry #46 — on rewriting the homepage</a>
+        <a class="nx" href="#">entry #48 — the cat, photographed</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOLILOQUY DETAIL B — ANCHORED IN STREAM -->
+<div id="variant-dpb" class="dpb page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">soliloquy</a> / <span class="here">morning-pages-again</span></p>
+    <div class="stream">
+      <p class="ctx" style="margin-bottom:6px">— surrounding entries —</p>
+      <div class="row">
+        <span class="ts">2026-09-12 · 18:03</span>
+        <p class="body">fixed the extruder. it was the extruder all along. #printing</p>
+      </div>
+      <div class="anchor">
+        <span class="t">Morning pages, again</span>
+        <span class="ts">2026-09-14 · 09:12 · entry #47</span>
+        <div class="body">
+          <p>Fifth rewrite of the homepage. Each version was a correct answer to the wrong question: portfolio-first, bio-first, card grid, no grid — all fine, none mine.</p>
+          <p>This one is a terminal, which feels right for a site that started as a neofetch joke.</p>
+          <div class="pic"><div class="ph g6" data-name="homepage-v5.png" style="aspect-ratio: 16/9"></div></div>
+        </div>
+      </div>
+      <div class="row">
+        <span class="ts">2026-09-14 · 23:41</span>
+        <p class="body">the cat distribution system delivered again. photos tomorrow. #cats</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== PAGE: STUDIES DETAIL ==================== -->
+<div id="page-S-detail" data-page="S-detail" hidden>
+
+<!-- STUDIES DETAIL A — CONSOLE OUTPUT -->
+<div id="variant-dsa" class="dsa page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">studies</a> / <span class="here">shipping-static-workers</span></p>
+    <div class="stack">
+      <div class="win">
+        <div class="titlebar"><span class="fn">studies/shipping-static-workers.md</span><span>9 min read</span></div>
+        <article class="doc">
+          <h1>Shipping a static site on Workers</h1>
+          <p class="sum">Workers static assets over Pages: no adapter, unlimited free requests, and one wrangler.jsonc. What I'd tell past me.</p>
+          <hr>
+          <p>Every guide said Pages. Pages was the answer for three years — then Workers static assets quietly grew up, and the migration is one config file you can read aloud.</p>
+          <h2>The whole deploy config</h2>
+          <p>The surprise is that there isn't one: <code>wrangler.jsonc</code> with an <code>assets</code> block, a <code>404-page</code> (not SPA-fallback — ask me how I know), and routes for the apex plus a www redirect. That's the deploy story.</p>
+          <p>Free tier: unlimited static requests. The real ceilings are 20k files per version and 25 MiB per file — none of which a personal site will ever touch.</p>
+        </article>
+      </div>
+      <div class="termout">
+        <p class="cmd">identify shipping-static-workers.md</p>
+        <p class="out"><span class="k">date</span>=<span class="v">2026-09-12</span> <span class="d">·</span> <span class="k">status</span>=<span class="v">published</span></p>
+        <p class="out"><span class="k">tags</span>=<a href="#">#cloudflare</a> <a href="#">#astro</a></p>
+        <p class="out"><span class="k">projects</span>=<a href="#">→ personal-site</a></p>
+      </div>
+      <div class="rel">
+        <h2>related studies</h2>
+        <ul>
+          <li><a href="#"><span class="rt">eleventy-to-astro.md</span><br><span class="rs">the other half of this migration</span></a></li>
+          <li><a href="#"><span class="rt">resume-download-page.md</span><br><span class="rs">counting downloads without JS</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDIES DETAIL B — NEOFETCH SPLIT -->
+<div id="variant-dsb" class="dsb page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">studies</a> / <span class="here">shipping-static-workers</span></p>
+    <div class="detail">
+      <div class="docwrap">
+        <div class="titlebar"><span class="fn">studies/shipping-static-workers.md</span><span>9 min read</span></div>
+        <article class="doc">
+          <h1>Shipping a static site on Workers</h1>
+          <p class="sum">Workers static assets over Pages: no adapter, unlimited free requests, and one wrangler.jsonc.</p>
+          <hr>
+          <p>Every guide said Pages. Pages was the answer for three years — then Workers static assets quietly grew up, and the migration is one config file you can read aloud.</p>
+          <p>The surprise is that there isn't one: <code>wrangler.jsonc</code> with an <code>assets</code> block, a <code>404-page</code> (not SPA-fallback — ask me how I know), and routes for the apex plus a www redirect.</p>
+          <p>Free tier: unlimited static requests. The real ceilings are 20k files per version and 25 MiB per file.</p>
+        </article>
+      </div>
+      <aside class="fetch">
+        <dl>
+          <dt>date</dt><dd>2026-09-12</dd>
+          <dt>status</dt><dd>published</dd>
+          <dt>tags</dt><dd class="tags"><a href="#">cloudflare</a> <span class="sep">·</span> <a href="#">astro</a></dd>
+          <dt>project</dt><dd><a href="#">personal-site</a></dd>
+        </dl>
+        <p class="projblurb">Part of the <a href="#">personal-site</a> rebuild — see the case study and work page for the full picture.</p>
+      </aside>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- prototype switcher (never part of the design) -->
+<div class="proto-bar" role="navigation" aria-label="Prototype variant switcher">
+  <button id="pageBtn" aria-label="Toggle page">page ⇄</button>
+  <span class="pagesep">|</span>
+  <button id="prev" aria-label="Previous variant">←</button>
+  <span class="label" id="vlabel">soliloquy · A (Journalctl stream)</span>
+  <button id="next" aria-label="Next variant">→</button>
+</div>
+
+<script>
+  // 4 pages, each with its own variants
+  const PAGES = {
+    soliloquy: [
+      { key: 'a', el: document.getElementById('variant-sa'), name: 'A (Journalctl stream)' },
+      { key: 'b', el: document.getElementById('variant-sb'), name: 'B (Day-grouped sessions)' },
+      { key: 'c', el: document.getElementById('variant-sc'), name: 'C (Date rail)' },
+    ],
+    studies: [
+      { key: 'a', el: document.getElementById('variant-ta'), name: 'A (Report windows)' },
+      { key: 'b', el: document.getElementById('variant-tb'), name: 'B (Man-page index)' },
+      { key: 'c', el: document.getElementById('variant-tc'), name: 'C (Featured spread)' },
+    ],
+    's-detail': [
+      { key: 'a', el: document.getElementById('variant-dpa'), name: 'A (Entry in context)' },
+      { key: 'b', el: document.getElementById('variant-dpb'), name: 'B (Anchored in stream)' },
+    ],
+    'S-detail': [
+      { key: 'a', el: document.getElementById('variant-dsa'), name: 'A (Console output)' },
+      { key: 'b', el: document.getElementById('variant-dsb'), name: 'B (Neofetch split)' },
+    ],
+  };
+  const ORDER = ['soliloquy', 'studies', 's-detail', 'S-detail'];
+  const PAGE_TITLES = { soliloquy: 'soliloquy', studies: 'studies', 's-detail': 'soliloquy detail', 'S-detail': 'studies detail' };
+  const params = new URLSearchParams(location.search);
+  let page = ORDER.includes(params.get('page')) ? params.get('page') : 'soliloquy';
+  let i = 0;
+
+  function applyPage() {
+    ORDER.forEach(p => { document.getElementById('page-' + p).hidden = p !== page; });
+    const vi = PAGES[page].findIndex(v => v.key === params.get('variant'));
+    i = Math.max(0, vi);
+  }
+  function render() {
+    applyPage();
+    PAGES[page].forEach((v, idx) => v.el.hidden = idx !== i);
+    document.getElementById('vlabel').textContent = PAGE_TITLES[page] + ' · ' + PAGES[page][i].name;
+    const url = new URL(location);
+    url.searchParams.set('page', page);
+    url.searchParams.set('variant', PAGES[page][i].key);
+    history.replaceState(null, '', url);
+    scrollTo(0, 0);
+  }
+  function cycle(d) { i = (i + d + PAGES[page].length) % PAGES[page].length; render(); }
+  function flip() { page = ORDER[(ORDER.indexOf(page) + 1) % ORDER.length]; render(); }
+
+  document.getElementById('prev').onclick = () => cycle(-1);
+  document.getElementById('next').onclick = () => cycle(1);
+  document.getElementById('pageBtn').onclick = flip;
+  addEventListener('keydown', e => {
+    if (/input|textarea/i.test(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+
+  const toggle = document.getElementById('themeToggle');
+  toggle.onclick = () => {
+    document.body.classList.toggle('light');
+    toggle.textContent = document.body.classList.contains('light') ? '🌙 dark' : '☀️ light';
+  };
+
+  render();
+</script>
+</body>
+</html>
