@@ -199,6 +199,10 @@
   .dc .gal .thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .dc .gal .p { aspect-ratio: 4/3; border-radius: 6px; border: 1px solid var(--edge); }
 
+  /* =================== DETAIL D — FACT SHEET + TIMELINE (B layout, C spec windows) =================== */
+  .dd section .win { margin-top: 14px; }
+  .dd .tl { margin-top: 22px; }
+
   /* ---------- theme toggle + prototype bar (not part of design) ---------- */
   .theme-toggle {
     position: fixed; top: 16px; right: 16px; z-index: 60;
@@ -550,15 +554,60 @@
           <span class="ts">2026-08-14 21:15</span> — attempt 1: supports fused at the elbows. Re-oriented 20°, manual supports.
         </div>
       </div>
-      <div class="gal">
-        <h2>photos/</h2>
-        <div class="thumbs">
+<!-- DETAIL D — FACT SHEET + TIMELINE: B's side-by-side layout, C's spec-sheet windows -->
+<div id="variant-dd" class="db dc dd page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">prints</a> / <span class="here">mecha-bust</span></p>
+    <div class="detail">
+      <div>
+        <figure class="figure">
+          <div class="titlebar"><span class="fn">mecha-bust-04.jpg</span><span class="res">PLA</span></div>
+          <div class="ph g1" data-name="print" style="aspect-ratio: 4/3"></div>
+        </figure>
+        <div class="process" aria-label="photo set">
           <span class="p ph g4" data-name="attempt-2"></span>
           <span class="p ph g6" data-name="supports"></span>
           <span class="p ph g7" data-name="plate"></span>
-          <span class="p ph g1" data-name="final"></span>
         </div>
       </div>
+      <section aria-label="print specs and maker log">
+        <h2 style="font-size:17px; color: var(--pink); margin-bottom: 2px;">mecha-bust</h2>
+        <div class="win">
+          <div class="titlebar"><span class="t">specs</span><span>cat</span></div>
+          <table>
+            <tr><td>date</td><td>2026-08-21</td></tr>
+            <tr><td>printer</td><td>bambu lab A1 mini</td></tr>
+            <tr><td>material</td><td>PLA</td></tr>
+            <tr><td>layer height</td><td>0.2 mm</td></tr>
+            <tr><td>infill</td><td>15%</td></tr>
+            <tr><td>duration</td><td>9.2 h</td></tr>
+            <tr><td>tags</td><td style="color:var(--pink)">#mecha #fanart</td></tr>
+          </table>
+        </div>
+        <div class="win">
+          <div class="titlebar"><span class="t">models & notes</span><span>open</span></div>
+          <div class="links">
+            <a href="#">printables.com/model/123456</a>
+            <a href="#">makerworld.com/@mayur/models/789</a>
+          </div>
+          <p>A third-time-lucky bust. Belt tension was the whole story: one shift, two re-plates, one clean release.</p>
+        </div>
+        <div class="tl">
+          <h2>maker log</h2>
+          <div class="entry">
+            <p class="h">2026-08-21</p>
+            <p class="m">Clean release. Sanded the shoulder seam, primed same evening.</p>
+          </div>
+          <div class="entry fail">
+            <p class="h">2026-08-18 — failed attempt</p>
+            <p class="m">Layer shift on the left arm at 6h. Tightened the belt, dropped to 250mm/s.</p>
+          </div>
+          <div class="entry fail">
+            <p class="h">2026-08-14 — failed attempt</p>
+            <p class="m">Supports fused into the elbow joints. Re-oriented 20° tilt, manual supports under forearms only.</p>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </div>
@@ -585,6 +634,7 @@
       { key: 'a', el: document.getElementById('variant-da'), name: 'A (Print job console + git log)' },
       { key: 'b', el: document.getElementById('variant-db'), name: 'B (Neofetch specs + timeline)' },
       { key: 'c', el: document.getElementById('variant-dc'), name: 'C (Spec sheet + transcript)' },
+      { key: 'd', el: document.getElementById('variant-dd'), name: 'D (Fact sheet + timeline)' },
     ],
   };
   const params = new URLSearchParams(location.search);
