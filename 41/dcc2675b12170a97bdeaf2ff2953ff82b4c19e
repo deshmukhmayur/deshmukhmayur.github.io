@@ -1,0 +1,20 @@
+prototype/writing-prototype.html
+  s_4d126306e8f0dc::t_c5943531c24910 1-303
+  s_4d126306e8f0dc::t_3ffdcf007b86a0 304-819
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "41dcc2675b12170a97bdeaf2ff2953ff82b4c19e",
+  "prompts": {},
+  "sessions": {
+    "s_4d126306e8f0dc": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5b01efa5ffeR1m925WpA1aZqs",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
