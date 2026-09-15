@@ -286,15 +286,15 @@
   .dsc .fetch dd.tags a { color: var(--pink); }
   .dsc .fetch dd.tags a::before { content: "#"; }
   .dsc .fetch .sep { color: var(--dim); }
-  .dsc .related { margin-top: 26px; }
-  .dsc .related h2 { font-size: 13px; color: var(--amber); margin-bottom: 4px; }
-  .dsc .related h2::before { content: "$ "; color: var(--accent); }
-  .dsc .related .sub { color: var(--dim); font-size: 11.5px; margin-bottom: 12px; }
-  .dsc .related .cards { display: grid; gap: 12px; }
-  .dsc .related .cards a { display: block; text-decoration: none; border: 1px solid var(--edge); border-radius: 8px; padding: 10px 14px; }
+  .dsc .related { margin-top: 22px; border-top: 1px dashed var(--edge); padding-top: 14px; }
+  .dsc .related h2 { font-size: 11.5px; color: var(--amber); margin-bottom: 8px; }
+  .dsc .related h2::before { content: "$ "; color: var(--dim); }
+  .dsc .related h2 + .cards { margin-bottom: 16px; }
+  .dsc .related .cards { display: grid; gap: 8px; }
+  .dsc .related .cards a { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; text-decoration: none; border: 1px solid var(--edge); border-radius: 6px; padding: 7px 10px; }
   .dsc .related .cards a:hover { border-color: var(--cyan); }
-  .dsc .related .cards .rt { color: var(--cyan); font-size: 13px; }
-  .dsc .related .cards .rs { color: var(--dim); font-size: 12px; }
+  .dsc .related .cards .rt { color: var(--cyan); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dsc .related .cards .rs { color: var(--dim); font-size: 11px; flex: none; }
   .dsc .related .cards .tagged a { border-style: dashed; }
   .dsc .related .cards .tagged .rt { color: var(--pink); }
 
@@ -993,30 +993,15 @@
   <div class="term">
     <p class="crumb"><a href="#">home</a> / <a href="#">studies</a> / <span class="here">shipping-static-workers</span></p>
     <div class="detail">
-      <div>
-        <div class="docwrap">
-          <div class="titlebar"><span class="fn">studies/shipping-static-workers.md</span><span>9 min read</span></div>
-          <article class="doc">
-            <h1>Shipping a static site on Workers</h1>
-            <p class="sum">Workers static assets over Pages: no adapter, unlimited free requests, and one wrangler.jsonc.</p>
-            <hr>
-            <p>Every guide said Pages. Pages was the answer for three years — then Workers static assets quietly grew up, and the migration is one config file you can read aloud.</p>
-            <p>The surprise is that there isn't one: <code>wrangler.jsonc</code> with an <code>assets</code> block, a <code>404-page</code> (not SPA-fallback — ask me how I know), and routes for the apex plus a www redirect.</p>
-          </article>
-        </div>
-        <div class="related">
-          <h2>ls studies --project=personal-site</h2>
-          <p class="sub">same project, newest first</p>
-          <div class="cards">
-            <a href="#"><span class="rt">eleventy-to-astro.md</span><br><span class="rs">2026-07-19 — the other half of this migration</span></a>
-            <a href="#"><span class="rt">resume-download-page.md</span><br><span class="rs">2026-05-04 — counting downloads without JS</span></a>
-          </div>
-          <h2 style="margin-top:22px">ls studies --tag=cloudflare</h2>
-          <p class="sub">no project match — falling back to shared tags</p>
-          <div class="cards tagged">
-            <a href="#"><span class="rt">workers-cron-jobs.md</span><br><span class="rs">2026-04-18 — scheduled tasks without a scheduler</span></a>
-          </div>
-        </div>
+      <div class="docwrap">
+        <div class="titlebar"><span class="fn">studies/shipping-static-workers.md</span><span>9 min read</span></div>
+        <article class="doc">
+          <h1>Shipping a static site on Workers</h1>
+          <p class="sum">Workers static assets over Pages: no adapter, unlimited free requests, and one wrangler.jsonc.</p>
+          <hr>
+          <p>Every guide said Pages. Pages was the answer for three years — then Workers static assets quietly grew up, and the migration is one config file you can read aloud.</p>
+          <p>The surprise is that there isn't one: <code>wrangler.jsonc</code> with an <code>assets</code> block, a <code>404-page</code> (not SPA-fallback — ask me how I know), and routes for the apex plus a www redirect.</p>
+        </article>
       </div>
       <aside class="fetch">
         <dl>
@@ -1025,7 +1010,17 @@
           <dt>tags</dt><dd class="tags"><a href="#">cloudflare</a> <span class="sep">·</span> <a href="#">astro</a></dd>
           <dt>project</dt><dd><a href="#">personal-site</a></dd>
         </dl>
-        <p class="projblurb">Part of the <a href="#">personal-site</a> rebuild — see the case study and work page for the full picture.</p>
+        <div class="related">
+          <h2>ls studies --project=personal-site</h2>
+          <div class="cards">
+            <a href="#"><span class="rt">eleventy-to-astro.md</span><span class="rs">2026-07-19</span></a>
+            <a href="#"><span class="rt">resume-download-page.md</span><span class="rs">2026-05-04</span></a>
+          </div>
+          <h2>ls studies --tag=cloudflare</h2>
+          <div class="cards tagged">
+            <a href="#"><span class="rt">workers-cron-jobs.md</span><span class="rs">2026-04-18</span></a>
+          </div>
+        </div>
       </aside>
     </div>
   </div>
