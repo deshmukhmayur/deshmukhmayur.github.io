@@ -272,13 +272,13 @@
   .dd .side dd a { color: var(--pink); text-decoration: none; }
   .dd .side dd a:hover { text-decoration: underline; }
   .dd .rel { margin-top: 26px; }
-  .dd .rel h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 12px; }
+  .dd .rel h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 10px; }
   .dd .rel h2::before { content: "$ "; color: var(--accent); }
-  .dd .rel ul { list-style: none; display: grid; gap: 10px; }
-  .dd .rel .study { border: 1px solid var(--edge); border-radius: 6px; padding: 10px 12px; text-decoration: none; display: block; }
+  .dd .rel ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dd .rel .study { display: block; text-decoration: none; border: 1px solid var(--edge); border-radius: 8px; padding: 10px 14px; }
   .dd .rel .study:hover { border-color: var(--cyan); }
-  .dd .rel .study .st { color: var(--cyan); font-weight: 700; }
-  .dd .rel .study .sm { color: var(--dim); font-size: 12px; }
+  .dd .rel .study .rt { color: var(--cyan); font-size: 13px; }
+  .dd .rel .study .rs { color: var(--dim); font-size: 12px; }
 
   /* ---------- theme toggle + prototype bar (not part of design) ---------- */
   .theme-toggle {
@@ -528,13 +528,13 @@
           <span class="p ph sh4" data-name="trace diff"></span>
         </div>
       </div>
-      <div class="rel">
-        <h2>related studies</h2>
-        <ul>
-          <li><a class="study" href="#"><span class="st">Sampling that keeps the interesting 2%</span><br><span class="sm">How trace-path reconstruction survives aggressive head sampling.</span><br><span class="dt">2024-11 · 14 min read</span></a></li>
-          <li><a class="study" href="#"><span class="st">ClickHouse as a trace store</span><br><span class="sm">Schema decisions and the query patterns that made them work.</span><br><span class="dt">2024-09 · 9 min read</span></a></li>
-        </ul>
-      </div>
+        <div class="rel">
+          <h2>related studies</h2>
+          <ul>
+            <li><a class="study" href="#"><span class="rt">Sampling that keeps the interesting 2%</span><br><span class="rs">trace-path reconstruction under aggressive head sampling</span></a></li>
+            <li><a class="study" href="#"><span class="rt">ClickHouse as a trace store</span><br><span class="rs">schema decisions and the queries that made them work</span></a></li>
+          </ul>
+        </div>
     </div>
   </div>
 </div>
@@ -626,7 +626,6 @@
       <aside class="side">
         <p class="cmd">identify atlas-tracer</p>
         <div class="panel">
-          <div class="titlebar"><span class="fn">atlas-tracer.meta</span><span class="res">specs</span></div>
           <div class="body">
             <dl>
               <dt>kinds</dt><dd class="kd">work</dd>
