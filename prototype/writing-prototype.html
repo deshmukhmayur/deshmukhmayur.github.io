@@ -786,7 +786,7 @@
     i = Math.max(0, vi);
   }
   function render() {
-    applyPage();
+    ORDER.forEach(p => { document.getElementById('page-' + p).hidden = p !== page; });
     PAGES[page].forEach((v, idx) => v.el.hidden = idx !== i);
     document.getElementById('vlabel').textContent = PAGE_TITLES[page] + ' · ' + PAGES[page][i].name;
     const url = new URL(location);
@@ -796,7 +796,7 @@
     scrollTo(0, 0);
   }
   function cycle(d) { i = (i + d + PAGES[page].length) % PAGES[page].length; render(); }
-  function flip() { page = ORDER[(ORDER.indexOf(page) + 1) % ORDER.length]; render(); }
+  function flip() { page = ORDER[(ORDER.indexOf(page) + 1) % ORDER.length]; applyPage(); render(); }
 
   document.getElementById('prev').onclick = () => cycle(-1);
   document.getElementById('next').onclick = () => cycle(1);
