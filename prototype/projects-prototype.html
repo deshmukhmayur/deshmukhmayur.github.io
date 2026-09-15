@@ -272,13 +272,15 @@
   .dd .side dd a { color: var(--pink); text-decoration: none; }
   .dd .side dd a:hover { text-decoration: underline; }
   .dd .rel { margin-top: 26px; }
-  .dd .rel h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 10px; }
+  .dd .rel h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 6px; }
   .dd .rel h2::before { content: "$ "; color: var(--accent); }
-  .dd .rel ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .dd .rel .study { display: block; text-decoration: none; border: 1px solid var(--edge); border-radius: 8px; padding: 10px 14px; }
-  .dd .rel .study:hover { border-color: var(--cyan); }
+  .dd .rel ul { list-style: none; display: grid; }
+  .dd .rel li { border-bottom: 1px dashed var(--edge); }
+  .dd .rel li:last-child { border-bottom: 0; }
+  .dd .rel .study { display: block; text-decoration: none; padding: 10px 4px; }
+  .dd .rel .study:hover .rt { color: var(--pink); }
   .dd .rel .study .rt { color: var(--cyan); font-size: 13px; }
-  .dd .rel .study .rs { color: var(--dim); font-size: 12px; }
+  .dd .rel .study .rs { display: block; color: var(--dim); font-size: 12px; font-style: italic; }
 
   /* ---------- theme toggle + prototype bar (not part of design) ---------- */
   .theme-toggle {
