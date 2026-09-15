@@ -267,6 +267,67 @@
   .dsb .projblurb a { color: var(--cyan); text-decoration: none; }
   .dsb .projblurb a:hover { text-decoration: underline; }
 
+  /* =================== STUDIES D — PROJECT FOLDERS =================== */
+  .td .grp { margin-bottom: 30px; }
+  .td .grp .titlebar .fn::before { content: "studies/"; color: var(--dim); }
+  .td .row { display: grid; grid-template-columns: 92px minmax(0, 1.1fr) 1.3fr; gap: 16px; padding: 12px 14px; border-bottom: 1px dashed var(--edge); font-size: 13px; text-decoration: none; }
+  .td .row:last-child { border-bottom: 0; }
+  .td .row:hover { background: var(--bg); }
+  .td .row .date { color: var(--dim); }
+  .td .row .t { color: var(--cyan); }
+  .td .row:hover .t { color: var(--pink); }
+  .td .row .sum { color: var(--dim); }
+  .td .row .sum a { color: var(--cyan); }
+  .td .empty { color: var(--dim); font-size: 12px; padding: 10px 14px; }
+
+  /* =================== STUDIES E — UNFRAMED EDITORIAL =================== */
+  .te .lead { border-top: 2px solid var(--edge); padding: 24px 0 30px; text-decoration: none; display: block; }
+  .te .lead .t { font-size: 24px; color: var(--ink); font-weight: 700; line-height: 1.3; }
+  .te .lead:hover .t { color: var(--cyan); }
+  .te .lead .sum { margin-top: 8px; font-size: 15px; color: var(--dim); font-style: italic; max-width: 56ch; }
+  .te .lead .meta { margin-top: 10px; font-size: 12px; color: var(--dim); display: flex; gap: 16px; }
+  .te .lead .meta .proj { color: var(--cyan); }
+  .te .story { border-top: 1px solid var(--edge); padding: 20px 0; text-decoration: none; display: grid; grid-template-columns: 110px 1fr auto; gap: 20px; align-items: baseline; }
+  .te .story .date { color: var(--dim); font-size: 12px; }
+  .te .story .t { font-size: 17px; color: var(--ink); font-weight: 700; }
+  .te .story:hover .t { color: var(--cyan); }
+  .te .story .sum { margin-top: 4px; font-size: 13px; color: var(--dim); font-style: italic; max-width: 60ch; }
+  .te .story .side { font-size: 12px; color: var(--dim); text-align: right; }
+  .te .story .side .proj { color: var(--cyan); }
+  .te .tags a { color: var(--pink); text-decoration: none; }
+  .te .tags a::before { content: "#"; }
+
+  /* =================== SOLILOQUY DETAIL C — PRINTOUT =================== */
+  .dpc .printout { max-width: 640px; margin: 0 auto; border-top: 2px dashed var(--edge); border-bottom: 2px dashed var(--edge); padding: 26px 10px; }
+  .dpc .printout .t { color: var(--cyan); font-weight: 700; font-size: 18px; }
+  .dpc .printout .t::before { content: "### "; color: var(--dim); font-weight: 400; }
+  .dpc .printout .ts { display: block; margin-top: 2px; }
+  .dpc .printout .body { margin-top: 14px; font-size: 14px; }
+  .dpc .printout .body p { margin-bottom: 12px; }
+  .dpc .printout .pic { border: 1px solid var(--edge); border-radius: 8px; margin: 14px 0; }
+  .dpc .printout .cap { color: var(--dim); font-size: 11.5px; }
+  .dpc .eof { text-align: center; color: var(--dim); font-size: 12px; padding: 12px 0 0; letter-spacing: .3em; }
+  .dpc .nav { max-width: 640px; margin: 18px auto 0; display: flex; justify-content: space-between; font-size: 13px; }
+  .dpc .nav a { color: var(--dim); text-decoration: none; }
+  .dpc .nav a:hover { color: var(--cyan); }
+
+  /* =================== SOLILOQUY DETAIL D — NEARBY RAIL =================== */
+  .dpd .layout { display: grid; grid-template-columns: 210px 1fr; gap: 40px; align-items: start; max-width: 900px; }
+  .dpd .rail { position: sticky; top: 24px; font-size: 12.5px; }
+  .dpd .rail h2 { font-size: 13px; color: var(--amber); margin-bottom: 10px; }
+  .dpd .rail h2::before { content: "$ "; color: var(--accent); }
+  .dpd .rail a { display: block; padding: 6px 0 6px 14px; border-left: 1px solid var(--edge); color: var(--dim); text-decoration: none; }
+  .dpd .rail a .o { color: var(--dim); font-size: 11px; display: block; }
+  .dpd .rail a:hover { color: var(--cyan); }
+  .dpd .rail a.on { color: var(--pink); border-left: 2px solid var(--pink); padding-left: 13px; }
+  .dpd .entry .t { color: var(--cyan); font-weight: 700; font-size: 19px; }
+  .dpd .entry .t::before { content: "### "; color: var(--dim); font-weight: 400; }
+  .dpd .entry .ts { display: block; margin-top: 2px; }
+  .dpd .entry .body { margin-top: 14px; font-size: 14px; max-width: 60ch; }
+  .dpd .entry .body p { margin-bottom: 12px; }
+  .dpd .entry .pic { border: 1px solid var(--edge); border-radius: 8px; margin: 14px 0; }
+  .dpd .entry .cap { color: var(--dim); font-size: 11.5px; }
+
   /* ---------- theme toggle + prototype bar (not part of design) ---------- */
   .theme-toggle {
     position: fixed; top: 16px; right: 16px; z-index: 60;
@@ -282,6 +343,7 @@
   .proto-bar button { background: none; border: 0; color: #fff; font: inherit; cursor: pointer; padding: 4px 10px; }
   .proto-bar .label { min-width: 260px; text-align: center; }
   .proto-bar .pagesep { color: #555; }
+  .proto-bar [data-pg].on { color: #ffd166; text-decoration: underline; text-underline-offset: 4px; }
 
   @media (max-width: 760px) {
     .term { padding: 28px 20px 0; }
@@ -619,6 +681,112 @@
     </div>
   </div>
 </div>
+
+<!-- STUDIES D — PROJECT FOLDERS -->
+<div id="variant-td" class="td page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">studies</span></p>
+    <div class="filters">
+      <span class="lbl">ls studies --tag</span>
+      <button class="on">all</button>
+      <button>astro</button>
+      <button>cloudflare</button>
+      <button>printing</button>
+      <button>process</button>
+      <span class="count">6 studies</span>
+    </div>
+    <div class="grp">
+      <div class="win">
+        <div class="titlebar"><span class="fn">personal-site/</span><span class="ord">2 studies</span></div>
+        <a class="row" href="#">
+          <span class="date">2026-09-12</span>
+          <span class="t">shipping-static-workers.md</span>
+          <span class="sum">No adapter, unlimited free requests, one wrangler.jsonc.</span>
+        </a>
+        <a class="row" href="#">
+          <span class="date">2026-07-19</span>
+          <span class="t">eleventy-to-astro.md</span>
+          <span class="sum">Content collections beat Nunjucks loops; the image pipeline is worth it.</span>
+        </a>
+      </div>
+    </div>
+    <div class="grp">
+      <div class="win">
+        <div class="titlebar"><span class="fn">fleet-dashboard/</span><span class="ord">1 study</span></div>
+        <a class="row" href="#">
+          <span class="date">2026-08-28</span>
+          <span class="t">case-study.md</span>
+          <span class="sum">Offline-first, two taps to anything, and the map is optional.</span>
+        </a>
+      </div>
+    </div>
+    <div class="grp">
+      <div class="win">
+        <div class="titlebar"><span class="fn">unfiled/</span><span class="ord">3 studies</span></div>
+        <a class="row" href="#">
+          <span class="date">2026-08-02</span>
+          <span class="t">a1-mini-noise.md</span>
+          <span class="sum">Six prints, one rhythmic click, one half-millimeter spool wobble.</span>
+        </a>
+        <a class="row" href="#">
+          <span class="date">2026-06-14</span>
+          <span class="t">car-sketching-on-paper.md</span>
+          <span class="sum">Why the tablet never replaced the 0.5mm pencil.</span>
+        </a>
+        <a class="row" href="#">
+          <span class="date">2026-05-30</span>
+          <span class="t">cold-brew-ratios.md</span>
+          <span class="sum">Four months of 1:11 through 1:16, one clear winner.</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDIES E — UNFRAMED EDITORIAL -->
+<div id="variant-te" class="te page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">studies</span></p>
+    <div class="filters">
+      <span class="lbl">ls studies --tag</span>
+      <button class="on">all</button>
+      <button>astro</button>
+      <button>cloudflare</button>
+      <button>printing</button>
+      <button>process</button>
+      <span class="count">6 studies</span>
+    </div>
+    <a class="lead" href="#">
+      <p class="t">Shipping a static site on Workers</p>
+      <p class="sum">Workers static assets over Pages: no adapter, unlimited free requests, and one wrangler.jsonc. What I'd tell past me — including the 404-page trap.</p>
+      <div class="meta"><span>2026-09-12</span><span class="proj">→ personal-site</span><span class="tags"><a href="#">cloudflare</a> <a href="#">astro</a></span></div>
+    </a>
+    <a class="story" href="#">
+      <span class="date">2026-08-28</span>
+      <span><span class="t">Fleet dashboard, field-tested</span>
+        <p class="sum">A dashboard 40 field engineers actually use: offline-first, two taps deep, and the map is optional.</p></span>
+      <span class="side"><span class="proj">→ fleet-dashboard</span><br>#process</span>
+    </a>
+    <a class="story" href="#">
+      <span class="date">2026-08-02</span>
+      <span><span class="t">Chasing a rhythmic click</span>
+        <p class="sum">Six prints of debugging across the A1 mini until it turned out to be a half-millimeter spool wobble.</p></span>
+      <span class="side">#printing</span>
+    </a>
+    <a class="story" href="#">
+      <span class="date">2026-07-19</span>
+      <span><span class="t">Eleventy to Astro</span>
+        <p class="sum">Content collections beat Nunjucks loops, and the image pipeline is worth the rewrite alone.</p></span>
+      <span class="side"><span class="proj">→ personal-site</span><br>#astro</span>
+    </a>
+    <a class="story" href="#">
+      <span class="date">2026-06-14</span>
+      <span><span class="t">Car sketching on paper</span>
+        <p class="sum">Why the tablet never replaced the 0.5mm pencil, even after four years of trying.</p></span>
+      <span class="side">#process</span>
+    </a>
+  </div>
+</div>
 </div>
 
 <!-- ==================== PAGE: SOLILOQUY DETAIL ==================== -->
@@ -671,6 +839,53 @@
         <span class="ts">2026-09-14 · 23:41</span>
         <p class="body">the cat distribution system delivered again. photos tomorrow. #cats</p>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOLILOQUY DETAIL C — PRINTOUT -->
+<div id="variant-dpc" class="dpc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">soliloquy</a> / <span class="here">morning-pages-again</span></p>
+    <div class="printout">
+      <span class="t">Morning pages, again</span>
+      <span class="ts">2026-09-14 · 09:12 · entry #47 of 214</span>
+      <div class="body">
+        <p>Fifth rewrite of the homepage. Each version was a correct answer to the wrong question: portfolio-first, bio-first, card grid, no grid — all fine, none mine.</p>
+        <p>This one is a terminal, which feels right for a site that started as a neofetch joke. The test: if a stranger can't tell it's a terminal in three seconds, it's decoration.</p>
+        <div class="pic"><div class="ph g6" data-name="homepage-v5.png" style="aspect-ratio: 16/9"></div></div>
+        <p class="cap">fig 1 — v5, the one that stuck</p>
+      </div>
+      <p class="eof">· · ·</p>
+    </div>
+    <div class="nav">
+      <a href="#">$ cd ../entry-46</a>
+      <a href="#">$ cd ../entry-48</a>
+    </div>
+  </div>
+</div>
+
+<!-- SOLILOQUY DETAIL D — NEARBY RAIL -->
+<div id="variant-dpd" class="dpd page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">soliloquy</a> / <span class="here">morning-pages-again</span></p>
+    <div class="layout">
+      <nav class="rail" aria-label="nearby entries">
+        <h2>nearby entries</h2>
+        <a href="#">2026-09-12 · 18:03<span class="o">#46 — fixed the extruder…</span></a>
+        <a class="on" href="#">2026-09-14 · 09:12<span class="o">#47 — Morning pages, again</span></a>
+        <a href="#">2026-09-14 · 23:41<span class="o">#48 — the cat, photographed…</span></a>
+      </nav>
+      <article class="entry">
+        <span class="t">Morning pages, again</span>
+        <span class="ts">2026-09-14 · 09:12</span>
+        <div class="body">
+          <p>Fifth rewrite of the homepage. Each version was a correct answer to the wrong question: portfolio-first, bio-first, card grid, no grid — all fine, none mine.</p>
+          <p>This one is a terminal, which feels right for a site that started as a neofetch joke. The test: if a stranger can't tell it's a terminal in three seconds, it's decoration.</p>
+          <div class="pic"><div class="ph g6" data-name="homepage-v5.png" style="aspect-ratio: 16/9"></div></div>
+          <p class="cap">fig 1 — v5, the one that stuck</p>
+        </div>
+      </article>
     </div>
   </div>
 </div>
@@ -745,10 +960,13 @@
 
 <!-- prototype switcher (never part of the design) -->
 <div class="proto-bar" role="navigation" aria-label="Prototype variant switcher">
-  <button id="pageBtn" aria-label="Toggle page">page ⇄</button>
+  <button data-pg="soliloquy">soliloquy</button>
+  <button data-pg="studies">studies</button>
+  <button data-pg="s-detail">sol detail</button>
+  <button data-pg="S-detail">studies detail</button>
   <span class="pagesep">|</span>
   <button id="prev" aria-label="Previous variant">←</button>
-  <span class="label" id="vlabel">soliloquy · A (Journalctl stream)</span>
+  <span class="label" id="vlabel">soliloquy · C (Date rail)</span>
   <button id="next" aria-label="Next variant">→</button>
 </div>
 
@@ -764,10 +982,14 @@
       { key: 'a', el: document.getElementById('variant-ta'), name: 'A (Report windows)' },
       { key: 'b', el: document.getElementById('variant-tb'), name: 'B (Man-page index)' },
       { key: 'c', el: document.getElementById('variant-tc'), name: 'C (Featured spread)' },
+      { key: 'd', el: document.getElementById('variant-td'), name: 'D (Project folders)' },
+      { key: 'e', el: document.getElementById('variant-te'), name: 'E (Unframed editorial)' },
     ],
     's-detail': [
       { key: 'a', el: document.getElementById('variant-dpa'), name: 'A (Entry in context)' },
       { key: 'b', el: document.getElementById('variant-dpb'), name: 'B (Anchored in stream)' },
+      { key: 'c', el: document.getElementById('variant-dpc'), name: 'C (Printout)' },
+      { key: 'd', el: document.getElementById('variant-dpd'), name: 'D (Nearby rail)' },
     ],
     'S-detail': [
       { key: 'a', el: document.getElementById('variant-dsa'), name: 'A (Console output)' },
@@ -789,6 +1011,7 @@
     ORDER.forEach(p => { document.getElementById('page-' + p).hidden = p !== page; });
     PAGES[page].forEach((v, idx) => v.el.hidden = idx !== i);
     document.getElementById('vlabel').textContent = PAGE_TITLES[page] + ' · ' + PAGES[page][i].name;
+    document.querySelectorAll('.proto-bar [data-pg]').forEach(b => b.classList.toggle('on', b.dataset.pg === page));
     const url = new URL(location);
     url.searchParams.set('page', page);
     url.searchParams.set('variant', PAGES[page][i].key);
@@ -796,11 +1019,12 @@
     scrollTo(0, 0);
   }
   function cycle(d) { i = (i + d + PAGES[page].length) % PAGES[page].length; render(); }
-  function flip() { page = ORDER[(ORDER.indexOf(page) + 1) % ORDER.length]; applyPage(); render(); }
 
   document.getElementById('prev').onclick = () => cycle(-1);
   document.getElementById('next').onclick = () => cycle(1);
-  document.getElementById('pageBtn').onclick = flip;
+  document.querySelectorAll('.proto-bar [data-pg]').forEach(btn => {
+    btn.onclick = () => { page = btn.dataset.pg; applyPage(); render(); };
+  });
   addEventListener('keydown', e => {
     if (/input|textarea/i.test(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
     if (e.key === 'ArrowLeft') cycle(-1);
