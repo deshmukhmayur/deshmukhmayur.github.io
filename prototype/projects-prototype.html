@@ -1,0 +1,564 @@
+<!doctype html>
+<!-- PROTOTYPE, throwaway: projects listing + project detail page for deshmukhmayur.com, switchable via ?page=list|detail and ?variant=a|b|c.
+     Question it answers: "How does the terminal/TUI homepage direction extend to the projects listing and detail page?"
+     Note: section renamed Work → Projects; URLs /projects/. See .scratch/personal-site/issues/17-prototype-work-listing-detail.md -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects prototype — Mayur Deshmukh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1317; --panel: #141a20; --edge: #262f38; --ink: #c9d4dc;
+    --dim: #6d7a84; --accent: #58c470; --cyan: #5ac8d8; --amber: #e0b45e; --pink: #e07a9a;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "JetBrains Mono", monospace; font-size: 14px; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.light {
+    --bg: #f4f6f7; --panel: #ffffff; --edge: #d9dfe4; --ink: #2a3238;
+    --dim: #6d7a84; --accent: #1c8a48; --cyan: #0d7d8e; --amber: #a06f14; --pink: #b0446c;
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 2px; }
+  .page { min-height: 100vh; padding-bottom: 120px; }
+  .term { max-width: 1160px; margin: 0 auto; padding: 48px 40px 0; }
+
+  /* ---------- shared header ---------- */
+  .crumb { margin-bottom: 8px; font-size: 13px; color: var(--dim); }
+  .crumb a { color: var(--dim); text-decoration: none; }
+  .crumb a:hover, .crumb a:focus-visible { color: var(--cyan); }
+  .crumb .here { color: var(--amber); }
+  .crumb::before { content: "~/projects $ "; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 22px 0 34px; font-size: 13px; }
+  .filters .lbl { color: var(--dim); }
+  .filters .lbl::before { content: "$ "; color: var(--accent); }
+  .filters button {
+    background: none; border: 0; padding: 2px 4px; cursor: pointer;
+    font: inherit; color: var(--ink);
+  }
+  .filters button::before { content: "--kind="; color: var(--dim); }
+  .filters button.on { color: var(--pink); text-decoration: underline; text-underline-offset: 4px; }
+  .filters button:hover, .filters button:focus-visible { color: var(--pink); }
+  .filters .count { color: var(--dim); margin-left: auto; }
+  .filters .count::before { content: "# "; color: var(--amber); }
+
+  /* ---------- placeholder screenshots ---------- */
+  .ph { width: 100%; display: block; position: relative; overflow: hidden; background: var(--panel); }
+  .ph::after {
+    content: attr(data-name); position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.85); font-size: 12px; letter-spacing: .08em; text-shadow: 0 1px 4px rgba(0,0,0,.4);
+  }
+  body.light .ph::after { color: rgba(0,0,0,.55); text-shadow: none; }
+  .ph.sh1 { background: linear-gradient(150deg, #1a2430, #2c3e50 60%, #4a6b8a); }
+  .ph.sh2 { background: linear-gradient(160deg, #23272e, #3a4552 55%, #58c47022); }
+  .ph.sh3 { background: linear-gradient(140deg, #2d1f30, #523055 60%, #a86b8a); }
+  .ph.sh4 { background: linear-gradient(170deg, #1f2d26, #2f4a3a 60%, #58c47055); }
+  .ph.sh5 { background: linear-gradient(155deg, #302a1f, #5a4a2f 60%, #e0b45e55); }
+  .ph.sh6 { background: linear-gradient(165deg, #1f2733, #33475a 65%, #5ac8d855); }
+
+  /* =================== LISTING A — SCREENSHOT WINDOW TILES =================== */
+  .la .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .la .win { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); display: flex; flex-direction: column; }
+  .la .titlebar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px; font-size: 11.5px; color: var(--dim);
+    border-bottom: 1px solid var(--edge);
+  }
+  .la .titlebar .fn { color: var(--cyan); }
+  .la .titlebar .st { white-space: nowrap; }
+  .la .titlebar .st::before { content: "● "; color: var(--accent); }
+  .la .titlebar .st.archived { color: var(--dim); }
+  .la .titlebar .st.archived::before { content: "○ "; }
+  .la .win a.shot { display: block; text-decoration: none; line-height: 0; }
+  .la .win a.shot:hover .ph { filter: brightness(1.1); }
+  .la .cap { padding: 10px 12px 12px; border-top: 1px solid var(--edge); display: flex; flex-direction: column; gap: 4px; }
+  .la .cap .t { font-size: 14px; font-weight: 700; }
+  .la .cap .t::after { content: " →"; color: var(--dim); font-weight: 400; }
+  .la .cap .sum { font-size: 12.5px; color: var(--dim); }
+  .la .cap .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11.5px; color: var(--dim); margin-top: 3px; }
+  .la .cap .meta .kd { color: var(--pink); }
+  .la .cap .meta .kd::before { content: "["; }
+  .la .cap .meta .kd::after { content: "]"; }
+  .la .cap .meta .te { color: var(--amber); }
+  .la .cap .meta .dt { margin-left: auto; }
+
+  /* =================== LISTING B — LEDGER ROWS =================== */
+  .lb .ledger { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; }
+  .lb .row { display: grid; grid-template-columns: 210px minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 14px 18px; background: var(--panel); }
+  .lb .row + .row { border-top: 1px solid var(--edge); }
+  .lb .row:hover { background: #1a222b; }
+  .lb .row a { text-decoration: none; display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; align-items: center; gap: 20px; }
+  .lb .row .th { width: 150px; aspect-ratio: 16/10; border-radius: 4px; border: 1px solid var(--edge); }
+  .lb .row .nm { color: var(--cyan); font-weight: 700; }
+  .lb .row .nm::after { content: " ·"; color: var(--dim); }
+  .lb .row .sum { color: var(--dim); font-size: 12.5px; }
+  .lb .row .rl { text-align: right; font-size: 11.5px; color: var(--dim); line-height: 1.9; }
+  .lb .row .kd { color: var(--pink); }
+  .lb .row .te { color: var(--amber); }
+  .lb .row .sta::before { content: "● "; color: var(--accent); }
+  .lb .row .sta.archived::before { content: "○ "; }
+
+  /* =================== LISTING C — FEATURED + ROSTER =================== */
+  .lc .hero { border: 1px solid var(--edge); border-radius: 10px; overflow: hidden; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); background: var(--panel); margin-bottom: 34px; }
+  .lc .hero a.shot { display: block; line-height: 0; text-decoration: none; }
+  .lc .hero .ph { height: 100%; min-height: 260px; }
+  .lc .hero .body { padding: 22px 24px; display: flex; flex-direction: column; gap: 10px; }
+  .lc .hero .eyebrow { font-size: 11px; letter-spacing: .12em; color: var(--amber); }
+  .lc .hero .eyebrow::before { content: "★ "; }
+  .lc .hero h2 { font-size: 19px; color: var(--cyan); }
+  .lc .hero h2::after { content: " →"; color: var(--dim); font-weight: 400; }
+  .lc .hero p { font-size: 13px; color: var(--dim); max-width: 52ch; }
+  .lc .hero .te { font-size: 11.5px; color: var(--amber); margin-top: auto; }
+  .lc .roster { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
+  .lc .mini { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; text-decoration: none; display: grid; grid-template-columns: 128px 1fr; background: var(--panel); }
+  .lc .mini:hover { border-color: var(--cyan); }
+  .lc .mini .th { height: 100%; min-height: 76px; border-right: 1px solid var(--edge); }
+  .lc .mini .txt { padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; }
+  .lc .mini .nm { color: var(--cyan); font-weight: 700; font-size: 13.5px; }
+  .lc .mini .sum { color: var(--dim); font-size: 12px; }
+  .lc .mini .mt { color: var(--pink); font-size: 11px; margin-top: auto; }
+  .lc .rosterhead { font-size: 13px; color: var(--amber); margin-top: 26px; }
+  .lc .rosterhead::before { content: "$ "; color: var(--accent); }
+
+  /* =================== DETAIL A — CONSOLE OUTPUT =================== */
+  .da .stack { max-width: 860px; }
+  .da .win { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; }
+  .da .termout { margin-top: 18px; font-size: 13.5px; }
+  .da .termout .cmd { color: var(--accent); }
+  .da .termout .cmd::before { content: "$ "; color: var(--dim); }
+  .da .termout .out { color: var(--ink); padding-left: 14px; }
+  .da .termout .out .k { color: var(--amber); }
+  .da .termout .out .v { color: var(--ink); }
+  .da .termout .out .d { color: var(--dim); }
+  .da .termout .out a { color: var(--pink); text-decoration: none; }
+  .da .termout .out a:hover { text-decoration: underline; }
+  .da .body { margin-top: 20px; max-width: 66ch; font-size: 14px; }
+  .da .body h3 { font-size: 13px; color: var(--amber); margin: 16px 0 4px; }
+  .da .body h3::before { content: "$ "; color: var(--accent); }
+  .da .shots { margin-top: 22px; }
+  .da .shots h2 { font-size: 13px; color: var(--amber); margin-bottom: 10px; }
+  .da .shots h2::before { content: "$ "; color: var(--accent); }
+  .da .shots .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .da .shots .thumbs .p { aspect-ratio: 16/10; border-radius: 6px; border: 1px solid var(--edge); }
+  .da .rel { margin-top: 26px; }
+  .da .rel h2 { font-size: 13px; color: var(--amber); margin-bottom: 10px; }
+  .da .rel h2::before { content: "$ "; color: var(--accent); }
+  .da .rel ul { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .da .rel .study { border: 1px solid var(--edge); border-radius: 6px; padding: 12px 14px; text-decoration: none; display: block; background: var(--panel); }
+  .da .rel .study:hover { border-color: var(--cyan); }
+  .da .rel .study .st { color: var(--cyan); font-weight: 700; }
+  .da .rel .study .sm { color: var(--dim); font-size: 12px; }
+  .da .rel .study .dt { color: var(--amber); font-size: 11px; }
+
+  /* =================== DETAIL B — NEOFETCH SPLIT =================== */
+  .db .detail { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 36px; align-items: start; }
+  .db .win { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; }
+  .db .gallery { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .db .gallery .p { flex: 1 1 120px; aspect-ratio: 16/10; border-radius: 6px; border: 1px solid var(--edge); cursor: pointer; }
+  .db .gallery .p:hover { border-color: var(--cyan); }
+  .db .fetch dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 18px; font-size: 13.5px; }
+  .db .fetch dt { color: var(--amber); font-weight: 700; white-space: nowrap; }
+  .db .fetch dt::after { content: ":"; }
+  .db .fetch dd { color: var(--ink); }
+  .db .fetch dd .d { color: var(--dim); }
+  .db .fetch dd.kd a { color: var(--pink); text-decoration: none; }
+  .db .fetch h2 { font-size: 17px; color: var(--cyan); margin-bottom: 14px; }
+  .db .desc { margin-top: 16px; font-size: 13.5px; max-width: 44ch; color: var(--ink); }
+  .db .desc .more { color: var(--pink); text-decoration: none; }
+  .db .desc .more:hover { text-decoration: underline; }
+  .db .rel { margin-top: 30px; border-top: 1px dashed var(--edge); padding-top: 18px; }
+  .db .rel h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 12px; }
+  .db .rel h2::before { content: "$ "; color: var(--accent); }
+  .db .rel ul { list-style: none; display: grid; gap: 10px; }
+  .db .rel .study { border: 1px solid var(--edge); border-radius: 6px; padding: 10px 12px; text-decoration: none; display: block; }
+  .db .rel .study:hover { border-color: var(--cyan); }
+  .db .rel .study .st { color: var(--cyan); font-weight: 700; }
+  .db .rel .study .sm { color: var(--dim); font-size: 12px; }
+
+  /* =================== DETAIL C — README WINDOW =================== */
+  .dc .readme { max-width: 880px; border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .dc .readme .titlebar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px; font-size: 11.5px; color: var(--dim); border-bottom: 1px solid var(--edge);
+  }
+  .dc .readme .titlebar .fn { color: var(--cyan); }
+  .dc .readme .body { padding: 26px 30px; }
+  .dc .readme .body h1 { font-size: 20px; color: var(--ink); margin-bottom: 4px; }
+  .dc .readme .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 18px; font-size: 11.5px; }
+  .dc .readme .badges span { border: 1px solid var(--edge); border-radius: 4px; padding: 2px 9px; color: var(--dim); }
+  .dc .readme .badges .kd { color: var(--pink); border-color: var(--pink); }
+  .dc .readme .badges .sta { color: var(--accent); }
+  .dc .readme .links { margin-left: auto; }
+  .dc .readme .badges a { color: var(--cyan); text-decoration: none; }
+  .dc .readme .badges a:hover { text-decoration: underline; }
+  .dc .readme .shot { border-radius: 6px; border: 1px solid var(--edge); margin: 6px 0 18px; }
+  .dc .readme .body h3 { font-size: 14px; color: var(--amber); margin: 18px 0 4px; }
+  .dc .readme .body h3::before { content: "## "; color: var(--dim); }
+  .dc .readme .body p { max-width: 66ch; font-size: 13.5px; }
+  .dc .rel { max-width: 880px; margin-top: 26px; }
+  .dc .rel h2 { font-size: 13px; color: var(--amber); margin-bottom: 10px; }
+  .dc .rel h2::before { content: "$ "; color: var(--accent); }
+  .dc .rel ul { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .dc .rel .study { border: 1px solid var(--edge); border-radius: 6px; padding: 12px 14px; text-decoration: none; display: block; background: var(--panel); }
+  .dc .rel .study:hover { border-color: var(--cyan); }
+  .dc .rel .study .st { color: var(--cyan); font-weight: 700; }
+  .dc .rel .study .sm { color: var(--dim); font-size: 12px; }
+  .dc .rel .study .dt { color: var(--amber); font-size: 11px; }
+
+  /* ---------- theme toggle + prototype bar (not part of design) ---------- */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 60;
+    border: 1px solid var(--edge); background: var(--panel); color: var(--ink);
+    font: 700 13px "JetBrains Mono", monospace; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .proto-bar {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    background: #111; color: #fff; border-radius: 999px; padding: 8px 10px;
+    font: 600 13px "Inter", sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  .proto-bar button { background: none; border: 0; color: #fff; font: inherit; cursor: pointer; padding: 4px 10px; }
+  .proto-bar .label { min-width: 220px; text-align: center; }
+  .proto-bar .pagesep { color: #555; }
+
+  @media (max-width: 760px) {
+    .term { padding: 28px 20px 0; }
+    .la .grid, .lc .roster { grid-template-columns: 1fr; }
+    .lb .row, .lb .row a { grid-template-columns: 1fr; }
+    .lb .row .th { width: 100%; }
+    .lb .row .rl { text-align: left; }
+    .db .detail { grid-template-columns: 1fr; }
+    .da .shots .thumbs, .da .rel ul, .dc .rel ul { grid-template-columns: 1fr; }
+    .dc .readme .body { padding: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle">☀️ light</button>
+
+<!-- ==================== LISTING A — SCREENSHOT WINDOW TILES ==================== -->
+<div id="page-list" data-page="list">
+<div id="variant-la" class="la page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">projects</span></p>
+    <div class="filters">
+      <span class="lbl">ls projects --kind</span>
+      <button class="on">all</button>
+      <button>work</button>
+      <button>open-source</button>
+      <button>personal</button>
+      <span class="count">8 projects</span>
+    </div>
+    <div class="grid">
+      <div class="win">
+        <div class="titlebar"><span class="fn">atlas-tracer</span><span class="st">active</span></div>
+        <a class="shot" href="#"><div class="ph sh1" data-name="screenshot" style="aspect-ratio: 16/9"></div></a>
+        <div class="cap">
+          <span class="t">atlas-tracer</span>
+          <span class="sum">Distributed tracing visualizer that untangles a million spans into one readable flamegraph.</span>
+          <span class="meta"><span class="kd">work</span><span class="te">go · clickhouse</span><span class="dt">2024-03 →</span></span>
+        </div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">bracketeer</span><span class="st">maintained</span></div>
+        <a class="shot" href="#"><div class="ph sh4" data-name="screenshot" style="aspect-ratio: 16/9"></div></a>
+        <div class="cap">
+          <span class="t">bracketeer</span>
+          <span class="sum">Tournament bracket engine with first-class double-elimination support for community leagues.</span>
+          <span class="meta"><span class="kd">open-source</span><span class="te">typescript · react</span><span class="dt">2023-01 →</span></span>
+        </div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">stillcounts</span><span class="st archived">archived</span></div>
+        <a class="shot" href="#"><div class="ph sh3" data-name="screenshot" style="aspect-ratio: 16/9"></div></a>
+        <div class="cap">
+          <span class="t">stillcounts</span>
+          <span class="sum">Film-roll inventory tracker with expiration forecasting and darkroom shot logs.</span>
+          <span class="meta"><span class="kd">personal</span><span class="te">astro · d1</span><span class="dt">2022-07 → 2023-09</span></span>
+        </div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">hexparse</span><span class="st archived">archived</span></div>
+        <a class="shot" href="#"><div class="ph sh5" data-name="screenshot" style="aspect-ratio: 16/9"></div></a>
+        <div class="cap">
+          <span class="t">hexparse</span>
+          <span class="sum">Binary dump annotation tool — paste a hex blob, get a struct-mapped breakdown.</span>
+          <span class="meta"><span class="kd">open-source</span><span class="te">rust · wasm</span><span class="dt">2022-02 → 2022-11</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LISTING B — LEDGER ROWS ==================== -->
+<div id="variant-lb" class="lb page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">projects</span></p>
+    <div class="filters">
+      <span class="lbl">ls projects --kind</span>
+      <button class="on">all</button>
+      <button>work</button>
+      <button>open-source</button>
+      <button>personal</button>
+      <span class="count">8 projects</span>
+    </div>
+    <div class="ledger">
+      <div class="row"><a href="#">
+        <span class="th ph sh1" data-name=""></span>
+        <span><span class="nm">atlas-tracer</span><span class="sum">distributed tracing visualizer, one readable flamegraph</span></span>
+        <span class="rl"><span class="kd">work</span> · <span class="te">go · clickhouse</span><br><span class="sta">active</span> 2024-03 →</span>
+      </a></div>
+      <div class="row"><a href="#">
+        <span class="th ph sh4" data-name=""></span>
+        <span><span class="nm">bracketeer</span><span class="sum">double-elim tournament engine for community leagues</span></span>
+        <span class="rl"><span class="kd">open-source</span> · <span class="te">typescript</span><br><span class="sta">maintained</span> 2023-01 →</span>
+      </a></div>
+      <div class="row"><a href="#">
+        <span class="th ph sh6" data-name=""></span>
+        <span><span class="nm">quietcast</span><span class="sum">self-hosted radio streamer with per-listener volume curves</span></span>
+        <span class="rl"><span class="kd">personal</span> · <span class="te">python · ffmpeg</span><br><span class="sta">active</span> 2023-05 →</span>
+      </a></div>
+      <div class="row"><a href="#">
+        <span class="th ph sh3" data-name=""></span>
+        <span><span class="nm">stillcounts</span><span class="sum">film-roll inventory with expiration forecasting</span></span>
+        <span class="rl"><span class="kd">personal</span> · <span class="te">astro · d1</span><br><span class="sta archived">archived</span> 2022-07 → 2023-09</span>
+      </a></div>
+      <div class="row"><a href="#">
+        <span class="th ph sh5" data-name=""></span>
+        <span><span class="nm">hexparse</span><span class="sum">hex-dump annotation against C struct definitions</span></span>
+        <span class="rl"><span class="kd">open-source</span> · <span class="te">rust · wasm</span><br><span class="sta archived">archived</span> 2022-02 → 2022-11</span>
+      </a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LISTING C — FEATURED + ROSTER ==================== -->
+<div id="variant-lc" class="lc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">projects</span></p>
+    <div class="filters">
+      <span class="lbl">ls projects --kind</span>
+      <button class="on">all</button>
+      <button>work</button>
+      <button>open-source</button>
+      <button>personal</button>
+      <span class="count">8 projects</span>
+    </div>
+    <div class="hero">
+      <a class="shot" href="#"><div class="ph sh1" data-name="screenshot"></div></a>
+      <div class="body">
+        <span class="eyebrow">featured</span>
+        <h2>atlas-tracer</h2>
+        <p>Distributed tracing visualizer that untangles a million spans into one readable flamegraph — a request's whole journey, honestly rendered.</p>
+        <span class="te">go · clickhouse · otel · 2024-03 →</span>
+      </div>
+    </div>
+    <p class="rosterhead">ls projects/ --all</p>
+    <div class="roster">
+      <a class="mini" href="#">
+        <span class="th ph sh4" data-name=""></span>
+        <span class="txt"><span class="nm">bracketeer</span><span class="sum">double-elim tournament engine</span><span class="mt">open-source · 2023-01 →</span></span>
+      </a>
+      <a class="mini" href="#">
+        <span class="th ph sh6" data-name=""></span>
+        <span class="txt"><span class="nm">quietcast</span><span class="sum">self-hosted radio streamer</span><span class="mt">personal · 2023-05 →</span></span>
+      </a>
+      <a class="mini" href="#">
+        <span class="th ph sh3" data-name=""></span>
+        <span class="txt"><span class="nm">stillcounts</span><span class="sum">film-roll inventory tracker</span><span class="mt">personal · 2022-07 → 2023-09</span></span>
+      </a>
+      <a class="mini" href="#">
+        <span class="th ph sh5" data-name=""></span>
+        <span class="txt"><span class="nm">hexparse</span><span class="sum">hex-dump annotation tool</span><span class="mt">open-source · 2022-02 → 2022-11</span></span>
+      </a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== DETAIL A — CONSOLE OUTPUT ==================== -->
+<div id="page-detail" data-page="detail" hidden>
+<div id="variant-da" class="da page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">projects</a> / <span class="here">atlas-tracer</span></p>
+    <div class="stack">
+      <figure class="win">
+        <div class="ph sh1" data-name="screenshot" style="aspect-ratio: 16/9"></div>
+      </figure>
+      <div class="termout">
+        <p class="cmd">identify atlas-tracer</p>
+        <p class="out"><span class="k">kinds</span>=<span class="v">work</span> <span class="d">·</span> <span class="k">status</span>=<span class="v">active</span> <span class="d">·</span> <span class="k">dates</span>=<span class="v">2024-03 →</span> <span class="d">·</span> <span class="k">role</span>=<span class="v">tech lead</span></p>
+        <p class="out"><span class="k">tech</span>=<span class="v">go · clickhouse · otel</span> <span class="d">·</span> <span class="k">links</span>=<a href="#">github ↗</a> <a href="#">demo ↗</a></p>
+      </div>
+      <div class="body">
+        <p>atlas-tracer takes raw distributed traces from a fleet of services and reassembles them into a single coherent picture of a request's journey — built for teams whose flamegraph was a wall of noise.</p>
+        <h3>why it exists</h3>
+        <p>Sampling dropped the interesting 2% of spans; queries over ClickHouse rebuilt the path deterministically, so a trace view stayed honest under 1% sampling.</p>
+      </div>
+      <div class="shots">
+        <h2>screenshots/</h2>
+        <div class="thumbs">
+          <span class="p ph sh2" data-name="flamegraph"></span>
+          <span class="p ph sh6" data-name="service map"></span>
+          <span class="p ph sh4" data-name="trace diff"></span>
+        </div>
+      </div>
+      <div class="rel">
+        <h2>related studies</h2>
+        <ul>
+          <li><a class="study" href="#"><span class="st">Sampling that keeps the interesting 2%</span><br><span class="sm">How trace-path reconstruction survives aggressive head sampling.</span><br><span class="dt">2024-11 · 14 min read</span></a></li>
+          <li><a class="study" href="#"><span class="st">ClickHouse as a trace store</span><br><span class="sm">Schema decisions and the query patterns that made them work.</span><br><span class="dt">2024-09 · 9 min read</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DETAIL B — NEOFETCH SPLIT ==================== -->
+<div id="variant-db" class="db page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">projects</a> / <span class="here">atlas-tracer</span></p>
+    <div class="detail">
+      <div>
+        <figure class="win"><div class="ph sh1" data-name="screenshot" style="aspect-ratio: 16/10"></div></figure>
+        <div class="gallery" aria-label="screenshot gallery">
+          <span class="p ph sh2" data-name="flamegraph"></span>
+          <span class="p ph sh6" data-name="service map"></span>
+          <span class="p ph sh4" data-name="trace diff"></span>
+        </div>
+        <p class="desc">atlas-tracer reassembles a request's journey from raw distributed traces — built for teams whose flamegraph was a wall of noise.</p>
+        <p class="desc"><a class="more" href="#">read the full case study →</a></p>
+      </div>
+      <section class="fetch" aria-label="project metadata">
+        <h2>atlas-tracer</h2>
+        <dl>
+          <dt>kinds</dt><dd class="kd"><a href="#">work</a></dd>
+          <dt>status</dt><dd>● active</dd>
+          <dt>dates</dt><dd>2024-03 →</dd>
+          <dt>role</dt><dd>tech lead</dd>
+          <dt>tech</dt><dd>go · clickhouse · otel</dd>
+          <dt>links</dt><dd><a href="#">github ↗</a> · <a href="#">demo ↗</a></dd>
+        </dl>
+        <div class="rel">
+          <h2>related studies</h2>
+          <ul>
+            <li><a class="study" href="#"><span class="st">Sampling that keeps the interesting 2%</span><br><span class="sm">2024-11 · 14 min</span></a></li>
+            <li><a class="study" href="#"><span class="st">ClickHouse as a trace store</span><br><span class="sm">2024-09 · 9 min</span></a></li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DETAIL C — README WINDOW ==================== -->
+<div id="variant-dc" class="dc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">projects</a> / <span class="here">atlas-tracer</span></p>
+    <div class="readme">
+      <div class="titlebar"><span class="fn">atlas-tracer/README.md</span><span class="res">rendered</span></div>
+      <div class="body">
+        <h1>atlas-tracer</h1>
+        <div class="badges">
+          <span class="kd">work</span><span class="sta">● active</span><span>2024-03 →</span><span>tech lead</span>
+          <span class="links"><a href="#">github ↗</a> · <a href="#">demo ↗</a></span>
+        </div>
+        <p>atlas-tracer takes raw distributed traces from a fleet of services and reassembles them into one readable flamegraph — a request's whole journey, sampled down to nothing interesting.</p>
+        <div class="shot ph sh1" data-name="screenshot" style="aspect-ratio: 16/8"></div>
+        <h3>why it exists</h3>
+        <p>Sampling dropped the interesting 2% of spans. Rebuilding the path deterministically from ClickHouse keeps the trace view honest even at 1% sampling rates.</p>
+        <h3>screenshots</h3>
+        <div class="shot ph sh2" data-name="flamegraph" style="aspect-ratio: 16/8"></div>
+      </div>
+    </div>
+    <div class="rel">
+      <h2>related studies</h2>
+      <ul>
+        <li><a class="study" href="#"><span class="st">Sampling that keeps the interesting 2%</span><br><span class="sm">How trace-path reconstruction survives aggressive head sampling.</span><br><span class="dt">2024-11</span></a></li>
+        <li><a class="study" href="#"><span class="st">ClickHouse as a trace store</span><br><span class="sm">Schema decisions and the queries that made them work.</span><br><span class="dt">2024-09</span></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- prototype switcher (never part of the design) -->
+<div class="proto-bar" role="navigation" aria-label="Prototype variant switcher">
+  <button id="pageBtn" aria-label="Toggle page">list ⇄ detail</button>
+  <span class="pagesep">|</span>
+  <button id="prev" aria-label="Previous variant">←</button>
+  <span class="label" id="vlabel">list · A (Screenshot window tiles)</span>
+  <button id="next" aria-label="Next variant">→</button>
+</div>
+
+<script>
+  const PAGES = {
+    list: [
+      { key: 'a', el: document.getElementById('variant-la'), name: 'A (Screenshot window tiles)' },
+      { key: 'b', el: document.getElementById('variant-lb'), name: 'B (Ledger rows)' },
+      { key: 'c', el: document.getElementById('variant-lc'), name: 'C (Featured + roster)' },
+    ],
+    detail: [
+      { key: 'a', el: document.getElementById('variant-da'), name: 'A (Console output)' },
+      { key: 'b', el: document.getElementById('variant-db'), name: 'B (Neofetch split)' },
+      { key: 'c', el: document.getElementById('variant-dc'), name: 'C (README window)' },
+    ],
+  };
+  const params = new URLSearchParams(location.search);
+  let page = PAGES[params.get('page')] ? params.get('page') : 'list';
+  let i = 0;
+
+  function pageVisibility() {
+    document.getElementById('page-detail').hidden = page !== 'detail';
+    document.getElementById('page-list').hidden = page !== 'list';
+  }
+  pageVisibility();
+
+  function render() {
+    PAGES[page].forEach((v, idx) => v.el.hidden = idx !== i);
+    document.getElementById('vlabel').textContent = page + ' · ' + PAGES[page][i].name;
+    const url = new URL(location);
+    url.searchParams.set('page', page);
+    url.searchParams.set('variant', PAGES[page][i].key);
+    history.replaceState(null, '', url);
+    scrollTo(0, 0);
+  }
+  function cycle(d) { i = (i + d + PAGES[page].length) % PAGES[page].length; render(); }
+  function flip() {
+    page = page === 'list' ? 'detail' : 'list';
+    pageVisibility();
+    i = Math.max(0, PAGES[page].findIndex(v => v.key === params.get('variant')));
+    render();
+  }
+
+  document.getElementById('prev').onclick = () => cycle(-1);
+  document.getElementById('next').onclick = () => cycle(1);
+  document.getElementById('pageBtn').onclick = flip;
+  addEventListener('keydown', e => {
+    if (/input|textarea/i.test(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+
+  const toggle = document.getElementById('themeToggle');
+  toggle.onclick = () => {
+    document.body.classList.toggle('light');
+    toggle.textContent = document.body.classList.contains('light') ? '🌙 dark' : '☀️ light';
+  };
+
+  const start = PAGES[page].findIndex(v => v.key === params.get('variant'));
+  i = Math.max(0, start);
+  render();
+</script>
+</body>
+</html>
