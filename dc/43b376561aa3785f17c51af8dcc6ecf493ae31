@@ -1,0 +1,23 @@
+.scratch/personal-site/map.md
+  s_4d126306e8f0dc::t_e54d19c51be681 48
+  s_4d126306e8f0dc::t_6809ca4b936ead 41
+.scratch/personal-site/issues/16-prototype-writing-listings.md
+  s_4d126306e8f0dc::t_d5d0fa90319b5c 4
+  s_4d126306e8f0dc::t_2e2025ea6695fb 9-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "dc43b376561aa3785f17c51af8dcc6ecf493ae31",
+  "prompts": {},
+  "sessions": {
+    "s_4d126306e8f0dc": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5b01efa5ffeR1m925WpA1aZqs",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
