@@ -1,0 +1,23 @@
+prototype/projects-prototype.html
+  s_cc6ca81f7aafea::t_3d5050b3619741 133-140,150-152,159
+  s_cc6ca81f7aafea::t_b9d28a58660f53 255-261,272,281
+  s_cc6ca81f7aafea::t_8ed35d85d88099 487
+  s_cc6ca81f7aafea::t_02d3bf7d6f8cb5 625-634,637-649
+  s_cc6ca81f7aafea::t_1e55eaf1af9a06 478
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "fece96be96e3eb25ce357048afaf323811cba5e3",
+  "prompts": {},
+  "sessions": {
+    "s_cc6ca81f7aafea": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5a812ec8ffeh2EJdY4OuVbqgD",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
