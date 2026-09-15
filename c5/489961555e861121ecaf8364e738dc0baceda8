@@ -1,0 +1,130 @@
+.scratch/personal-site/issues/15-prototype-prints-contact-sheet.md
+  s_9100e204ee23f8::t_2572981e59406b 21
+  s_f450ee8202f381::t_321bf2d59a2ef4 5-8
+  s_f450ee8202f381::t_b7b63d7bf77bcd 4,9-17
+  s_9100e204ee23f8::t_18ac9562aae8a5 1-3,18-20
+.scratch/personal-site/issues/04-art-content-model.md
+  s_6597713beec687::t_4f29c651d1ea19 4,8-24
+.scratch/personal-site/issues/05-prints-content-model.md
+  s_9100e204ee23f8::t_3710960e8824f0 4,8-30
+.scratch/personal-site/map.md
+  s_f450ee8202f381::t_5d84f0900ed432 40
+  s_d83fd5bba56d75::t_c5addbe0eb8854 22
+  s_8ef3bd4277d28a::t_d90ffea928e449 34
+  s_f450ee8202f381::t_98b2013add2a22 47
+  s_4ba066a92254cf::t_5dc572c1b45742 36
+  s_6597713beec687::t_c005edd00020dc 32
+  s_b988166ff6a4f5::t_e0a15fbbfe8631 16
+  s_d83fd5bba56d75::t_23f9ae1442f1cf 38
+  s_9100e204ee23f8::t_6273e81941b047 35
+  s_b988166ff6a4f5::t_9b2551cd467c94 39
+  s_7b9c3768ae8856::t_cab0ffd234c2f3 37
+  s_25b109c057f181::t_be88eb4e508dde 33
+  s_9100e204ee23f8::t_d3c74eb8a11378 24
+.scratch/personal-site/issues/13-task-art-image-import-pipeline.md
+  s_6597713beec687::t_4d252b2d37d92e 1-3,5-8
+  s_25b109c057f181::t_4b3e9d6a68d2c5 4
+  s_25b109c057f181::t_3df970e49adcdc 9-26
+.scratch/personal-site/issues/16-prototype-writing-listings.md
+  s_4ba066a92254cf::t_86cfa537f44cea 1-8
+.scratch/personal-site/issues/06-soliloquy-studies-model.md
+  s_4ba066a92254cf::t_629553ffaa120e 4,9-24
+  s_4ba066a92254cf::t_96b62a33b1293d 5
+.scratch/personal-site/issues/11-work-content-model.md
+  s_b988166ff6a4f5::t_b75a5b0a76df3b 9-28
+  s_b988166ff6a4f5::t_70957ac11b424a 4-5
+.scratch/personal-site/issues/17-prototype-work-listing-detail.md
+  s_b988166ff6a4f5::t_62484f553b0a2f 1-8
+.scratch/personal-site/issues/07-contact-form.md
+  s_7b9c3768ae8856::t_616c365d058515 4,8-19
+.scratch/personal-site/issues/08-setup-umami.md
+  s_d83fd5bba56d75::t_9c67ff2efb8e5e 4
+  s_d83fd5bba56d75::t_0ff001f1cfb988 11-27
+.scratch/personal-site/issues/14-prototype-art-gallery-detail.md
+  s_8ef3bd4277d28a::t_1669f83a9f767c 13-15,17,20-22
+  s_8ef3bd4277d28a::t_c50b1b9c84907b 4
+  s_8ef3bd4277d28a::t_7318e388ab711e 16
+  s_8ef3bd4277d28a::t_d248db9b46e95a 9-12
+  s_6597713beec687::t_58692ebc667bf3 1-3,5-8
+  s_8ef3bd4277d28a::t_f3c21cfa244171 18-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "c5489961555e861121ecaf8364e738dc0baceda8",
+  "prompts": {},
+  "sessions": {
+    "s_25b109c057f181": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f93829f36ffed4OxT2d30ZmAg9",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_4ba066a92254cf": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f9257bb44ffeqEHaQdHN0CWEwk",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_6597713beec687": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f93ed0d13ffeqRFIfYUKb5dFh6",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_7b9c3768ae8856": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f90079499ffeXOjrzyISOFzSeh",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_8ef3bd4277d28a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f935cba15ffebVkrlGT39Xwvbn",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_9100e204ee23f8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f931af683ffeH8wYfg0Pp1h8ZB",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_b988166ff6a4f5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f8a238169ffeYTnXt1M13iHiGw",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_d83fd5bba56d75": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f8d76e81affeJ039RoxM4EXowQ",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_f450ee8202f381": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5b4eaa25ffeWHg0uyhw6yc9JQ",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
