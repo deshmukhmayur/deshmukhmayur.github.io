@@ -1,0 +1,635 @@
+<!doctype html>
+<!-- PROTOTYPE, throwaway: prints section listing (contact-sheet-like) + print detail page for deshmukhmayur.com,
+     switchable via ?page=list|detail and ?variant=a|b|c.
+     Question it answers: "What does the prints contact-sheet listing and detail page (with maker log, specs, model links) look like
+     in the terminal/TUI direction, reusing the art gallery vocabulary from ticket 14?"
+     See .scratch/personal-site/issues/15-prototype-prints-contact-sheet.md -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prints prototype — Mayur Deshmukh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1317; --panel: #141a20; --edge: #262f38; --ink: #c9d4dc;
+    --dim: #6d7a84; --accent: #58c470; --cyan: #5ac8d8; --amber: #e0b45e; --pink: #e07a9a;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "JetBrains Mono", monospace; font-size: 14px; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.light {
+    --bg: #f4f6f7; --panel: #ffffff; --edge: #d9dfe4; --ink: #2a3238;
+    --dim: #6d7a84; --accent: #1c8a48; --cyan: #0d7d8e; --amber: #a06f14; --pink: #b0446c;
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 2px; }
+  .page { min-height: 100vh; padding-bottom: 120px; }
+  .term { max-width: 1160px; margin: 0 auto; padding: 48px 40px 0; }
+
+  /* ---------- shared header chrome (same vocabulary as art gallery) ---------- */
+  .crumb { margin-bottom: 8px; font-size: 13px; color: var(--dim); }
+  .crumb a { color: var(--dim); text-decoration: none; }
+  .crumb a:hover, .crumb a:focus-visible { color: var(--cyan); }
+  .crumb .here { color: var(--amber); }
+  .crumb::before { content: "~/prints $ "; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 22px 0 34px; font-size: 13px; }
+  .filters .lbl { color: var(--dim); }
+  .filters .lbl::before { content: "$ "; color: var(--accent); }
+  .filters button {
+    background: none; border: 0; padding: 2px 4px; cursor: pointer;
+    font: inherit; color: var(--ink);
+  }
+  .filters button::before { content: "--"; color: var(--dim); }
+  .filters button.on { color: var(--pink); text-decoration: underline; text-underline-offset: 4px; }
+  .filters button:hover, .filters button:focus-visible { color: var(--pink); }
+  .filters .count { color: var(--dim); margin-left: auto; }
+  .filters .count::before { content: "# "; color: var(--amber); }
+
+  /* ---------- placeholder photos ---------- */
+  .ph { width: 100%; display: block; position: relative; overflow: hidden; background: var(--panel); }
+  .ph::after {
+    content: attr(data-name); position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.85); font-size: 12px; letter-spacing: .08em; text-shadow: 0 1px 4px rgba(0,0,0,.4);
+  }
+  body.light .ph::after { color: rgba(0,0,0,.55); text-shadow: none; }
+  .ph.g1 { background: linear-gradient(160deg, #2c3e6b, #6b4a7a 60%, #c98ba3); }
+  .ph.g2 { background: linear-gradient(200deg, #d8a25a, #a05a3a 70%, #5a3428); }
+  .ph.g3 { background: linear-gradient(140deg, #4a6b5a, #7a9a6b 55%, #d8d0a2); }
+  .ph.g4 { background: linear-gradient(170deg, #3a3f4a, #6b7484 60%, #c4ccd8); }
+  .ph.g5 { background: linear-gradient(150deg, #7a3a4a, #c46b7a 60%, #f0c4c4); }
+  .ph.g6 { background: linear-gradient(190deg, #2a4a5a, #4a8a9a 65%, #a2d8dc); }
+  .ph.g7 { background: linear-gradient(180deg, #3a3230, #6b5a4a 60%, #a89280); }
+
+  /* =================== LIST A — CONTACT SHEET (uniform windowed grid) =================== */
+  .la .sheet { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .la .win { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .la .titlebar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px; font-size: 11.5px; color: var(--dim);
+    border-bottom: 1px solid var(--edge); background: var(--panel);
+  }
+  .la .titlebar .fn { color: var(--cyan); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .la .titlebar .res { color: var(--dim); }
+  .la .win a { display: block; text-decoration: none; line-height: 0; }
+  .la .win a:hover .ph, .la .win a:focus-visible .ph { filter: brightness(1.08); }
+  .la .cap { display: flex; flex-wrap: wrap; column-gap: 10px; row-gap: 2px; padding: 8px 12px; font-size: 11.5px; color: var(--dim); border-top: 1px solid var(--edge); }
+  .la .cap .prn { color: var(--cyan); }
+  .la .cap .hrs { color: var(--amber); }
+  .la .cap .hrs::before { content: "["; }
+  .la .cap .hrs::after { content: "]"; }
+  .la .cap .tags { margin-left: auto; color: var(--pink); }
+
+  /* =================== LIST B — PRINT QUEUE (ls -l ledger) =================== */
+  .lb .queue { font-size: 13px; }
+  .lb .head, .lb .row { display: grid; grid-template-columns: 72px minmax(0,2.2fr) 1.3fr 1fr 62px 92px; gap: 16px; align-items: center; padding: 9px 10px; }
+  .lb .head { color: var(--dim); font-size: 11.5px; border-bottom: 1px solid var(--edge); }
+  .lb .head .c { color: var(--amber); }
+  .lb .head .c::before { content: "$ "; color: var(--accent); }
+  .lb .row { border-bottom: 1px dashed var(--edge); text-decoration: none; border-radius: 6px; }
+  .lb .row:hover, .lb .row:focus-visible { background: var(--panel); }
+  .lb .th { width: 72px; height: 48px; border-radius: 4px; }
+  .lb .fn { color: var(--cyan); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lb .dim { color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lb .mat { color: var(--amber); }
+  .lb .hrs { text-align: right; color: var(--ink); }
+  .lb .date { text-align: right; color: var(--dim); }
+  .lb .tag { color: var(--pink); }
+
+  /* =================== LIST C — BUILD PLATES (grouped by printer) =================== */
+  .lc .group { margin-bottom: 38px; }
+  .lc .group h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 4px; }
+  .lc .group h2::before { content: "$ "; color: var(--accent); }
+  .lc .group .sub { color: var(--dim); font-size: 11.5px; margin-bottom: 14px; }
+  .lc .strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .lc .tile { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); text-decoration: none; display: block; }
+  .lc .tile:hover .ph, .lc .tile:focus-visible .ph { filter: brightness(1.08); }
+  .lc .cap { padding: 8px 12px; font-size: 11.5px; color: var(--dim); border-top: 1px solid var(--edge); display: flex; flex-wrap: wrap; column-gap: 10px; }
+  .lc .cap .fn { color: var(--cyan); }
+  .lc .cap .hrs { margin-left: auto; color: var(--amber); }
+
+  /* =================== DETAIL A — PRINT JOB (console output) =================== */
+  .da .stack { max-width: 860px; }
+  .da .figure { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; }
+  .da .titlebar { display: flex; justify-content: space-between; padding: 7px 12px; font-size: 11.5px; color: var(--dim); border-bottom: 1px solid var(--edge); }
+  .da .titlebar .fn { color: var(--cyan); }
+  .da .termout { margin-top: 18px; font-size: 13.5px; }
+  .da .cmd { color: var(--accent); }
+  .da .cmd::before { content: "$ "; color: var(--dim); }
+  .da .out { color: var(--ink); padding-left: 14px; }
+  .da .out .k { color: var(--amber); }
+  .da .out .v { color: var(--ink); }
+  .da .out .d { color: var(--dim); }
+  .da .out a { color: var(--pink); text-decoration: none; }
+  .da .out a:hover { text-decoration: underline; }
+  .da .photos { margin-top: 24px; }
+  .da .photos h2 { font-size: 13px; color: var(--amber); margin-bottom: 10px; }
+  .da .photos h2::before { content: "$ "; color: var(--accent); }
+  .da .thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .da .thumbs .p { aspect-ratio: 4/3; border-radius: 6px; border: 1px solid var(--edge); }
+  .da .log { margin-top: 26px; }
+  .da .log h2 { font-size: 13px; color: var(--amber); margin-bottom: 12px; }
+  .da .log h2::before { content: "$ "; color: var(--accent); }
+  .da .commit { padding: 12px 0 12px 16px; border-left: 1px solid var(--edge); }
+  .da .commit .h { font-size: 12px; color: var(--dim); }
+  .da .commit .h .hash { color: var(--pink); }
+  .da .commit .h .d { margin-left: auto; }
+  .da .commit .m { font-size: 13.5px; max-width: 62ch; }
+
+  /* =================== DETAIL B — NEOFETCH LOG (specs side + log timeline) =================== */
+  .db .detail { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 36px; align-items: start; }
+  .db .figure { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; }
+  .db .titlebar { display: flex; justify-content: space-between; padding: 7px 12px; font-size: 11.5px; color: var(--dim); border-bottom: 1px solid var(--edge); }
+  .db .titlebar .fn { color: var(--cyan); }
+  .db .process { display: flex; gap: 10px; margin-top: 12px; }
+  .db .process .p { flex: 1; aspect-ratio: 4/3; border-radius: 6px; border: 1px solid var(--edge); }
+  .db .fetch dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 18px; font-size: 13.5px; }
+  .db .fetch dt { color: var(--amber); font-weight: 700; white-space: nowrap; }
+  .db .fetch dt::after { content: ":"; }
+  .db .fetch dd { color: var(--ink); }
+  .db .fetch dd.tags a { color: var(--pink); text-decoration: none; }
+  .db .fetch dd.tags a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .db .fetch dd.tags a::before { content: "#"; }
+  .db .fetch dd.models a { color: var(--cyan); text-decoration: none; display: block; }
+  .db .fetch dd.models a:hover { text-decoration: underline; }
+  .db .fetch dd.models a::before { content: "↗ "; color: var(--dim); }
+  .db .fetch .sep { color: var(--dim); }
+  .db .desc { margin-top: 18px; font-size: 14px; max-width: 40ch; }
+  .db .tl { margin-top: 26px; border-top: 1px dashed var(--edge); padding-top: 18px; }
+  .db .tl h2 { font-size: 13px; color: var(--amber); font-weight: 700; margin-bottom: 14px; }
+  .db .tl h2::before { content: "$ "; color: var(--accent); }
+  .db .entry { padding: 0 0 16px 16px; border-left: 1px solid var(--edge); position: relative; }
+  .db .entry::before { content: ""; position: absolute; left: -5px; top: 7px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .db .entry.fail::before { background: var(--pink); }
+  .db .entry .h { font-size: 12px; color: var(--dim); }
+  .db .entry .m { font-size: 13.5px; max-width: 44ch; }
+
+  /* =================== DETAIL C — SPEC SHEET (datasheet window + transcript log) =================== */
+  .dc .sheet-wrap { max-width: 980px; }
+  .dc .figure { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; }
+  .dc .cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 5fr); gap: 26px; margin-top: 22px; align-items: start; }
+  .dc .win { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .dc .win .titlebar { display: flex; justify-content: space-between; padding: 7px 12px; font-size: 11.5px; color: var(--dim); border-bottom: 1px solid var(--edge); }
+  .dc .win .titlebar .t { color: var(--cyan); }
+  .dc .win table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .dc .win td { padding: 8px 14px; border-bottom: 1px dashed var(--edge); }
+  .dc .win td:first-child { color: var(--amber); width: 40%; }
+  .dc .win tr:last-child td { border-bottom: 0; }
+  .dc .win .links a { color: var(--cyan); text-decoration: none; display: block; padding: 8px 14px; border-bottom: 1px dashed var(--edge); }
+  .dc .win .links a:last-child { border-bottom: 0; }
+  .dc .win .links a:hover { text-decoration: underline; }
+  .dc .win .links a::before { content: "↗ "; color: var(--dim); }
+  .dc .win p { padding: 12px 14px; font-size: 13.5px; }
+  .dc .transcript { margin-top: 26px; font-size: 13.5px; }
+  .dc .transcript h2 { font-size: 13px; color: var(--amber); margin-bottom: 12px; }
+  .dc .transcript h2::before { content: "$ "; color: var(--accent); }
+  .dc .line { padding: 6px 0 6px 14px; border-left: 1px solid var(--edge); max-width: 78ch; }
+  .dc .line .ts { color: var(--pink); font-size: 12px; }
+  .dc .line.fail { color: var(--dim); }
+  .dc .gal { margin-top: 26px; }
+  .dc .gal h2 { font-size: 13px; color: var(--amber); margin-bottom: 10px; }
+  .dc .gal h2::before { content: "$ "; color: var(--accent); }
+  .dc .gal .thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .dc .gal .p { aspect-ratio: 4/3; border-radius: 6px; border: 1px solid var(--edge); }
+
+  /* ---------- theme toggle + prototype bar (not part of design) ---------- */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 60;
+    border: 1px solid var(--edge); background: var(--panel); color: var(--ink);
+    font: 700 13px "JetBrains Mono", monospace; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .proto-bar {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    background: #111; color: #fff; border-radius: 999px; padding: 8px 10px;
+    font: 600 13px "Inter", sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  .proto-bar button { background: none; border: 0; color: #fff; font: inherit; cursor: pointer; padding: 4px 10px; }
+  .proto-bar .label { min-width: 240px; text-align: center; }
+  .proto-bar .pagesep { color: #555; }
+
+  @media (max-width: 760px) {
+    .term { padding: 28px 20px 0; }
+    .la .sheet, .lc .strip { grid-template-columns: 1fr 1fr; }
+    .lb .head { display: none; }
+    .lb .row { grid-template-columns: 72px minmax(0,1fr) 62px; }
+    .lb .row .dim, .lb .row .mat, .lb .row .date { display: none; }
+    .db .detail, .dc .cols { grid-template-columns: 1fr; }
+    .db .process { flex-wrap: wrap; }
+    .da .thumbs, .dc .gal .thumbs { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle">☀️ light</button>
+
+<!-- ==================== PAGE: LIST ==================== -->
+<div id="page-list" data-page="list">
+
+<!-- LIST A — CONTACT SHEET: uniform windowed grid -->
+<div id="variant-la" class="la page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">prints</span></p>
+    <div class="filters">
+      <span class="lbl">ls prints/</span>
+      <button class="on">all</button>
+      <button>material=pla</button>
+      <button>material=petg</button>
+      <button>material=resin</button>
+      <button>printer=a1-mini</button>
+      <button>printer=ender-3</button>
+      <span class="count">9 prints</span>
+    </div>
+    <div class="sheet">
+      <div class="win">
+        <div class="titlebar"><span class="fn">mecha-bust.gcode</span><span class="res">9.2h</span></div>
+        <a href="#"><div class="ph g1" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">A1 mini</span><span class="hrs">PLA</span><span class="tags">#mecha</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">desk-organizer.3mf</span><span class="res">4.1h</span></div>
+        <a href="#"><div class="ph g3" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">A1 mini</span><span class="hrs">PETG</span><span class="tags">#functional</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">brushed-alu-rx7.stl</span><span class="res">6.8h</span></div>
+        <a href="#"><div class="ph g2" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">Ender 3</span><span class="hrs">PLA</span><span class="tags">#car</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">keycaps-v2.gcode</span><span class="res">11.4h</span></div>
+        <a href="#"><div class="ph g6" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">A1 mini</span><span class="hrs">resin</span><span class="tags">#functional</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">plant-pot-lattice.stl</span><span class="res">14.0h</span></div>
+        <a href="#"><div class="ph g5" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">Ender 3</span><span class="hrs">PETG</span><span class="tags">#vase-mode</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">cat-ear-headband.stl</span><span class="res">2.6h</span></div>
+        <a href="#"><div class="ph g4" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">A1 mini</span><span class="hrs">PLA</span><span class="tags">#cosplay</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">switch-plate.3mf</span><span class="res">1.9h</span></div>
+        <a href="#"><div class="ph g7" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">A1 mini</span><span class="hrs">PLA</span><span class="tags">#functional</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">lithophane-lamp.gcode</span><span class="res">7.5h</span></div>
+        <a href="#"><div class="ph paper" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">Ender 3</span><span class="hrs">PLA</span><span class="tags">#gift</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIST B — PRINT QUEUE: ls -l ledger rows -->
+<div id="variant-lb" class="lb page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">prints</span></p>
+    <div class="filters">
+      <span class="lbl">lpq -a</span>
+      <button class="on">all</button>
+      <button>material=pla</button>
+      <button>material=petg</button>
+      <button>material=resin</button>
+      <button>printer=a1-mini</button>
+      <button>printer=ender-3</button>
+      <span class="count">9 prints</span>
+    </div>
+    <div class="queue">
+      <div class="head"><span class="c">job</span><span class="c">file</span><span class="c">printer</span><span class="c">material</span><span class="c">hours</span><span class="c">date</span></div>
+      <a class="row" href="#">
+        <span class="th ph g1" data-name=""></span>
+        <span class="fn">mecha-bust</span>
+        <span class="dim">A1 mini</span>
+        <span class="mat">PLA · #mecha</span>
+        <span class="hrs">9.2h</span>
+        <span class="date">2026-08-30</span>
+      </a>
+      <a class="row" href="#">
+        <span class="th ph g6" data-name=""></span>
+        <span class="fn">keycaps-v2</span>
+        <span class="dim">A1 mini</span>
+        <span class="mat">resin · #functional</span>
+        <span class="hrs">11.4h</span>
+        <span class="date">2026-08-02</span>
+      </a>
+      <a class="row" href="#">
+        <span class="th ph g2" data-name=""></span>
+        <span class="fn">brushed-alu-rx7</span>
+        <span class="dim">Ender 3</span>
+        <span class="mat">PLA · #car</span>
+        <span class="hrs">6.8h</span>
+        <span class="date">2026-07-12</span>
+      </a>
+      <a class="row" href="#">
+        <span class="th ph g3" data-name=""></span>
+        <span class="fn">desk-organizer</span>
+        <span class="dim">A1 mini</span>
+        <span class="mat">PETG · #functional</span>
+        <span class="hrs">4.1h</span>
+        <span class="date">2026-06-20</span>
+      </a>
+      <a class="row" href="#">
+        <span class="th ph g5" data-name=""></span>
+        <span class="fn">plant-pot-lattice</span>
+        <span class="dim">Ender 3</span>
+        <span class="mat">PETG · #vase-mode</span>
+        <span class="hrs">14.0h</span>
+        <span class="date">2026-05-08</span>
+      </a>
+      <a class="row" href="#">
+        <span class="th ph g4" data-name=""></span>
+        <span class="fn">cat-ear-headband</span>
+        <span class="dim">A1 mini</span>
+        <span class="mat">PLA · #cosplay</span>
+        <span class="hrs">2.6h</span>
+        <span class="date">2026-04-15</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- LIST C — BUILD PLATES: grouped by printer -->
+<div id="variant-lc" class="lc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">prints</span></p>
+    <div class="group">
+      <h2>ls prints/ --printer=a1-mini</h2>
+      <p class="sub">5 prints · mostly small, fast parts</p>
+      <div class="strip">
+        <a class="tile" href="#">
+          <div class="ph g1" data-name="print" style="aspect-ratio: 4/3"></div>
+          <div class="cap"><span class="fn">mecha-bust</span><span class="hrs">9.2h</span></div>
+        </a>
+        <a class="tile" href="#">
+          <div class="ph g6" data-name="print" style="aspect-ratio: 4/3"></div>
+          <div class="cap"><span class="fn">keycaps-v2</span><span class="hrs">11.4h</span></div>
+        </a>
+        <a class="tile" href="#">
+          <div class="ph g3" data-name="print" style="aspect-ratio: 4/3"></div>
+          <div class="cap"><span class="fn">desk-organizer</span><span class="hrs">4.1h</span></div>
+        </a>
+        <a class="tile" href="#">
+          <div class="ph g4" data-name="print" style="aspect-ratio: 4/3"></div>
+          <div class="cap"><span class="fn">cat-ear-headband</span><span class="hrs">2.6h</span></div>
+        </a>
+      </div>
+    </div>
+    <div class="group">
+      <h2>ls prints/ --printer=ender-3</h2>
+      <p class="sub">4 prints · long beds, long waits</p>
+      <div class="strip">
+        <a class="tile" href="#">
+          <div class="ph g2" data-name="print" style="aspect-ratio: 4/3"></div>
+          <div class="cap"><span class="fn">brushed-alu-rx7</span><span class="hrs">6.8h</span></div>
+        </a>
+        <a class="tile" href="#">
+          <div class="ph g5" data-name="print" style="aspect-ratio: 4/3"></div>
+          <div class="cap"><span class="fn">plant-pot-lattice</span><span class="hrs">14.0h</span></div>
+        </a>
+        <a class="tile" href="#">
+          <div class="ph paper" data-name="print" style="aspect-ratio: 4/3"></div>
+          <div class="cap"><span class="fn">lithophane-lamp</span><span class="hrs">7.5h</span></div>
+        </a>
+        <a class="tile" href="#">
+          <div class="ph g7" data-name="print" style="aspect-ratio: 4/3"></div>
+          <div class="cap"><span class="fn">switch-plate</span><span class="hrs">1.9h</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== PAGE: DETAIL ==================== -->
+<div id="page-detail" data-page="detail" hidden>
+
+<!-- DETAIL A — PRINT JOB: console output + git-style log -->
+<div id="variant-da" class="da page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">prints</a> / <span class="here">mecha-bust</span></p>
+    <div class="stack">
+      <figure class="figure">
+        <div class="titlebar"><span class="fn">mecha-bust-04.jpg</span><span class="res">final · 3 of 3 attempts</span></div>
+        <div class="ph g1" data-name="print" style="aspect-ratio: 16/10"></div>
+      </figure>
+      <div class="termout">
+        <p class="cmd">print --info mecha-bust</p>
+        <p class="out"><span class="k">date</span>=<span class="v">2026-08-21</span> <span class="d">·</span> <span class="k">printer</span>=<span class="v">bambu lab A1 mini</span></p>
+        <p class="out"><span class="k">material</span>=<span class="v">PLA · 0.2mm layer · 15% infill</span> <span class="d">·</span> <span class="k">duration</span>=<span class="v">9.2h</span></p>
+        <p class="out"><span class="k">tags</span>=<a href="#">#mecha</a> <a href="#">#fanart</a></p>
+        <p class="cmd">open --models</p>
+        <p class="out"><a href="#">printables.com/model/123456</a> <span class="d">·</span> <a href="#">makerworld.com/@mayur/models/789</a></p>
+      </div>
+      <div class="photos">
+        <h2>photos/</h2>
+        <div class="thumbs">
+          <span class="p ph g1" data-name="attempt-3"></span>
+          <span class="p ph g4" data-name="attempt-2"></span>
+          <span class="p ph g6" data-name="supports"></span>
+          <span class="p ph g7" data-name="plate"></span>
+        </div>
+      </div>
+      <div class="log">
+        <h2>git log --maker</h2>
+        <div class="commit">
+          <p class="h"><span class="hash">a1f9c2e</span> <span class="d">2026-08-21</span></p>
+          <p class="m">Final print came off the plate clean. Sanding seam on the shoulder took 20 min with 400-grit; primed same evening.</p>
+        </div>
+        <div class="commit">
+          <p class="h"><span class="hash">7d3b110</span> <span class="d">2026-08-18</span></p>
+          <p class="m">Attempt 2 failed at 6h — layer shift on the left arm. Tightened the belt, dropped speed to 250mm/s.</p>
+        </div>
+        <div class="commit">
+          <p class="h"><span class="hash">c90e4d8</span> <span class="d">2026-08-14</span></p>
+          <p class="m">First attempt: supports fused into the elbow joints. Re-oriented to 20° tilt and added manual supports only under the forearms.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL B — NEOFETCH LOG: specs side panel + timeline with failure markers -->
+<div id="variant-db" class="db page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">prints</a> / <span class="here">mecha-bust</span></p>
+    <div class="detail">
+      <div>
+        <figure class="figure">
+          <div class="titlebar"><span class="fn">mecha-bust-04.jpg</span><span class="res">PLA</span></div>
+          <div class="ph g1" data-name="print" style="aspect-ratio: 4/3"></div>
+        </figure>
+        <div class="process" aria-label="photo set">
+          <span class="p ph g4" data-name="attempt-2"></span>
+          <span class="p ph g6" data-name="supports"></span>
+          <span class="p ph g7" data-name="plate"></span>
+        </div>
+      </div>
+      <section class="fetch" aria-label="print specs">
+        <h2 style="font-size:17px; color: var(--pink); margin-bottom: 16px;">mecha-bust</h2>
+        <dl>
+          <dt>date</dt><dd>2026-08-21</dd>
+          <dt>printer</dt><dd>bambu lab A1 mini</dd>
+          <dt>material</dt><dd>PLA · 0.2mm · 15% infill</dd>
+          <dt>duration</dt><dd>9.2 hours</dd>
+          <dt>tags</dt><dd class="tags"><a href="#">mecha</a> <span class="sep">·</span> <a href="#">fanart</a></dd>
+          <dt>models</dt><dd class="models"><a href="#">printables.com/model/123456</a><a href="#">makerworld.com/@mayur/models/789</a></dd>
+        </dl>
+        <p class="desc">Third time lucky. The bust finally survived a full plate — belt tension was the whole story.</p>
+        <div class="tl">
+          <h2>maker log</h2>
+          <div class="entry">
+            <p class="h">2026-08-21</p>
+            <p class="m">Clean release. Sanded the shoulder seam, primed same evening.</p>
+          </div>
+          <div class="entry fail">
+            <p class="h">2026-08-18 — failed attempt</p>
+            <p class="m">Layer shift on the left arm at 6h. Tightened the belt, dropped to 250mm/s.</p>
+          </div>
+          <div class="entry fail">
+            <p class="h">2026-08-14 — failed attempt</p>
+            <p class="m">Supports fused into the elbow joints. Re-oriented 20° tilt, manual supports under forearms only.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL C — SPEC SHEET: datasheet window + transcript log -->
+<div id="variant-dc" class="dc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <a href="#">prints</a> / <span class="here">mecha-bust</span></p>
+    <div class="sheet-wrap">
+      <figure class="figure">
+        <div class="ph g1" data-name="print" style="aspect-ratio: 16/9"></div>
+      </figure>
+      <div class="cols">
+        <div class="win">
+          <div class="titlebar"><span class="t">specs — mecha-bust</span><span>cat</span></div>
+          <table>
+            <tr><td>date</td><td>2026-08-21</td></tr>
+            <tr><td>printer</td><td>bambu lab A1 mini</td></tr>
+            <tr><td>material</td><td>PLA</td></tr>
+            <tr><td>layer height</td><td>0.2 mm</td></tr>
+            <tr><td>infill</td><td>15%</td></tr>
+            <tr><td>duration</td><td>9.2 h</td></tr>
+            <tr><td>tags</td><td style="color:var(--pink)">#mecha #fanart</td></tr>
+          </table>
+        </div>
+        <div class="win">
+          <div class="titlebar"><span class="t">models & notes</span><span>open</span></div>
+          <div class="links">
+            <a href="#">printables.com/model/123456</a>
+            <a href="#">makerworld.com/@mayur/models/789</a>
+          </div>
+          <p>A third-time-lucky bust. Belt tension was the whole story: one shift, two re-plates, one clean release.</p>
+        </div>
+      </div>
+      <div class="transcript">
+        <h2>tail -f maker.log</h2>
+        <div class="line">
+          <span class="ts">2026-08-21 14:02</span> — attempt 3 off the plate clean. Shoulder seam sanded at 400-grit, primed.
+        </div>
+        <div class="line fail">
+          <span class="ts">2026-08-18 03:47</span> — attempt 2 aborted: layer shift, left arm. Belt tightened, speed 250mm/s.
+        </div>
+        <div class="line fail">
+          <span class="ts">2026-08-14 21:15</span> — attempt 1: supports fused at the elbows. Re-oriented 20°, manual supports.
+        </div>
+      </div>
+      <div class="gal">
+        <h2>photos/</h2>
+        <div class="thumbs">
+          <span class="p ph g4" data-name="attempt-2"></span>
+          <span class="p ph g6" data-name="supports"></span>
+          <span class="p ph g7" data-name="plate"></span>
+          <span class="p ph g1" data-name="final"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- prototype switcher (never part of the design) -->
+<div class="proto-bar" role="navigation" aria-label="Prototype variant switcher">
+  <button id="pageBtn" aria-label="Toggle page">list ⇄ detail</button>
+  <span class="pagesep">|</span>
+  <button id="prev" aria-label="Previous variant">←</button>
+  <span class="label" id="vlabel">list · A (Contact sheet grid)</span>
+  <button id="next" aria-label="Next variant">→</button>
+</div>
+
+<script>
+  // list: 3 variants, detail: 3 variants — cycled within the current page
+  const PAGES = {
+    list: [
+      { key: 'a', el: document.getElementById('variant-la'), name: 'A (Contact sheet grid)' },
+      { key: 'b', el: document.getElementById('variant-lb'), name: 'B (Print queue ledger)' },
+      { key: 'c', el: document.getElementById('variant-lc'), name: 'C (Build plates by printer)' },
+    ],
+    detail: [
+      { key: 'a', el: document.getElementById('variant-da'), name: 'A (Print job console + git log)' },
+      { key: 'b', el: document.getElementById('variant-db'), name: 'B (Neofetch specs + timeline)' },
+      { key: 'c', el: document.getElementById('variant-dc'), name: 'C (Spec sheet + transcript)' },
+    ],
+  };
+  const params = new URLSearchParams(location.search);
+  let page = PAGES[params.get('page')] ? params.get('page') : 'list';
+  let i = 0;
+
+  document.getElementById('page-detail').hidden = page !== 'detail';
+  document.getElementById('page-list').hidden = page !== 'list';
+
+  function render() {
+    PAGES[page].forEach((v, idx) => v.el.hidden = idx !== i);
+    document.getElementById('vlabel').textContent = page + ' · ' + PAGES[page][i].name;
+    const url = new URL(location);
+    url.searchParams.set('page', page);
+    url.searchParams.set('variant', PAGES[page][i].key);
+    history.replaceState(null, '', url);
+    scrollTo(0, 0);
+  }
+  function cycle(d) { i = (i + d + PAGES[page].length) % PAGES[page].length; render(); }
+  function flip() {
+    page = page === 'list' ? 'detail' : 'list';
+    document.getElementById('page-detail').hidden = page !== 'detail';
+    document.getElementById('page-list').hidden = page !== 'list';
+    i = Math.max(0, PAGES[page].findIndex(v => v.key === params.get('variant')));
+    render();
+  }
+
+  document.getElementById('prev').onclick = () => cycle(-1);
+  document.getElementById('next').onclick = () => cycle(1);
+  document.getElementById('pageBtn').onclick = flip;
+  addEventListener('keydown', e => {
+    if (/input|textarea/i.test(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+
+  const toggle = document.getElementById('themeToggle');
+  toggle.onclick = () => {
+    document.body.classList.toggle('light');
+    toggle.textContent = document.body.classList.contains('light') ? '🌙 dark' : '☀️ light';
+  };
+
+  const startPage = PAGES[page].findIndex(v => v.key === params.get('variant'));
+  i = Math.max(0, startPage);
+  render();
+</script>
+</body>
+</html>
