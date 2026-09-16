@@ -1,0 +1,71 @@
+.scratch/personal-site/spec.md
+  s_3abaa7f66d5d56::t_f3b52a4472027d 72
+  s_4e63df71a65aa1::t_f3e9a145ba905c 1-2,4-12,14-23,25-43,45-71,73-88,101-102,104,106-111
+  s_3abaa7f66d5d56::t_5ef16313a8d5fb 103
+  s_3abaa7f66d5d56::t_b6ce126ced820a 89-100
+  s_cbf18d97baf08c::t_0dfe02c75a37b3 44
+  s_3abaa7f66d5d56::t_9ab627a36ab35d 3
+  s_3abaa7f66d5d56::t_1a5955cb492fa4 13
+  s_3abaa7f66d5d56::t_3631606c99305c 105,112-114
+  s_4e63df71a65aa1::t_6504784b8f80b3 24
+.scratch/personal-site/map.md
+  s_4e63df71a65aa1::t_230067fce68184 44
+  s_3abaa7f66d5d56::t_4974c22f6e0244 45
+  s_cbf18d97baf08c::t_f77b76206d0b6f 47
+  s_26464fd4751318::t_d24549a28cfc00 52
+  s_cbf18d97baf08c::t_4a46f33bbc1cf2 51,53
+  s_4e63df71a65aa1::t_2f30141952edf3 43
+  s_26464fd4751318::t_6f7822f1551cdf 46
+.scratch/personal-site/issues/20-prototype-interiors-about-contact-404.md
+  s_cbf18d97baf08c::t_59b45611fdf010 18-33
+  s_cbf18d97baf08c::t_3ada70669edaca 4-5
+  s_e19227dbc79435::t_c155f202c161f8 1-3,6-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "0dad3f024e65e8db4c66dc1dbd526f4d4d5d5c3f",
+  "prompts": {},
+  "sessions": {
+    "s_26464fd4751318": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5657e1f3ffetSmt7u0GxsAPVh",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_3abaa7f66d5d56": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f56e7d914ffe3cVbKWe2AgW4Bb",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_4e63df71a65aa1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5a1b9d9fffe1ePhbtW0gTnxMQ",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_cbf18d97baf08c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f56226a85ffeDRV2NvuDMnips1",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_e19227dbc79435": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f575d349dffe3QvpfRDgCxfaZX",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
