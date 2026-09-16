@@ -1,0 +1,48 @@
+prototype/interiors-prototype.html
+  s_cbf18d97baf08c::t_cbfb2a08495c97 818,820-821,838-839,851-852
+  s_cbf18d97baf08c::t_d7ca980f3ad5b8 270-338,353-355,359
+  s_cbf18d97baf08c::t_c9043ad9346e69 560-563,565
+  s_cbf18d97baf08c::t_ceb7b2d8b5ced6 710-717,720-725,727-731,733-735,737-745
+  s_cbf18d97baf08c::t_1727f6aff4e792 893
+  s_cbf18d97baf08c::t_cad2e20235f4cd 718-719
+  s_cbf18d97baf08c::t_3cfecb1b91d316 709
+  s_cbf18d97baf08c::t_85f891da3c0785 834-835
+  s_cbf18d97baf08c::t_59904add94da88 840
+  s_cbf18d97baf08c::t_41b0763c1221c5 819,822-833,836-837,841-850
+  s_cbf18d97baf08c::t_b5e5adf42b8000 630
+  s_cbf18d97baf08c::t_41413412c9fa9d 726
+  s_cbf18d97baf08c::t_716f694034e8f8 1-269,360-528,592,594-629,631-708,746-817,853-880,882-886,888-892,894-948
+  s_cbf18d97baf08c::t_55a3f5bc375c79 587-591,593
+  s_cbf18d97baf08c::t_256fff9fc45918 736
+  s_cbf18d97baf08c::t_43a058ee1da1f7 732
+  s_cbf18d97baf08c::t_704ff14c8b83e3 881,887
+  s_cbf18d97baf08c::t_32cf9aab205f8c 529-545,547-559,564,566-586
+  s_cbf18d97baf08c::t_be81d29a28fc4a 546
+  s_cbf18d97baf08c::t_e5664e41bce66d 339-352,356-358
+CONTEXT.md
+  s_4e63df71a65aa1::t_8353c131903f5b 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "713f4b1e3b02d69ecd841dd87bb5b2abb1ab3693",
+  "prompts": {},
+  "sessions": {
+    "s_4e63df71a65aa1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5a1b9d9fffe1ePhbtW0gTnxMQ",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_cbf18d97baf08c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f56226a85ffeDRV2NvuDMnips1",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
