@@ -1,6 +1,6 @@
 # Context
 
-Glossary for the personal site's content domains. No implementation details here — see `.scratch/personal-site/` for the effort map.
+Glossary for the personal site's content domains. No implementation details here — see `.scratch/personal-site/` for the effort map and spec, and `docs/adr/` for architecture decisions.
 
 ## Terms
 

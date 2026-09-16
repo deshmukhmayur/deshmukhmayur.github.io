@@ -1,0 +1,948 @@
+<!doctype html>
+<!-- PROTOTYPE, throwaway: about / contact(+homepage pane) / 404 interiors for deshmukhmayur.com,
+     switchable via ?page=about|contact|404 and ?variant=a|b|c.
+     Question it answers: "What should the three remaining interiors (about page, contact page/pane, 404)
+     look like in the established terminal/TUI vocabulary?" See .scratch/personal-site/issues/20-prototype-interiors-about-contact-404.md
+     Fonts: JetBrains Mono is the prototype stand-in; production swaps Space Mono (chrome) + Spectral (prose) per ADR 0006.
+     Layout shell (nav, footer, beacon slot) is a shared-layout concern, already spec'd — not re-decided here. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interiors prototype — Mayur Deshmukh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1317; --panel: #141a20; --edge: #262f38; --ink: #c9d4dc;
+    --dim: #6d7a84; --accent: #58c470; --cyan: #5ac8d8; --amber: #e0b45e; --pink: #e07a9a;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "JetBrains Mono", monospace; font-size: 14px; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.light {
+    --bg: #f4f6f7; --panel: #ffffff; --edge: #d9dfe4; --ink: #2a3238;
+    --dim: #6d7a84; --accent: #1c8a48; --cyan: #0d7d8e; --amber: #a06f14; --pink: #b0446c;
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 2px; }
+  .page { min-height: 100vh; padding-bottom: 48px; }
+  .term { max-width: 1160px; margin: 0 auto; padding: 48px 40px 0; }
+
+  /* ---------- shared chrome ---------- */
+  .crumb { margin-bottom: 8px; font-size: 13px; color: var(--dim); }
+  .crumb a { color: var(--dim); text-decoration: none; }
+  .crumb a:hover, .crumb a:focus-visible { color: var(--cyan); }
+  .crumb .here { color: var(--amber); }
+  .win { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .titlebar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px; font-size: 11.5px; color: var(--dim);
+    border-bottom: 1px solid var(--edge);
+  }
+  .titlebar .fn { color: var(--cyan); }
+  .footline {
+    max-width: 1160px; margin: 64px auto 0; padding: 0 40px;
+    text-align: center; color: var(--dim); font-size: 12.5px;
+  }
+  .footline a { color: var(--dim); text-decoration: none; border-bottom: 1px dotted #3a464f; }
+  .footline a:hover, .footline a:focus-visible { color: var(--cyan); }
+
+  /* the one button style of the interiors: a command you can click */
+  .cmdbtn {
+    display: inline-block; border: 1px solid var(--edge); border-radius: 8px;
+    background: var(--panel); color: var(--accent); text-decoration: none;
+    font: 700 13.5px "JetBrains Mono", monospace; padding: 10px 18px; cursor: pointer;
+  }
+  .cmdbtn::before { content: "$ "; color: var(--dim); font-weight: 400; }
+  .cmdbtn:hover, .cmdbtn:focus-visible { border-color: var(--accent); }
+  .cmdnote { margin-top: 8px; font-size: 11.5px; color: var(--dim); }
+
+  .dim { color: var(--dim); }
+  .sep { color: var(--dim); }
+
+  /* ---------- form vocabulary (contact page + homepage pane share it) ---------- */
+  .frow { display: grid; grid-template-columns: 88px 1fr; gap: 12px; align-items: start; margin-bottom: 14px; }
+  .frow label { color: var(--amber); font-size: 13.5px; padding-top: 10px; white-space: nowrap; }
+  input[type="text"], input[type="email"], textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--edge); border-radius: 6px;
+    color: var(--ink); font: 13.5px/1.6 "JetBrains Mono", monospace; padding: 8px 12px;
+  }
+  input::placeholder, textarea::placeholder { color: var(--dim); opacity: .7; }
+  input:focus-visible, textarea:focus-visible { outline: none; border-color: var(--cyan); }
+  textarea { resize: vertical; min-height: 130px; }
+  .hp {
+    display: flex; gap: 8px; align-items: center; opacity: .45;
+    border: 1px dashed var(--edge); border-radius: 6px; padding: 7px 12px;
+    font-size: 12px; color: var(--dim); margin-bottom: 14px;
+  }
+  .hp input { width: 180px; padding: 2px 8px; font-size: 12px; }
+  .turnstile {
+    display: flex; align-items: center; gap: 12px;
+    border: 1px dashed var(--edge); border-radius: 6px; padding: 12px 14px;
+    font-size: 12.5px; color: var(--dim); margin-bottom: 18px;
+  }
+  .turnstile .box { flex: none; width: 22px; height: 22px; border: 1px solid var(--dim); border-radius: 4px; }
+  .turnstile .slot { color: var(--ink); }
+  .turnstile .meta { margin-left: auto; font-size: 11px; opacity: .75; }
+  .send {
+    background: none; border: 1px solid var(--edge); border-radius: 999px;
+    color: var(--accent); font: 700 13px "JetBrains Mono", monospace;
+    padding: 8px 22px; cursor: pointer;
+  }
+  .send::before { content: "$ "; color: var(--dim); font-weight: 400; }
+  .send:hover, .send:focus-visible { border-color: var(--accent); }
+  .status { margin-top: 14px; font-size: 13px; min-height: 24px; }
+  .status.ok { color: var(--accent); }
+  .status.ok::before { content: "$ "; color: var(--dim); }
+  .status.fail { color: var(--pink); }
+  .statectl { margin-top: 4px; font-size: 11px; color: var(--dim); }
+  .statectl button {
+    background: none; border: 1px dashed var(--edge); border-radius: 4px;
+    color: var(--dim); font: 11px "JetBrains Mono", monospace;
+    padding: 1px 8px; cursor: pointer; margin-left: 4px;
+  }
+  .statectl button.on { color: var(--amber); border-color: var(--amber); }
+  .statectl button:hover, .statectl button:focus-visible { color: var(--cyan); border-color: var(--cyan); }
+
+  /* homepage-pane demo strip: the same component, squeezed */
+  .panedemo { margin-top: 44px; }
+  .panedemo > .lbl { font-size: 12px; color: var(--dim); margin-bottom: 12px; }
+  .panedemo > .lbl::before { content: "# "; color: var(--amber); }
+  .panedemo .pdwin { max-width: 440px; }
+  .panedemo .frow { grid-template-columns: 1fr; gap: 2px; margin-bottom: 10px; }
+  .panedemo .frow label { padding-top: 0; font-size: 12px; }
+  .panedemo textarea { min-height: 84px; }
+  .panedemo .hp { display: none; }
+
+  /* =================== ABOUT A — IDENTITY CARD (neofetch, extended) =================== */
+  .aba .card { display: flex; gap: 40px; align-items: center; margin: 34px 0 10px; }
+  .aba .doodle { flex: 0 0 auto; }
+  .aba .whoami { font-size: 13.5px; }
+  .aba .whoami .line { color: var(--ink); }
+  .aba .whoami .line::before { content: "whoami → "; color: var(--accent); }
+  .aba .whoami .line b { color: var(--cyan); font-weight: 700; }
+  .aba dl { margin: 14px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-size: 13px; }
+  .aba dt { color: var(--amber); font-weight: 700; white-space: nowrap; }
+  .aba dt::after { content: ":"; }
+  .aba dd { color: var(--ink); }
+  .aba dd .d { color: var(--dim); }
+  .aba .cats { margin-top: 26px; max-width: 74ch; }
+  .aba .cats .cmd { color: var(--accent); font-size: 13px; }
+  .aba .cats .cmd::before { content: "$ "; color: var(--dim); }
+  .aba .cats p { margin-top: 6px; font-size: 14px; }
+  .aba .cats p + p { margin-top: 10px; }
+  .aba .elsewhere { margin-top: 26px; font-size: 13px; }
+  .aba .elsewhere .cmd { color: var(--accent); font-size: 13px; }
+  .aba .elsewhere .cmd::before { content: "$ "; color: var(--dim); }
+  .aba .elsewhere ul { list-style: none; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px 22px; }
+  .aba .elsewhere a { color: var(--dim); text-decoration: none; }
+  .aba .elsewhere a:hover, .aba .elsewhere a:focus-visible { color: var(--cyan); }
+  .aba .elsewhere a::before { content: "→ "; color: var(--dim); }
+  .aba .resume { margin-top: 34px; }
+  .aba .ps { margin-top: 26px; font-size: 13px; color: var(--dim); }
+  .aba .ps a { color: var(--cyan); text-decoration: none; }
+  .aba .ps a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 760px) {
+    .aba .card { flex-direction: column; align-items: flex-start; gap: 20px; }
+  }
+
+  /* =================== ABOUT B — README DOCUMENT =================== */
+  .abb .docwin { max-width: 820px; margin-top: 34px; }
+  .abb .doc { padding: 24px 28px 28px; }
+  .abb .doc h1 { font-size: 20px; font-weight: 700; }
+  .abb .doc h1::before { content: "# "; color: var(--dim); }
+  .abb .doc h2 { font-size: 14.5px; color: var(--cyan); margin: 22px 0 6px; }
+  .abb .doc h2::before { content: "## "; color: var(--dim); }
+  .abb .doc p { font-size: 14px; max-width: 68ch; margin-top: 8px; }
+  .abb .doc .prose { font-style: italic; }
+  .abb .doc ul { list-style: none; margin-top: 8px; font-size: 13.5px; }
+  .abb .doc li a { color: var(--dim); text-decoration: none; }
+  .abb .doc li a:hover, .abb .doc li a:focus-visible { color: var(--cyan); }
+  .abb .doc li a::before { content: "→ "; color: var(--dim); }
+  .abb .doc .mod { margin-top: 26px; border-top: 1px dashed var(--edge); padding-top: 12px; font-size: 11.5px; color: var(--dim); }
+
+  /* =================== ABOUT C — SHELL HISTORY =================== */
+  .abc .lead { max-width: 66ch; margin: 30px 0 30px; font-size: 14px; }
+  .abc .cols { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 36px; align-items: start; }
+  .abc .hist .titlebar .fn::before { content: " "; }
+  .abc .tl { padding: 8px 0; }
+  .abc .trow { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 10px 18px; border-bottom: 1px dashed var(--edge); font-size: 13.5px; }
+  .abc .trow:last-child { border-bottom: 0; }
+  .abc .yr { color: var(--pink); font-size: 12.5px; padding-top: 2px; }
+  .abc .tx { color: var(--ink); max-width: 58ch; }
+  .abc .tx .d { color: var(--dim); }
+  .abc .stats { position: sticky; top: 24px; }
+  .abc .stats .cmd { color: var(--accent); font-size: 13px; margin-bottom: 10px; }
+  .abc .stats .cmd::before { content: "$ "; color: var(--dim); }
+  .abc .stats dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 18px; font-size: 13px; padding: 14px 18px 16px; }
+  .abc .stats dt { color: var(--dim); white-space: nowrap; }
+  .abc .stats dd { color: var(--ink); }
+  .abc .stats .note { font-size: 11px; color: var(--dim); padding: 0 18px 14px; border-top: 1px dashed var(--edge); padding-top: 10px; }
+  .abc .railblock { margin-top: 22px; font-size: 13px; }
+  .abc .railblock .cmd { color: var(--accent); font-size: 13px; margin-bottom: 8px; }
+  .abc .railblock .cmd::before { content: "$ "; color: var(--dim); }
+  .abc .railblock ul { list-style: none; }
+  .abc .railblock a { color: var(--dim); text-decoration: none; }
+  .abc .railblock a:hover, .abc .railblock a:focus-visible { color: var(--cyan); }
+  .abc .railblock a::before { content: "→ "; color: var(--dim); }
+  @media (max-width: 860px) {
+    .abc .cols { grid-template-columns: 1fr; }
+    .abc .stats { position: static; }
+  }
+
+  /* =================== CONTACT A — WINDOWED FORM =================== */
+  .cta .formwin { max-width: 640px; margin-top: 30px; }
+  .cta .formbody { padding: 20px 24px 24px; }
+  .cta .intro { max-width: 64ch; margin-top: 12px; font-size: 13.5px; color: var(--dim); }
+
+  /* =================== CONTACT B — PROMPT SESSION =================== */
+  .ctb .session { max-width: 660px; margin-top: 30px; font-size: 13.5px; }
+  .ctb .prompt { color: var(--accent); }
+  .ctb .prompt::before { content: "guest@deshmukhmayur:~$ "; color: var(--dim); }
+  .ctb .reply { color: var(--dim); padding-left: 14px; font-size: 13px; margin-top: 2px; }
+  .ctb .frow { grid-template-columns: 88px 1fr; padding-left: 14px; }
+  .ctb input, .ctb textarea {
+    background: none; border: 0; border-bottom: 1px dashed var(--edge); border-radius: 0; padding: 4px 2px;
+  }
+  .ctb .turnstile { margin-left: 14px; }
+  .ctb .hp { margin-left: 14px; }
+  .ctb .sendrow { padding-left: 14px; margin-top: 18px; }
+  .cursor { display: inline-block; width: 8px; height: 15px; background: var(--ink); vertical-align: -2px; animation: blink 1.2s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* =================== CONTACT C — FRONT DESK (split) =================== */
+  .ctc .cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 28px; align-items: start; margin-top: 30px; }
+  .ctc .info .formbody { padding: 18px 22px 22px; }
+  .ctc .info h2 { font-size: 13.5px; color: var(--cyan); margin-bottom: 4px; }
+  .ctc .info h2::before { content: "$ "; color: var(--dim); font-weight: 400; }
+  .ctc .info p { font-size: 13px; color: var(--ink); max-width: 48ch; margin-top: 8px; }
+  .ctc .info .sub { color: var(--dim); }
+  .ctc .info .alt { margin-top: 18px; border-top: 1px dashed var(--edge); padding-top: 14px; font-size: 13px; }
+  .ctc .info .alt .cmd { color: var(--accent); font-size: 12.5px; margin-bottom: 6px; }
+  .ctc .info .alt .cmd::before { content: "$ "; color: var(--dim); }
+  .ctc .info .alt ul { list-style: none; }
+  .ctc .info .alt a { color: var(--dim); text-decoration: none; }
+  .ctc .info .alt a:hover, .ctc .info .alt a:focus-visible { color: var(--cyan); }
+  .ctc .info .alt a::before { content: "→ "; color: var(--dim); }
+  @media (max-width: 860px) { .ctc .cols { grid-template-columns: 1fr; } }
+
+  /* =================== 404 A — COMMAND NOT FOUND =================== */
+  .nfa .crt { margin-top: 60px; font-size: 14.5px; }
+  .nfa .cmdline { color: var(--ink); }
+  .nfa .cmdline .pr { color: var(--accent); }
+  .nfa .cmdline .pr::before { content: "guest@deshmukhmayur:~$ "; color: var(--dim); }
+  .nfa .err { color: var(--pink); margin-top: 4px; padding-left: 14px; }
+  .nfa .dirs { margin-top: 8px; padding-left: 14px; display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; }
+  .nfa .dirs a { color: var(--cyan); text-decoration: none; }
+  .nfa .dirs a:hover, .nfa .dirs a:focus-visible { color: var(--pink); }
+  .nfa .hint { margin-top: 26px; font-size: 12.5px; color: var(--dim); }
+
+  /* =================== 404 B — MAN PAGE =================== */
+  .nfb .man { max-width: 780px; margin-top: 48px; font-size: 13.5px; }
+  .nfb .manhead { display: flex; justify-content: space-between; color: var(--dim); font-size: 12.5px; margin-bottom: 30px; }
+  .nfb .sec { display: grid; grid-template-columns: 130px 1fr; gap: 8px 20px; margin-bottom: 18px; }
+  .nfb .sec dt { color: var(--amber); font-weight: 700; }
+  .nfb .sec dd { color: var(--ink); }
+  .nfb .sec dd .cmd { color: var(--cyan); }
+  .nfb .sec dd .path { color: var(--pink); }
+  .nfb .seealso { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  .nfb .seealso a { color: var(--cyan); text-decoration: none; }
+  .nfb .seealso a:hover, .nfb .seealso a:focus-visible { color: var(--pink); }
+  .nfb .seealso .sup { color: var(--dim); }
+
+  /* =================== 404 C — SEGFAULT + CAT =================== */
+  .nfc .crt { margin-top: 60px; font-size: 14.5px; }
+  .nfc .cmdline .pr::before { content: "guest@deshmukhmayur:~$ "; color: var(--dim); }
+  .nfc .crash { color: var(--pink); margin-top: 4px; padding-left: 14px; }
+  .nfc .core { color: var(--dim); padding-left: 14px; font-size: 12.5px; }
+  .nfc .cat { margin-top: 44px; user-select: none; }
+  .nfc .cat pre { font-size: 13px; line-height: 1.5; color: var(--dim); display: inline-block; }
+  .nfc .cat .try { margin-top: 18px; font-size: 13.5px; }
+  .nfc .cat .try a { color: var(--cyan); text-decoration: none; }
+  .nfc .cat .try a:hover, .nfc .cat .try a:focus-visible { color: var(--pink); }
+
+  /* =================== ABOUT D — SHELL HISTORY, RESTRUCTURED =================== */
+  .abd .cols { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 36px; align-items: start; margin-top: 30px; }
+  .abd .whoami { margin-bottom: 26px; }
+  .abd .whoami .cmd { color: var(--accent); font-size: 13px; margin-bottom: 8px; }
+  .abd .whoami .cmd::before { content: "$ "; color: var(--dim); }
+  .abd .whoami dl { display: grid; grid-template-columns: auto 1fr; gap: 5px 18px; font-size: 13.5px; }
+  .abd .whoami dt { color: var(--amber); font-weight: 700; white-space: nowrap; }
+  .abd .whoami dt::after { content: ":"; }
+  .abd .whoami dd { color: var(--ink); }
+  .abd .whoami dd .d { color: var(--dim); }
+  .abd .hist .titlebar .fn::before { content: " "; }
+  .abd .tl { padding: 8px 0; }
+  .abd .trow { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 11px 18px; border-bottom: 1px dashed var(--edge); font-size: 13.5px; }
+  .abd .trow:last-child { border-bottom: 0; }
+  .abd .yr { color: var(--pink); font-size: 12.5px; padding-top: 2px; }
+  .abd .tx { color: var(--ink); max-width: 58ch; }
+  .abd .tx .d { color: var(--dim); }
+  .abd .resume { margin-top: 26px; }
+  .abd .resume .cmd { color: var(--accent); font-size: 13px; margin-bottom: 10px; }
+  .abd .resume .cmd::before { content: "$ "; color: var(--dim); }
+  .abd .ps { margin-top: 22px; font-size: 13px; color: var(--dim); }
+  .abd .ps a { color: var(--cyan); text-decoration: none; }
+  .abd .ps a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .abd .stats { position: sticky; top: 24px; }
+  .abd .stats .cmd { color: var(--accent); font-size: 13px; margin-bottom: 10px; }
+  .abd .stats .cmd::before { content: "$ "; color: var(--dim); }
+  .abd .stats dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 18px; font-size: 13px; padding: 14px 18px 16px; }
+  .abd .stats dt { color: var(--dim); white-space: nowrap; }
+  .abd .stats dd { color: var(--ink); }
+  .abd .stats .note { font-size: 11px; color: var(--dim); padding: 10px 18px 14px; border-top: 1px dashed var(--edge); }
+  .abd .railblock { margin-top: 22px; font-size: 13px; }
+  .abd .railblock .cmd { color: var(--accent); font-size: 13px; margin-bottom: 8px; }
+  .abd .railblock .cmd::before { content: "$ "; color: var(--dim); }
+  .abd .railblock ul { list-style: none; }
+  .abd .railblock a { color: var(--dim); text-decoration: none; }
+  .abd .railblock a:hover, .abd .railblock a:focus-visible { color: var(--cyan); }
+  .abd .railblock a::before { content: "→ "; color: var(--dim); }
+  @media (max-width: 860px) {
+    .abd .cols { grid-template-columns: 1fr; }
+    .abd .stats { position: static; }
+  }
+
+  /* =================== CONTACT D — MINIMAL SESSION + READ-ME-FIRST =================== */
+  .ctd .cols { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 36px; align-items: start; margin-top: 30px; }
+  .ctd .session { font-size: 13.5px; }
+  .ctd .prompt { color: var(--accent); }
+  .ctd .prompt::before { content: "guest@deshmukhmayur:~$ "; color: var(--dim); }
+  .ctd .reply { color: var(--dim); padding-left: 14px; font-size: 13px; margin-top: 2px; }
+  .ctd .frow { grid-template-columns: 88px 1fr; padding-left: 14px; }
+  .ctd input, .ctd textarea {
+    background: none; border: 0; border-bottom: 1px dashed var(--edge); border-radius: 0; padding: 4px 2px;
+  }
+  .ctd .turnstile { margin-left: 14px; }
+  .ctd .hp { margin-left: 14px; }
+  .ctd .sendrow { padding-left: 14px; margin-top: 18px; }
+  .ctd .rmf { font-size: 13px; }
+  .ctd .rmf h2 { font-size: 13px; color: var(--cyan); font-weight: 700; margin-bottom: 6px; }
+  .ctd .rmf h2::before { content: "$ "; color: var(--dim); font-weight: 400; }
+  .ctd .rmf p { color: var(--ink); max-width: 44ch; margin-top: 8px; }
+  .ctd .rmf p.sub { color: var(--dim); }
+  .ctd .rmf .alt { margin-top: 18px; border-top: 1px dashed var(--edge); padding-top: 14px; }
+  .ctd .rmf .alt .cmd { color: var(--accent); font-size: 12.5px; margin-bottom: 6px; }
+  .ctd .rmf .alt .cmd::before { content: "$ "; color: var(--dim); }
+  .ctd .rmf .alt ul { list-style: none; }
+  .ctd .rmf .alt a { color: var(--dim); text-decoration: none; }
+  .ctd .rmf .alt a:hover, .ctd .rmf .alt a:focus-visible { color: var(--cyan); }
+  .ctd .rmf .alt a::before { content: "→ "; color: var(--dim); }
+  @media (max-width: 860px) { .ctd .cols { grid-template-columns: 1fr; } .ctd .rmf { order: 2; } }
+
+  /* =================== 404 D — NEOFETCH + CAT =================== */
+  .nfd .fetch { display: flex; gap: 48px; align-items: center; margin-top: 70px; }
+  .nfd .logo { font-size: 15px; line-height: 1.45; color: var(--dim); user-select: none; }
+  .nfd .info { font-size: 13.5px; }
+  .nfd .info .host { color: var(--amber); font-weight: 700; }
+  .nfd .info .host .at { color: var(--cyan); }
+  .nfd .info .rule { color: var(--dim); font-size: 12px; }
+  .nfd .info dl { margin-top: 8px; display: grid; grid-template-columns: auto 1fr; gap: 5px 18px; }
+  .nfd .info dt { color: var(--amber); font-weight: 700; white-space: nowrap; }
+  .nfd .info dt::after { content: ":"; }
+  .nfd .info dd { color: var(--ink); }
+  .nfd .info dd .path { color: var(--pink); }
+  .nfd .info dd .d { color: var(--dim); }
+  .nfd .dirs { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; }
+  .nfd .dirs a { color: var(--cyan); text-decoration: none; }
+  .nfd .dirs a:hover, .nfd .dirs a:focus-visible { color: var(--pink); }
+  .nfd .dirs .lbl { color: var(--dim); font-size: 12.5px; margin-right: 6px; }
+  .nfd .hint { margin-top: 34px; font-size: 12.5px; color: var(--dim); }
+  .nfd .logo pre { font-size: 15px; line-height: 1.5; color: var(--cyan); display: inline-block; user-select: none; }
+  @media (max-width: 760px) { .nfd .fetch { flex-direction: column; gap: 22px; } }
+
+  /* ---------- theme toggle + prototype bar (not part of the design) ---------- */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 60;
+    border: 1px solid var(--edge); background: var(--panel); color: var(--ink);
+    font: 700 13px "JetBrains Mono", monospace; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .proto-bar {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    background: #111; color: #fff; border-radius: 999px; padding: 8px 10px;
+    font: 600 13px "Inter", sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  .proto-bar button { background: none; border: 0; color: #fff; font: inherit; cursor: pointer; padding: 4px 10px; }
+  .proto-bar [data-pg].on { color: #ffd166; text-decoration: underline; text-underline-offset: 4px; }
+  .proto-bar .pagesep { color: #555; }
+  .proto-bar .label { min-width: 210px; text-align: center; }
+
+  @media (max-width: 760px) {
+    .term { padding: 28px 20px 0; }
+    .footline { padding: 0 20px; }
+    .frow { grid-template-columns: 1fr; gap: 2px; }
+    .frow label { padding-top: 0; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle">🌙 dark</button>
+
+<!-- ==================== PAGE: ABOUT ==================== -->
+<div id="page-about" data-page="about">
+
+<!-- ABOUT A — IDENTITY CARD -->
+<div id="variant-aa" class="aba page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">about</span></p>
+
+    <section class="card" aria-label="who I am">
+      <!-- placeholder doodle: real sketch supplied during content gathering (ticket 09) -->
+      <svg class="doodle" width="220" height="220" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+        <path d="M100 22 C 62 24, 40 52, 42 92 C 43 128, 64 158, 100 160 C 136 158, 157 128, 158 92 C 160 52, 138 24, 100 22 Z" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M44 78 C 40 44, 66 18, 100 20 C 134 18, 160 44, 156 78 C 148 60, 136 52, 118 54 C 126 44, 120 36, 108 38 C 96 30, 78 34, 72 46 C 60 50, 48 62, 44 78 Z" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round" fill="var(--bg)"/>
+        <path d="M70 96 C 76 90, 88 90, 94 96" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M106 96 C 112 90, 124 90, 130 96" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M96 98 C 96 104, 98 108, 100 110 C 102 108, 104 104, 104 98" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M86 126 C 92 132, 108 132, 114 126" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M36 176 C 60 156, 84 150, 100 150 C 116 150, 140 156, 164 176" stroke="var(--dim)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M42 168 l -6 14 M158 168 l 6 14" stroke="var(--dim)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M170 30 l 10 -8 M176 44 l 12 -3" stroke="var(--amber)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M22 40 l -10 -6 M18 56 l -12 0" stroke="var(--amber)" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div class="whoami">
+        <p class="line">mayur deshmukh</p>
+        <dl>
+          <dt>role</dt><dd>software engineer <span class="d">· web, tooling, occasional ops</span></dd>
+          <dt>now</dt><dd>acme corp <span class="d">· 2022–present</span></dd>
+          <dt>focus</dt><dd>software · anime-style illustration · 3D printing</dd>
+          <dt>this site</dt><dd>a playground <span class="d">— the three hobbies, one roof</span></dd>
+        </dl>
+      </div>
+    </section>
+
+    <section class="cats">
+      <p class="cmd">cat about.txt</p>
+      <p>software by day, drawings and plastic by night. i build web things and developer tools, unwind by sketching anime-style illustrations, and keep two 3D printers busy making objects that occasionally solve real problems.</p>
+      <p>this site is where all three hobbies live together — the projects i ship, the art i draw, the things i print, and the words i write about all of it. <span class="dim">no brand voice was consulted.</span></p>
+    </section>
+
+    <section class="elsewhere">
+      <p class="cmd">ls elsewhere/</p>
+      <ul>
+        <li><a href="#">github</a></li>
+        <li><a href="#">linkedin</a></li>
+        <li><a href="#">instagram</a></li>
+        <li><a href="#">youtube</a></li>
+      </ul>
+    </section>
+
+    <section class="resume">
+      <a class="cmdbtn" href="#">curl -O mayur-deshmukh-resume.pdf</a>
+      <p class="cmdnote">→ opens /resume/ · download starts automatically · single-page, up to date as of 2026-09</p>
+    </section>
+
+    <p class="ps">p.s. — want to say hi? <a href="#">the contact page</a> is one short form away.</p>
+  </div>
+  <p class="footline">© 2026 mayur deshmukh · <a href="#">rss</a></p>
+</div>
+
+<!-- ABOUT B — README DOCUMENT -->
+<div id="variant-ab" class="abb page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">about</span></p>
+    <div class="docwin win">
+      <div class="titlebar"><span class="fn">mayur/README.md</span><span>rendered</span></div>
+      <div class="doc">
+        <h1>mayur deshmukh</h1>
+        <p class="prose">Software engineer who ships web things by day and unwinds by drawing anime-style illustrations and printing plastic that occasionally solves real problems.</p>
+        <p class="prose">This site is the playground where all three live: <a href="#" style="color:var(--cyan)">projects</a> i've shipped, <a href="#" style="color:var(--cyan)">art</a> i've drawn, <a href="#" style="color:var(--cyan)">prints</a> i've made, and <a href="#" style="color:var(--cyan)">studies</a> on how it all went.</p>
+
+        <h2>now</h2>
+        <p>software engineer at acme corp · 2022–present. currently rebuilding this very site on astro + cloudflare workers — <a href="#" style="color:var(--cyan)">the build log is a study</a>.</p>
+
+        <h2>elsewhere</h2>
+        <ul>
+          <li><a href="#">github — code &amp; open source</a></li>
+          <li><a href="#">linkedin — the professional ledger</a></li>
+          <li><a href="#">instagram — sketches &amp; wips</a></li>
+          <li><a href="#">youtube — timelapses, occasionally</a></li>
+        </ul>
+
+        <h2>résumé</h2>
+        <p class="prose">One page, kept current. The download starts automatically — no viewer, no hoop.</p>
+        <p style="margin-top:12px"><a class="cmdbtn" href="#">curl -O mayur-deshmukh-resume.pdf</a></p>
+
+        <p class="mod">last modified 2026-09 · © mayur deshmukh · <a href="#" style="color:var(--dim)">contact →</a></p>
+      </div>
+    </div>
+  </div>
+  <p class="footline">© 2026 mayur deshmukh · <a href="#">rss</a></p>
+</div>
+
+<!-- ABOUT C — SHELL HISTORY -->
+<div id="variant-ac" class="abc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">about</span></p>
+    <p class="lead">short version: software by day, drawings and plastic by night. long version below — run <span class="dim" style="color:var(--ink)">history</span> to see how i got here.</p>
+    <div class="cols">
+      <section class="hist win" aria-label="history">
+        <div class="titlebar"><span class="fn">~/.history</span><span>about</span></div>
+        <div class="tl">
+          <div class="trow"><span class="yr">2022</span><span class="tx">now → software engineer at acme corp <span class="d">· web, tooling, occasional ops</span></span></div>
+          <div class="trow"><span class="yr">2021</span><span class="tx">bought an ender 3 to print "one bracket". it snowballed into a second printer and a shelf of PETG.</span></div>
+          <div class="trow"><span class="yr">2020</span><span class="tx">first anime-style illustration posted; clip studio paint joined the toolkit and never left.</span></div>
+          <div class="trow"><span class="yr">2018</span><span class="tx">wrote my first line of python. never really stopped.</span></div>
+          <div class="trow"><span class="yr">2026</span><span class="tx">rebuilt this site as a terminal. <span class="d">you're inside it.</span></span></div>
+        </div>
+      </section>
+      <aside>
+        <section class="stats" aria-label="stats">
+          <p class="cmd">site --stats</p>
+          <div class="win">
+            <dl>
+              <dt>soliloquies</dt><dd>214</dd>
+              <dt>studies</dt><dd>6</dd>
+              <dt>prints</dt><dd>37</dd>
+              <dt>drawings</dt><dd>96</dd>
+              <dt>printers</dt><dd>2 <span class="dim">(ender 3 · a1 mini)</span></dd>
+            </dl>
+            <p class="note">counts computed from the content collections at build time</p>
+          </div>
+        </section>
+        <section class="railblock" aria-label="elsewhere">
+          <p class="cmd">ls elsewhere/</p>
+          <ul>
+            <li><a href="#">github</a></li>
+            <li><a href="#">linkedin</a></li>
+            <li><a href="#">instagram</a></li>
+            <li><a href="#">youtube</a></li>
+          </ul>
+        </section>
+        <section class="railblock" aria-label="resume">
+          <p class="cmd">resume</p>
+          <a class="cmdbtn" href="#">curl -O resume.pdf</a>
+        </section>
+      </aside>
+    </div>
+  </div>
+  <p class="footline">© 2026 mayur deshmukh · <a href="#">rss</a></p>
+</div>
+
+<!-- ABOUT D — SHELL HISTORY, RESTRUCTURED -->
+<div id="variant-ad" class="abd page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">about</span></p>
+    <div class="cols">
+      <div>
+        <section class="whoami" aria-label="who I am">
+          <p class="cmd">whoami --verbose</p>
+          <dl>
+            <dt>name</dt><dd>mayur deshmukh</dd>
+            <dt>role</dt><dd>software engineer <span class="d">· web, tooling, occasional ops</span></dd>
+            <dt>now</dt><dd>acme corp <span class="d">· 2022–present</span></dd>
+            <dt>focus</dt><dd>software · anime-style illustration · 3D printing</dd>
+            <dt>this site</dt><dd>a playground <span class="d">— the three hobbies, one roof</span></dd>
+          </dl>
+        </section>
+
+        <section class="hist win" aria-label="history">
+          <div class="titlebar"><span class="fn">~/.history</span><span>how i got here</span></div>
+          <div class="tl">
+            <div class="trow"><span class="yr">2018</span><span class="tx">wrote my first line of python. never really stopped.</span></div>
+            <div class="trow"><span class="yr">2020</span><span class="tx">first anime-style illustration posted; clip studio paint joined the toolkit and never left.</span></div>
+            <div class="trow"><span class="yr">2021</span><span class="tx">bought an ender 3 to print "one bracket". it snowballed into a second printer and a shelf of PETG.</span></div>
+            <div class="trow"><span class="yr">2022</span><span class="tx">now → software engineer at acme corp <span class="d">· web, tooling, occasional ops</span></span></div>
+            <div class="trow"><span class="yr">2026</span><span class="tx">rebuilt this site as a terminal. <span class="d">you're inside it.</span></span></div>
+          </div>
+        </section>
+        <p class="ps">p.s. — want to say hi? <a href="#">the contact page</a> is one short form away.</p>
+      </div>
+      <aside>
+        <section class="railblock" aria-label="resume download">
+          <a class="cmdbtn" href="#">curl -O resume.pdf</a>
+          <p class="cmdnote">→ /resume/ · download starts automatically · current as of 2026-09</p>
+        </section>
+        <section class="stats" aria-label="stats">
+          <p class="cmd">ls content --count</p>
+          <div class="win">
+            <dl>
+              <dt>soliloquies</dt><dd>214</dd>
+              <dt>studies</dt><dd>6</dd>
+              <dt>prints</dt><dd>37</dd>
+              <dt>drawings</dt><dd>96</dd>
+              <dt>printers</dt><dd>2 <span class="dim">(ender 3 · a1 mini)</span></dd>
+            </dl>
+            <p class="note">counts computed from the content collections at build time</p>
+          </div>
+        </section>
+        <section class="railblock" aria-label="elsewhere">
+          <p class="cmd">ls elsewhere/</p>
+          <ul>
+            <li><a href="#">github</a></li>
+            <li><a href="#">linkedin</a></li>
+            <li><a href="#">instagram</a></li>
+            <li><a href="#">youtube</a></li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+  <p class="footline">© 2026 mayur deshmukh · <a href="#">rss</a></p>
+</div>
+</div>
+
+<!-- ==================== PAGE: CONTACT ==================== -->
+<div id="page-contact" data-page="contact" hidden>
+
+<!-- CONTACT A — WINDOWED FORM -->
+<div id="variant-ca" class="cta page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">contact</span></p>
+    <p class="intro">one short form, straight to my inbox. replies come from my actual email — no ticket numbers, no "do not reply".</p>
+
+    <div class="formwin win">
+      <div class="titlebar"><span class="fn">new-message.compose</span><span>draft</span></div>
+      <form class="formbody tform" data-form="ca" novalidate>
+        <div class="frow"><label for="ca-name">name:</label><input id="ca-name" type="text" autocomplete="name" placeholder="who's asking"></div>
+        <div class="frow"><label for="ca-email">email:</label><input id="ca-email" type="email" autocomplete="email" placeholder="you@somewhere.tld"></div>
+        <div class="frow"><label for="ca-msg">message:</label><textarea id="ca-msg" rows="6" placeholder="what's on your mind?"></textarea></div>
+        <div class="hp">website: <input type="text" tabindex="-1" autocomplete="off"> <span>← honeypot — hidden in production, bots only</span></div>
+        <div class="turnstile"><span class="box"></span><span class="slot">turnstile — verifying you're human</span><span class="meta">widget slot · free keys at deploy</span></div>
+        <button type="submit" class="send">send --msg</button>
+        <p class="status" aria-live="polite"></p>
+        <p class="statectl">prototype state: <button type="button" data-st="idle" class="on">idle</button><button type="button" data-st="ok">ok</button><button type="button" data-st="fail">fail</button></p>
+      </form>
+    </div>
+
+    <div class="panedemo">
+      <p class="lbl">same component, homepage-pane size —</p>
+      <div class="pdwin win">
+        <div class="titlebar"><span class="fn">contact/</span><span>say hi</span></div>
+        <form class="formbody tform" data-form="pa" novalidate>
+          <div class="frow"><label for="pa-name">name:</label><input id="pa-name" type="text" autocomplete="name" placeholder="who's asking"></div>
+          <div class="frow"><label for="pa-email">email:</label><input id="pa-email" type="email" autocomplete="email" placeholder="you@somewhere.tld"></div>
+          <div class="frow"><label for="pa-msg">message:</label><textarea id="pa-msg" rows="3" placeholder="what's up?"></textarea></div>
+          <div class="turnstile" style="margin-bottom:12px"><span class="box"></span><span class="slot">turnstile</span></div>
+          <button type="submit" class="send">send</button>
+          <p class="status" aria-live="polite"></p>
+          <p class="statectl">state: <button type="button" data-st="idle" class="on">idle</button><button type="button" data-st="ok">ok</button><button type="button" data-st="fail">fail</button></p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <p class="footline">© 2026 mayur deshmukh · <a href="#">rss</a></p>
+</div>
+
+<!-- CONTACT B — PROMPT SESSION -->
+<div id="variant-cb" class="ctb page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">contact</span></p>
+    <div class="session">
+      <p class="prompt">contact --new</p>
+      <p class="reply">starting a new message… ok. three questions, then send.</p>
+      <form class="tform" data-form="cb" novalidate>
+        <div class="frow"><label for="cb-name">name:</label><input id="cb-name" type="text" autocomplete="name" placeholder="who's asking"></div>
+        <div class="frow"><label for="cb-email">email:</label><input id="cb-email" type="email" autocomplete="email" placeholder="you@somewhere.tld"></div>
+        <div class="frow"><label for="cb-msg">message:</label><textarea id="cb-msg" rows="5" placeholder="what's on your mind? (markdown welcome, vibes accepted)"></textarea></div>
+        <div class="hp">website: <input type="text" tabindex="-1" autocomplete="off"> <span>← honeypot — hidden in production</span></div>
+        <div class="turnstile"><span class="box"></span><span class="slot">turnstile — verifying you're human</span><span class="meta">widget slot · keys at deploy</span></div>
+        <div class="sendrow"><button type="submit" class="send">send</button><span class="cursor" style="margin-left:12px" aria-hidden="true"></span></div>
+        <p class="status" aria-live="polite"></p>
+        <p class="statectl">prototype state: <button type="button" data-st="idle" class="on">idle</button><button type="button" data-st="ok">ok</button><button type="button" data-st="fail">fail</button></p>
+      </form>
+    </div>
+    <p class="intro dim" style="margin-top:30px;font-size:12.5px;max-width:60ch">homepage pane: identical transcript at ~340px wide — the component is the same, only the width changes.</p>
+  </div>
+  <p class="footline">© 2026 mayur deshmukh · <a href="#">rss</a></p>
+</div>
+
+<!-- CONTACT C — FRONT DESK (split) -->
+<div id="variant-cc" class="ctc page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">contact</span></p>
+    <div class="cols">
+      <section class="info win" aria-label="before you write">
+        <div class="titlebar"><span class="fn">read-me-first</span><span>faq-adjacent</span></div>
+        <div class="formbody">
+          <h2>worth writing about</h2>
+          <p>feedback on a study, a question about a print's settings, a bug in an open-source project, or a collaboration idea.</p>
+          <p class="sub">i read everything. replies come from my actual inbox — usually within a couple of days, slower when a print is running.</p>
+          <div class="alt">
+            <p class="cmd">or skip the form</p>
+            <ul>
+              <li><a href="#">github issues — for code bugs</a></li>
+              <li><a href="#">instagram dm — for doodle talk</a></li>
+              <li><a href="#">reply on any soliloquy entry</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section class="formside win">
+        <div class="titlebar"><span class="fn">new-message.compose</span><span>draft</span></div>
+        <form class="formbody tform" data-form="cc" novalidate>
+          <div class="frow"><label for="cc-name">name:</label><input id="cc-name" type="text" autocomplete="name" placeholder="who's asking"></div>
+          <div class="frow"><label for="cc-email">email:</label><input id="cc-email" type="email" autocomplete="email" placeholder="you@somewhere.tld"></div>
+          <div class="frow"><label for="cc-msg">message:</label><textarea id="cc-msg" rows="6" placeholder="what's on your mind?"></textarea></div>
+          <div class="hp">website: <input type="text" tabindex="-1" autocomplete="off"> <span>← honeypot — hidden in production</span></div>
+          <div class="turnstile"><span class="box"></span><span class="slot">turnstile — verifying you're human</span><span class="meta">keys at deploy</span></div>
+          <button type="submit" class="send">send --msg</button>
+          <p class="status" aria-live="polite"></p>
+          <p class="statectl">prototype state: <button type="button" data-st="idle" class="on">idle</button><button type="button" data-st="ok">ok</button><button type="button" data-st="fail">fail</button></p>
+        </form>
+      </section>
+    </div>
+    <div class="panedemo">
+      <p class="lbl">homepage pane keeps only the form — context drops, width squeezes:</p>
+      <div class="pdwin win">
+        <div class="titlebar"><span class="fn">contact/</span><span>say hi</span></div>
+        <form class="formbody tform" data-form="pc" novalidate>
+          <div class="frow"><label for="pc-name">name:</label><input id="pc-name" type="text" autocomplete="name" placeholder="who's asking"></div>
+          <div class="frow"><label for="pc-email">email:</label><input id="pc-email" type="email" autocomplete="email" placeholder="you@somewhere.tld"></div>
+          <div class="frow"><label for="pc-msg">message:</label><textarea id="pc-msg" rows="3" placeholder="what's up?"></textarea></div>
+          <div class="turnstile" style="margin-bottom:12px"><span class="box"></span><span class="slot">turnstile</span></div>
+          <button type="submit" class="send">send</button>
+          <p class="status" aria-live="polite"></p>
+          <p class="statectl">state: <button type="button" data-st="idle" class="on">idle</button><button type="button" data-st="ok">ok</button><button type="button" data-st="fail">fail</button></p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <p class="footline">© 2026 mayur deshmukh · <a href="#">rss</a></p>
+</div>
+
+<!-- CONTACT D — MINIMAL SESSION + READ-ME-FIRST -->
+<div id="variant-cd" class="ctd page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">contact</span></p>
+    <div class="cols">
+      <section class="session" aria-label="contact form">
+        <p class="prompt">mail -s "hi from the internet" mayur</p>
+        <p class="reply">compose mode. three fields, then send.</p>
+        <form class="tform" data-form="cd" novalidate>
+          <div class="frow"><label for="cd-name">name:</label><input id="cd-name" type="text" autocomplete="name" placeholder="who's asking"></div>
+          <div class="frow"><label for="cd-email">email:</label><input id="cd-email" type="email" autocomplete="email" placeholder="you@somewhere.tld"></div>
+          <div class="frow"><label for="cd-msg">message:</label><textarea id="cd-msg" rows="5" placeholder="what's on your mind? (markdown welcome, vibes accepted)"></textarea></div>
+          <div class="hp">website: <input type="text" tabindex="-1" autocomplete="off"> <span>← honeypot — hidden in production</span></div>
+          <div class="turnstile"><span class="box"></span><span class="slot">turnstile — verifying you're human</span><span class="meta">keys at deploy</span></div>
+          <div class="sendrow"><button type="submit" class="send">send</button></div>
+          <p class="status" aria-live="polite"></p>
+          <p class="statectl">prototype state: <button type="button" data-st="idle" class="on">idle</button><button type="button" data-st="ok">ok</button><button type="button" data-st="fail">fail</button></p>
+        </form>
+      </section>
+      <aside class="rmf" aria-label="before you write">
+        <h2>man contact</h2>
+        <p>worth writing about: feedback on a study, a question about a print's settings, a bug in an open-source project, or a collaboration idea.</p>
+        <p class="sub">i read everything. replies come from my actual inbox — usually within a couple of days, slower when a print is running.</p>
+        <div class="alt">
+          <p class="cmd">ls elsewhere/ --faster</p>
+          <ul>
+            <li><a href="#">github issues — for code bugs</a></li>
+            <li><a href="#">instagram dm — for doodle talk</a></li>
+            <li><a href="#">reply on any soliloquy entry</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <p class="footline">© 2026 mayur deshmukh · <a href="#">rss</a></p>
+</div>
+</div>
+
+<!-- ==================== PAGE: 404 ==================== -->
+<div id="page-404" data-page="404" hidden>
+
+<!-- 404 A — COMMAND NOT FOUND -->
+<div id="variant-na" class="nfa page">
+  <div class="term">
+    <div class="crt">
+      <p class="cmdline"><span class="pr"></span>cat /projects/does-not-exist</p>
+      <p class="err">cat: /projects/does-not-exist: No such file or directory</p>
+      <p class="cmdline" style="margin-top:22px"><span class="pr"></span>ls ~</p>
+      <p class="dirs">
+        <a href="#">home/</a>
+        <a href="#">projects/</a>
+        <a href="#">art/</a>
+        <a href="#">prints/</a>
+        <a href="#">studies/</a>
+        <a href="#">soliloquy/</a>
+        <a href="#">about/</a>
+        <a href="#">contact/</a>
+      </p>
+      <p class="hint"># the page moved, was never born, or the url has a typo. production renders the path you actually asked for.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 404 B — MAN PAGE -->
+<div id="variant-nb" class="nfb page" hidden>
+  <div class="term">
+    <div class="man">
+      <div class="manhead"><span>MISSING(1)</span><span>mayur's playground</span><span>MISSING(1)</span></div>
+      <dl>
+        <div class="sec"><dt>NAME</dt><dd>missing — the page you were looking for</dd></div>
+        <div class="sec"><dt>SYNOPSIS</dt><dd><span class="cmd">GET /</span><span class="path">anything-you-like</span> <span class="dim">→ returns this page, status 404</span></dd></div>
+        <div class="sec"><dt>DESCRIPTION</dt><dd>The path <span class="path">/projects/does-not-exist</span> matches no file on this site. It may have moved, never existed, or contain a typo. Everything else is intact — see SEE ALSO.</dd></div>
+        <div class="sec"><dt>EXIT STATUS</dt><dd><span class="dim">404</span>  page not found <span class="dim">(you're soaking in it)</span></dd></div>
+        <div class="sec"><dt>SEE ALSO</dt>
+          <dd class="seealso">
+            <a href="#">home<span class="sup">(1)</span></a>
+            <a href="#">projects<span class="sup">(1)</span></a>
+            <a href="#">art<span class="sup">(1)</span></a>
+            <a href="#">prints<span class="sup">(1)</span></a>
+            <a href="#">studies<span class="sup">(1)</span></a>
+            <a href="#">soliloquy<span class="sup">(1)</span></a>
+            <a href="#">about<span class="sup">(1)</span></a>
+            <a href="#">contact<span class="sup">(1)</span></a>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<!-- 404 C — SEGFAULT + CAT -->
+<div id="variant-nc" class="nfc page" hidden>
+  <div class="term">
+    <div class="crt">
+      <p class="cmdline"><span class="pr"></span>navigate /projects/does-not-exist</p>
+      <p class="crash">zsh: segmentation fault  navigate /projects/does-not-exist</p>
+      <p class="core">core dumped → /dev/null (nothing of value was lost)</p>
+      <div class="cat">
+<pre aria-hidden="true">    /\_/\
+   ( o.o )?   well, this is awkward
+    &gt; ^ &lt;     the page you wanted isn't here</pre>
+        <p class="try">try: <a href="#">home</a> <span class="sep">·</span> <a href="#">projects</a> <span class="sep">·</span> <a href="#">art</a> <span class="sep">·</span> <a href="#">studies</a> <span class="sep">·</span> <a href="#">contact</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 404 D — NEOFETCH + CAT -->
+<div id="variant-nd" class="nfd page" hidden>
+  <div class="term">
+    <div class="fetch">
+      <div class="logo"><pre aria-hidden="true">        ?
+      /\_/\
+     ( o.o )    ← confused but fine
+      &gt; ^ &lt;</pre></div>
+      <div class="info">
+        <p class="host">404<span class="at">@</span>deshmukhmayur.com</p>
+        <p class="rule">---------------------------</p>
+        <dl>
+          <dt>error</dt><dd><span class="path">/projects/does-not-exist</span> <span class="d">— nothing lives here</span></dd>
+          <dt>cause</dt><dd>the page moved, was never born, or the url has a typo</dd>
+          <dt>os</dt><dd>mayur's playground <span class="d">(static edition)</span></dd>
+          <dt>host</dt><dd>astro on cloudflare workers</dd>
+          <dt>uptime</dt><dd id="nf-res">since 2026 <span class="d">— longest-running rewrite yet</span></dd>
+          <dt>status</dt><dd>everything else is intact <span class="d">— see below</span></dd>
+        </dl>
+      </div>
+    </div>
+    <p class="dirs"><span class="lbl">ls ~ →</span>
+      <a href="#">home/</a>
+      <a href="#">projects/</a>
+      <a href="#">art/</a>
+      <a href="#">prints/</a>
+      <a href="#">studies/</a>
+      <a href="#">soliloquy/</a>
+      <a href="#">about/</a>
+      <a href="#">contact/</a>
+    </p>
+    <p class="hint"># production renders the path you actually asked for · the logo slot can swap in a small illustration from your own art (same pattern as the homepage doodle, ticket 09)</p>
+  </div>
+</div>
+</div>
+
+<!-- prototype switcher: pages + variants (never part of the design) -->
+<div class="proto-bar" role="navigation" aria-label="Prototype page and variant switcher">
+  <button data-pg="about" class="on">about</button>
+  <span class="pagesep">|</span>
+  <button data-pg="contact">contact</button>
+  <span class="pagesep">|</span>
+  <button data-pg="404">404</button>
+  <span class="pagesep">|</span>
+  <button id="prev" aria-label="Previous variant">←</button>
+  <span class="label" id="vlabel">A — identity card</span>
+  <button id="next" aria-label="Next variant">→</button>
+</div>
+
+<script>
+  const THEME_KEY = 'interiors-proto-theme';
+  const toggle = document.getElementById('themeToggle');
+  toggle.onclick = () => {
+    document.body.classList.toggle('light');
+    toggle.textContent = document.body.classList.contains('light') ? '🌙 dark' : '☀️ light';
+  };
+
+  const PAGES = [
+    { key: 'about', el: document.getElementById('page-about'), variants: [
+      { key: 'a', el: document.getElementById('variant-aa'), name: 'A — identity card' },
+      { key: 'b', el: document.getElementById('variant-ab'), name: 'B — README document' },
+      { key: 'c', el: document.getElementById('variant-ac'), name: 'C — shell history' },
+      { key: 'd', el: document.getElementById('variant-ad'), name: 'D — whoami + history + stats' },
+    ]},
+    { key: 'contact', el: document.getElementById('page-contact'), variants: [
+      { key: 'a', el: document.getElementById('variant-ca'), name: 'A — windowed form' },
+      { key: 'b', el: document.getElementById('variant-cb'), name: 'B — prompt session' },
+      { key: 'c', el: document.getElementById('variant-cc'), name: 'C — front desk (split)' },
+      { key: 'd', el: document.getElementById('variant-cd'), name: 'D — session + read-me-first' },
+    ]},
+    { key: '404', el: document.getElementById('page-404'), variants: [
+      { key: 'a', el: document.getElementById('variant-na'), name: 'A — command not found' },
+      { key: 'b', el: document.getElementById('variant-nb'), name: 'B — man page' },
+      { key: 'c', el: document.getElementById('variant-nc'), name: 'C — segfault + cat' },
+      { key: 'd', el: document.getElementById('variant-nd'), name: 'D — neofetch + cat' },
+    ]},
+  ];
+  const params = new URLSearchParams(location.search);
+  let pi = Math.max(0, PAGES.findIndex(p => p.key === params.get('page')));
+  let vi = 0;
+
+  const STATUS_TEXT = {
+    ok: "send ok — message queued. i'll try my best to respond.",
+    fail: 'send: error — rate limited by the waf. wait a minute and try again.',
+  };
+
+  // wire every contact form: submit → ok, statectl buttons → idle/ok/fail
+  document.querySelectorAll('.tform').forEach(form => {
+    const status = form.querySelector('.status');
+    const ctlButtons = [...form.querySelectorAll('.statectl button')];
+    const setState = st => {
+      status.className = 'status' + (st === 'idle' ? '' : ' ' + st);
+      status.textContent = STATUS_TEXT[st] || '';
+      ctlButtons.forEach(b => b.classList.toggle('on', b.dataset.st === st));
+    };
+    form.addEventListener('submit', e => { e.preventDefault(); setState('ok'); });
+    ctlButtons.forEach(b => b.addEventListener('click', () => setState(b.dataset.st)));
+    setState('idle');
+  });
+
+  function render() {
+    const page = PAGES[pi];
+    vi = Math.min(vi, page.variants.length - 1);
+    PAGES.forEach(p => p.el.hidden = p !== page);
+    page.variants.forEach((v, idx) => v.el.hidden = idx !== vi);
+    document.getElementById('vlabel').textContent = page.variants[vi].name;
+    document.querySelectorAll('[data-pg]').forEach(b => b.classList.toggle('on', b.dataset.pg === page.key));
+    const url = new URL(location);
+    url.searchParams.set('page', page.key);
+    url.searchParams.set('variant', page.variants[vi].key);
+    history.replaceState(null, '', url);
+  }
+  function cycle(d) { vi = (vi + d + PAGES[pi].variants.length) % PAGES[pi].variants.length; render(); }
+
+  document.querySelectorAll('[data-pg]').forEach(b => b.onclick = () => { pi = PAGES.findIndex(p => p.key === b.dataset.pg); vi = 0; render(); });
+  document.getElementById('prev').onclick = () => cycle(-1);
+  document.getElementById('next').onclick = () => cycle(1);
+  addEventListener('keydown', e => {
+    if (/input|textarea/i.test(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+
+  // default each page's variant from URL (?page=contact&variant=b)
+  const vp = PAGES[pi].variants.findIndex(v => v.key === params.get('variant'));
+  if (vp > 0) vi = vp;
+  render();
+</script>
+</body>
+</html>
