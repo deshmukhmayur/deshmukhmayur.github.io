@@ -1,0 +1,93 @@
+src/content/art/2026-01-09-cold-front.md
+  s_cbf18d97baf08c::t_c96a3e72c262ed 13
+  s_9e6254a3effdb0::t_4e77813828c617 1-12
+src/content/art/2026-02-14-long-shadow.md
+  s_9e6254a3effdb0::t_4e77813828c617 1-5,7-11
+  s_cbf18d97baf08c::t_a3e71e75fdeb27 12
+  s_9e6254a3effdb0::t_5cd9099be2ffcf 6
+src/components/WindowedTile.module.css
+  s_9e6254a3effdb0::t_eb29205581df27 1-61
+src/pages/art/[id].astro
+  s_9e6254a3effdb0::t_06514ae029030d 112
+  s_25b109c057f181::t_c25fdbd99fdd34 1,9-18,39,124
+  s_9e6254a3effdb0::t_ee5a899cb5e406 6
+  s_9e6254a3effdb0::t_55db8c1926dfd6 2
+  s_9e6254a3effdb0::t_218b6790a7b945 137,139-141,150
+  s_25b109c057f181::t_d42272f3cbb63c 3
+  s_9e6254a3effdb0::t_08bb38923bda60 125-131,138,144-146,155-157
+  s_9e6254a3effdb0::t_ddcbf8fca63c92 4-5,7-8,19-38,40-111,113-123,132-136,142-143,147-149,151-154,158-159
+src/content/art/2026-05-18-quiet-static.md
+  s_9e6254a3effdb0::t_4e77813828c617 1-12
+  s_cbf18d97baf08c::t_c96a3e72c262ed 13
+src/pages/art/index.astro
+  s_9e6254a3effdb0::t_9832739b4defeb 1-41,43-48,50-61
+  s_9e6254a3effdb0::t_37db86bfeae8cc 42,49
+src/components/WindowedTile.astro
+  s_9e6254a3effdb0::t_24be10f77dc2ef 1-24
+src/pages/art/listing.module.css
+  s_9e6254a3effdb0::t_53e7c33d381ca8 1-26
+src/content.config.ts
+  s_9e6254a3effdb0::t_bfd6a41b0d7201 16
+  s_9e6254a3effdb0::t_4a32d24a6a57d4 3,15
+src/pages/art/detail.module.css
+  s_9e6254a3effdb0::t_f753605f6d75e3 38
+  s_9e6254a3effdb0::t_81399f9c773f30 1-37,39-159
+src/lib/constants.ts
+  s_cbf18d97baf08c::t_de3995b4cd92fc 52
+  s_9e6254a3effdb0::t_2c46a37ef0196a 59-60,65-66
+  s_9e6254a3effdb0::t_9d5d54831148f2 53-58,61-64,67-84
+src/content/art/2026-04-02-paper-lanterns.md
+  s_9e6254a3effdb0::t_4e77813828c617 1-11
+  s_cbf18d97baf08c::t_c96a3e72c262ed 12
+src/content/art/2026-08-12-signal-drift.md
+  s_9e6254a3effdb0::t_4e77813828c617 1-16
+  s_cbf18d97baf08c::t_c96a3e72c262ed 17
+src/content/art/2026-07-03-idle-engine.md
+  s_cbf18d97baf08c::t_c96a3e72c262ed 12
+  s_9e6254a3effdb0::t_4e77813828c617 1-11
+.scratch/personal-site/issues/23-art-section.md
+  s_9e6254a3effdb0::t_fa57d60317e80a 7,9-12
+  s_4c13706a6cdff9::t_44b1df29f5b1eb 1-6,8
+src/content/art/2026-09-04-pipeline-trial.md
+  s_25b109c057f181::t_fea56bdfa551a1 1-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "a689ab39d45116c099f69c500f2ffda37972a281",
+  "prompts": {},
+  "sessions": {
+    "s_25b109c057f181": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f93829f36ffed4OxT2d30ZmAg9",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_4c13706a6cdff9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f509b7f11ffepoU6pb9JxCAj64",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_9e6254a3effdb0": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5035b95cffexpStU3N0wks660",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": null
+    },
+    "s_cbf18d97baf08c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f56226a85ffeDRV2NvuDMnips1",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
