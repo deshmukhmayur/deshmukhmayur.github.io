@@ -1,0 +1,38 @@
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 30px;
+}
+
+/* uniform contact-sheet grid (ticket 15, variant A) */
+.sheet {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.cell[hidden] {
+  display: none;
+}
+
+/* uniform 4:3 plates — a contact sheet, not a masonry */
+.sheet :global(img) {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 980px) {
+  .sheet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .sheet {
+    grid-template-columns: 1fr;
+  }
+}

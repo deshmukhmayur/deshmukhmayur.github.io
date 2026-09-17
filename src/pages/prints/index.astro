@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import TerminalLayout from '../../layouts/TerminalLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import LsFilterRow from '../../components/LsFilterRow.astro';
+import WindowedTile from '../../components/WindowedTile.astro';
+import { Picture } from 'astro:assets';
+import { PROMPTS, PRINTS } from '../../lib/constants';
+import styles from './listing.module.css';
+
+const entries = await getCollection('prints');
+entries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const materialOptions = [{ value: 'all', label: 'all' }].concat(
+  PRINTS.materials.map((m) => ({ value: m, label: m })),
+);
+const printerOptions = [{ value: 'all', label: 'all' }].concat(
+  PRINTS.printers.map((p) => ({ value: p, label: p })),
+);
+---
+
+<TerminalLayout title="prints">
+  <Breadcrumb
+    prompt={PROMPTS.section("prints")}
+    trail={[{ label: "home", href: "/" }, { label: "prints" }]}
+  />
+
+  <div class={styles.filters}>
+    <LsFilterRow
+      command={PRINTS.filterCommand}
+      flag={PRINTS.materialFlag}
+      options={materialOptions}
+      targetId="print-sheet"
+      countSingular={PRINTS.countSingular}
+      countPlural={PRINTS.countPlural}
+      emptyPrefix={PRINTS.emptyPrefix}
+      initialCount={entries.length}
+    />
+    <LsFilterRow
+      command={PRINTS.filterCommand}
+      flag={PRINTS.printerFlag}
+      options={printerOptions}
+      targetId="print-sheet"
+      countSingular={PRINTS.countSingular}
+      countPlural={PRINTS.countPlural}
+      emptyPrefix={PRINTS.emptyPrefix}
+      initialCount={entries.length}
+    />
+  </div>
+
+  <div class={styles.sheet} id="print-sheet">
+    {
+      entries.map((entry) => {
+        const { data } = entry;
+        return (
+          <div
+            class={styles.cell}
+            data-filter-values={`${data.material} ${data.printer}`}
+          >
+            <WindowedTile
+              filename={PRINTS.filename(entry.id, data.file)}
+              meta={PRINTS.duration(data.durationHours)}
+              href={`/prints/${entry.id}/`}
+            >
+              <Picture
+                src={data.photos[0].src}
+                alt={data.photos[0].alt}
+                widths={[480, 960, 1600]}
+                sizes="(min-width: 980px) 25vw, (min-width: 620px) 50vw, 100vw"
+                formats={["avif", "webp"]}
+                loading="lazy"
+              />
+              <span slot="caption">
+                {PRINTS.caption(
+                  PRINTS.printerLabels[data.printer as keyof typeof PRINTS.printerLabels],
+                  PRINTS.materialLabels[data.material as keyof typeof PRINTS.materialLabels],
+                  data.tags,
+                )}
+              </span>
+            </WindowedTile>
+          </div>
+        );
+      })
+    }
+  </div>
+</TerminalLayout>

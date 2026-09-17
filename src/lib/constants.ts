@@ -86,6 +86,52 @@ export const ART = {
  * Projects section chrome (ticket 22). Voice per ADR 0007: lowercase, terse,
  * real POSIX verbs; errors dry with a real command-link reset.
  */
+/*
+ * Prints section chrome (ticket 24). Voice per ADR 0007: lowercase, terse,
+ * real POSIX verbs; errors dry with a real command-link reset.
+ */
+export const PRINTS = {
+  filterCommand: "ls prints/",
+  // two chips share the one command; each flag renders as --<flag>=
+  materialFlag: "material",
+  printerFlag: "printer",
+  // closed starter enums (spec §4) — extended deliberately
+  materials: ["pla", "petg", "resin", "abs"],
+  printers: ["a1-mini", "ender-3"],
+  materialLabels: { pla: "PLA", petg: "PETG", resin: "resin", abs: "ABS" },
+  printerLabels: { "a1-mini": "A1 mini", "ender-3": "Ender 3" },
+  // subject tags, own closed starter list (mirrors the art rule)
+  startTags: ["mecha", "functional", "vase-mode", "cosplay", "gift", "car"],
+  countSingular: "print",
+  countPlural: "prints",
+  emptyPrefix: "ls: no matches for --",
+  // titlebar `filename … duration` — bare filename (id is `YYYY-MM-DD-<slug>`)
+  filename: (id: string, file?: string) => file ?? `${id.slice(11)}.gcode`,
+  dateISO: (d: Date) => d.toISOString().slice(0, 10),
+  duration: (hours: number) => `${hours.toFixed(1)}h`,
+  caption: (printer: string, material: string, tags: string[]) =>
+    [printer, material, ...tags.map((t) => `#${t}`)].filter(Boolean).join(" · "),
+  // detail windows
+  specsHeading: "specs",
+  specsTitlebar: "cat",
+  modelsHeading: "models & notes",
+  modelsTitlebar: "open",
+  // specs datasheet keys
+  specs: {
+    date: "date",
+    printer: "printer",
+    material: "material",
+    duration: "duration",
+    tags: "tags",
+  },
+  photoTitlebar: (id: string, index: number, total: number) =>
+    `${id.slice(11)}-${String(index).padStart(2, "0")}.jpg · ${index}/${total}`,
+  logHeading: "maker log",
+  // dated `## YYYY-MM-DD` body sections; `— failed` suffix marks a pink dot
+  failedMarker: /—\s*fail/i,
+  failedLabel: " — failed attempt",
+} as const;
+
 export const PROJECTS = {
   filterCommand: "ls projects --kind",
   flag: "kind",

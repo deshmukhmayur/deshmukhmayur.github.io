@@ -1,6 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { ART } from './lib/constants';
+import { ART, PRINTS } from './lib/constants';
 
 const art = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/art' }),
@@ -75,4 +75,34 @@ const projects = defineCollection({
       }),
 });
 
-export const collections = { art, projects };
+/*
+ * Prints (spec §4): entry id is the `YYYY-MM-DD-<slug>` filename → URL date
+ * prefix. Print settings stay freeform in the body; the maker log is the
+ * body's dated `## YYYY-MM-DD` sections (failures only as attempts inside a
+ * successful print's log). Photos carry their own required alt; model links
+ * are { platform, url } pairs.
+ */
+const prints = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/prints' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      date: z.coerce.date(),
+      printer: z.enum(PRINTS.printers as [string, ...string[]]),
+      material: z.enum(PRINTS.materials as [string, ...string[]]),
+      materialColor: z.string().optional(),
+      durationHours: z.number().positive(),
+      file: z.string().optional(),
+      photos: z
+        .array(z.object({ src: image(), alt: z.string().min(1) }))
+        .min(1, 'at least one photo'),
+      description: z.string().optional(),
+      modelLinks: z
+        .array(z.object({ platform: z.string().min(1), url: z.string().url() }))
+        .default([]),
+      tags: z.array(z.enum(PRINTS.startTags as [string, ...string[]])).default([]),
+      featured: z.boolean().optional(),
+    }),
+});
+
+export const collections = { art, prints, projects };

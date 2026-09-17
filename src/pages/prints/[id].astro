@@ -1,0 +1,180 @@
+---
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import TerminalLayout from '../../layouts/TerminalLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { PROMPTS, PRINTS } from '../../lib/constants';
+import styles from './detail.module.css';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('prints');
+  return entries.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const date = PRINTS.dateISO(data.date);
+const material = [
+  PRINTS.materialLabels[data.material as keyof typeof PRINTS.materialLabels],
+  data.materialColor,
+]
+  .filter(Boolean)
+  .join(" · ");
+const printer =
+  PRINTS.printerLabels[data.printer as keyof typeof PRINTS.printerLabels];
+
+/*
+ * Maker log (spec §4): dated `## YYYY-MM-DD` sections in the body, newest
+ * last; a `— failed` suffix on the heading marks a failed attempt (pink dot).
+ * Everything before the first dated section is freeform notes/settings.
+ */
+interface LogEntry {
+  date: string;
+  failed: boolean;
+  text: string[];
+}
+
+const intro: string[] = [];
+const log: LogEntry[] = [];
+let current: LogEntry | null = null;
+for (const line of (entry.body ?? "").split("\n")) {
+  const m = line.match(/^## (\d{4}-\d{2}-\d{2})(.*)$/);
+  if (m) {
+    current = {
+      date: m[1],
+      failed: PRINTS.failedMarker.test(m[2]),
+      text: [],
+    };
+    log.push(current);
+  } else if (current) {
+    if (line.trim()) current.text.push(line.trim());
+  } else if (line.trim()) {
+    intro.push(line.trim());
+  }
+}
+log.reverse();
+---
+
+<TerminalLayout title={data.title} description={data.description}>
+  <Breadcrumb
+    prompt={PROMPTS.section("prints")}
+    trail={[
+      { label: "home", href: "/" },
+      { label: "prints", href: "/prints/" },
+      { label: entry.id },
+    ]}
+  />
+
+  <article class={styles.detail}>
+    <div class={styles.photos}>
+      <figure class={styles.figure}>
+        <span class={styles.figBar} aria-hidden="true">
+          <span class={styles.figFn}>{PRINTS.photoTitlebar(entry.id, 1, data.photos.length)}</span>
+          <span class={styles.figRes}>{material}</span>
+        </span>
+        <Picture
+          src={data.photos[0].src}
+          alt={data.photos[0].alt}
+          widths={[480, 960, 1600]}
+          sizes="(min-width: 1160px) 620px, 100vw"
+          formats={["avif", "webp"]}
+          loading="eager"
+        />
+      </figure>
+      {
+        data.photos.length > 1 && (
+          <div class={styles.thumbs} aria-label="photo set">
+            {data.photos.slice(1).map((photo) => (
+              <Picture
+                src={photo.src}
+                alt={photo.alt}
+                widths={[240, 480, 960]}
+                sizes="190px"
+                formats={["avif", "webp"]}
+                loading="lazy"
+              />
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    <section class={styles.side}>
+      <p class={styles.title}>{data.title}</p>
+
+      <div class={styles.win}>
+        <span class={styles.winBar}>
+          <span class={styles.winFn}>{PRINTS.specsHeading}</span>
+          <span class={styles.winRes}>{PRINTS.specsTitlebar}</span>
+        </span>
+        <table class={styles.specs}>
+          <tbody>
+            <tr><td>{PRINTS.specs.date}</td><td class={styles.dt}>{date}</td></tr>
+            <tr><td>{PRINTS.specs.printer}</td><td>{printer}</td></tr>
+            <tr><td>{PRINTS.specs.material}</td><td>{material}</td></tr>
+            <tr><td>{PRINTS.specs.duration}</td><td>{PRINTS.duration(data.durationHours)}</td></tr>
+            {
+              data.tags.length > 0 && (
+                <tr>
+                  <td>{PRINTS.specs.tags}</td>
+                  <td class={styles.tagcell}>{data.tags.map((t) => `#${t}`).join(" ")}</td>
+                </tr>
+              )
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class={styles.win}>
+        <span class={styles.winBar}>
+          <span class={styles.winFn}>{PRINTS.modelsHeading}</span>
+          <span class={styles.winRes}>{PRINTS.modelsTitlebar}</span>
+        </span>
+        {
+          data.modelLinks.length > 0 && (
+            <div class={styles.links}>
+              {data.modelLinks.map((link) => (
+                <a href={link.url} rel="noopener noreferrer">
+                  {link.url.replace(/^https?:\/\//, "")}
+                </a>
+              ))}
+            </div>
+          )
+        }
+        {data.description && <p class={styles.notes}>{data.description}</p>}
+        {
+          intro.length > 0 && (
+            <p class={styles.notes}>
+              {intro.map((p) => <span class={styles.notePara}>{p}</span>)}
+            </p>
+          )
+        }
+      </div>
+
+      {
+        log.length > 0 && (
+          <div class={styles.log}>
+            <h2>
+              <span class={styles.hash} aria-hidden="true">#</span>
+              {PRINTS.logHeading}
+            </h2>
+            <ol class={styles.timeline}>
+              {log.map((e) => (
+                <li class={`${styles.entry} ${e.failed ? styles.fail : ""}`}>
+                  <p class={styles.entryH}>
+                    {e.date}
+                    {e.failed && <span class={styles.failed}>{PRINTS.failedLabel}</span>}
+                  </p>
+                  {e.text.map((p) => <p class={styles.entryM}>{p}</p>)}
+                </li>
+              ))}
+            </ol>
+          </div>
+        )
+      }
+    </section>
+  </article>
+</TerminalLayout>

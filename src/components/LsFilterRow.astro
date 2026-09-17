@@ -76,9 +76,35 @@ const {
 </div>
 
 <script>
+  /*
+   * Roots sharing one target combine: each root owns one flag, and a row is
+   * visible only when it matches every active flag. Counts and empty states
+   * update on all roots after any change.
+   */
   function initFilters(): void {
-    const roots = document.querySelectorAll<HTMLElement>("[data-ls-filter]");
+    const roots = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-ls-filter]"),
+    );
 
+    interface Root {
+      root: HTMLElement;
+      flag: string;
+      buttons: HTMLButtonElement[];
+      countEl: HTMLElement | null;
+      emptyEl: HTMLElement | null;
+      emptyText: HTMLElement | null;
+      resetBtn: HTMLButtonElement | null;
+      singular: string;
+      plural: string;
+      emptyPrefix: string;
+    }
+    interface Group {
+      rows: HTMLElement[];
+      flags: Map<string, string>;
+      roots: Root[];
+    }
+
+    const groups = new Map<string, Group>();
     for (const root of roots) {
       const targetId = root.dataset.target ?? "";
       const target = document.getElementById(targetId);
@@ -88,53 +114,81 @@ const {
       const buttons = Array.from(
         root.querySelectorAll<HTMLButtonElement>("button[data-value]"),
       );
-      const countEl = root.querySelector<HTMLElement>("[data-count]");
-      const emptyEl = root.querySelector<HTMLElement>("[data-empty]");
-      const emptyText = root.querySelector<HTMLElement>("[data-empty-text]");
-      const resetBtn = root.querySelector<HTMLButtonElement>("[data-reset]");
-      const flag = root.dataset.flag ?? "";
-      const singular = root.dataset.countSingular ?? "";
-      const plural = root.dataset.countPlural ?? "";
-      const emptyPrefix = root.dataset.emptyPrefix ?? "ls: no matches for --";
       if (!buttons.length || !rows.length) continue;
+      let group = groups.get(targetId);
+      if (!group) {
+        group = { rows, flags: new Map(), roots: [] };
+        groups.set(targetId, group);
+      }
+      group.roots.push({
+        root,
+        flag: root.dataset.flag ?? "",
+        buttons,
+        countEl: root.querySelector<HTMLElement>("[data-count]"),
+        emptyEl: root.querySelector<HTMLElement>("[data-empty]"),
+        emptyText: root.querySelector<HTMLElement>("[data-empty-text]"),
+        resetBtn: root.querySelector<HTMLButtonElement>("[data-reset]"),
+        singular: root.dataset.countSingular ?? "",
+        plural: root.dataset.countPlural ?? "",
+        emptyPrefix: root.dataset.emptyPrefix ?? "ls: no matches for --",
+      });
+    }
 
-      const apply = (value: string, push: boolean): void => {
+    for (const group of groups.values()) {
+      const refresh = (pushFlag?: string, pushValue?: string): void => {
+        if (pushFlag && pushValue !== undefined) {
+          group.flags.set(pushFlag, pushValue);
+          const r = group.roots.find((x) => x.flag === pushFlag);
+          if (r) {
+            for (const b of r.buttons) {
+              b.setAttribute(
+                "aria-pressed",
+                String(b.dataset.value === pushValue),
+              );
+            }
+          }
+        }
+        const active = [...group.flags.entries()].filter(
+          ([, v]) => v !== "all",
+        );
         let visible = 0;
-        for (const row of rows) {
+        for (const row of group.rows) {
           const values = (row.dataset.filterValues ?? "").split(" ").filter(Boolean);
-          const show = value === "all" || values.includes(value);
+          const show = active.every(([, v]) => values.includes(v));
           row.hidden = !show;
           if (show) visible++;
         }
-        for (const b of buttons) {
-          b.setAttribute("aria-pressed", String(b.dataset.value === value));
-        }
-        if (countEl) {
-          countEl.textContent = `${visible} ${visible === 1 ? singular : plural}`;
-        }
-        if (emptyEl && emptyText) {
-          emptyEl.hidden = visible !== 0;
-          if (visible === 0) {
-            emptyText.textContent = `${emptyPrefix}${flag} ${value}`;
+        for (const r of group.roots) {
+          if (r.countEl) {
+            r.countEl.textContent = `${visible} ${visible === 1 ? r.singular : r.plural}`;
           }
-        }
-        if (push) {
-          const url = new URL(window.location.href);
-          if (value === "all") url.searchParams.delete(flag);
-          else url.searchParams.set(flag, value);
-          history.replaceState(null, "", url);
+          const value = group.flags.get(r.flag) ?? "all";
+          if (r.emptyEl && r.emptyText) {
+            r.emptyEl.hidden = !(visible === 0 && value !== "all");
+            if (!r.emptyEl.hidden) {
+              r.emptyText.textContent = `${r.emptyPrefix}${r.flag} ${value}`;
+            }
+          }
+          if (pushFlag === r.flag && pushValue !== undefined) {
+            const url = new URL(window.location.href);
+            if (value === "all") url.searchParams.delete(r.flag);
+            else url.searchParams.set(r.flag, value);
+            history.replaceState(null, "", url);
+          }
         }
       };
 
-      for (const b of buttons) {
-        b.addEventListener("click", () => apply(b.dataset.value ?? "all", true));
-      }
-      resetBtn?.addEventListener("click", () => apply("all", true));
+      for (const r of group.roots) {
+        for (const b of r.buttons) {
+          b.addEventListener("click", () => refresh(r.flag, b.dataset.value ?? "all"));
+        }
+        r.resetBtn?.addEventListener("click", () => refresh(r.flag, "all"));
 
-      const initial = new URLSearchParams(window.location.search).get(flag);
-      const valid =
-        initial !== null && buttons.some((b) => b.dataset.value === initial);
-      apply(valid && initial ? initial : "all", false);
+        const initial = new URLSearchParams(window.location.search).get(r.flag);
+        const valid =
+          initial !== null && r.buttons.some((b) => b.dataset.value === initial);
+        refresh(r.flag, valid && initial ? initial : "all");
+      }
     }
   }
 

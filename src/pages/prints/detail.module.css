@@ -1,0 +1,241 @@
+/* detail D (ticket 15): sticky photo column left, spec windows + timeline right */
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 36px;
+  align-items: start;
+  max-width: 1080px;
+  margin-bottom: 40px;
+}
+
+.photos {
+  position: sticky;
+  top: 32px;
+}
+
+.figure {
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.figBar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--dim);
+  border-bottom: 1px solid var(--edge);
+}
+
+.figFn {
+  color: var(--cyan);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.figRes {
+  color: var(--pink);
+  white-space: nowrap;
+}
+
+.figure :global(img) {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* photo-set thumbs under the main figure */
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.thumbs :global(img) {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  display: block;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--pink);
+  margin-bottom: 2px;
+}
+
+/* datasheet windows */
+.win {
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--panel);
+  margin-top: 14px;
+}
+
+.winBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--dim);
+  border-bottom: 1px solid var(--edge);
+}
+
+.winFn {
+  color: var(--cyan);
+}
+
+.winRes {
+  color: var(--pink);
+}
+
+.specs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.specs td {
+  padding: 8px 14px;
+  border-bottom: 1px dashed var(--edge);
+}
+
+.specs td:first-child {
+  color: var(--amber);
+  width: 40%;
+}
+
+.specs tr:last-child td {
+  border-bottom: 0;
+}
+
+.specs td:last-child {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.specs td.tagcell {
+  color: var(--pink);
+}
+
+.dt {
+  color: var(--pink);
+}
+
+.links a {
+  display: block;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--cyan);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--edge);
+  overflow-wrap: anywhere;
+}
+
+.links a::before {
+  content: "↗ ";
+  color: var(--dim);
+}
+
+.links a:hover,
+.links a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.links a:last-of-type {
+  border-bottom: 0;
+}
+
+.notes {
+  padding: 12px 14px;
+  font-size: 13.5px;
+  color: var(--ink);
+  max-width: 48ch;
+}
+
+.notes + .notes {
+  padding-top: 0;
+}
+
+/* dotted maker-log timeline */
+.log {
+  margin-top: 26px;
+}
+
+.log h2 {
+  font-size: 13px;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+
+.hash {
+  color: var(--dim);
+  margin-right: 6px;
+}
+
+.timeline {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+}
+
+.entry {
+  position: relative;
+  padding: 0 0 18px 18px;
+  border-left: 1px solid var(--edge);
+}
+
+.entry:last-child {
+  padding-bottom: 4px;
+}
+
+/* timeline dots — green for landed, pink for a failed attempt */
+.entry::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.fail::before {
+  background: var(--pink);
+}
+
+.entryH {
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.failed {
+  color: var(--pink);
+}
+
+.entryM {
+  font-size: 13.5px;
+  color: var(--ink);
+  max-width: 44ch;
+}
+
+@media (max-width: 760px) {
+  .detail {
+    grid-template-columns: 1fr;
+  }
+
+  .photos {
+    position: static;
+  }
+}

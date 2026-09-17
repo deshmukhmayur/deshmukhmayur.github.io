@@ -1,23 +1,26 @@
 ---
 /*
  * Shared terminal-window tile (spec §2 vocabulary): filename titlebar +
- * `…` date, media children, caption row slot. Reused by art/prints listings.
+ * `…` date (or arbitrary right-side meta, e.g. a print duration), media
+ * children, caption row slot. Reused by art/prints listings.
  */
 interface Props {
   filename: string;
-  date: string;
+  date?: string;
+  /** right-side titlebar text; wins over `date` when set */
+  meta?: string;
   href: string;
 }
 
 import styles from "./WindowedTile.module.css";
 
-const { filename, date, href } = Astro.props;
+const { filename, date, meta, href } = Astro.props;
 ---
 
 <a class={styles.tile} href={href}>
   <span class={styles.bar}>
     <span class={styles.fn}>{filename}</span>
-    <span class={styles.dt}>{date}</span>
+    <span class={styles.dt}>{meta ?? date}</span>
   </span>
   <span class={styles.media}><slot /></span>
   <span class={styles.caption}><slot name="caption" /></span>
