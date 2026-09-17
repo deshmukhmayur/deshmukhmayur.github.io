@@ -1,0 +1,19 @@
+.scratch/personal-site/issues/25-studies-section-and-join.md
+  s_59e2f1334d8f8d::t_f7e27e361dcf05 7,9-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "c61c78ae1cb694f1fa84d38726fbae4354d0df86",
+  "prompts": {},
+  "sessions": {
+    "s_59e2f1334d8f8d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4fbeb8efffeBQ2FIfaPK92G2E",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
