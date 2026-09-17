@@ -1,0 +1,29 @@
+prototype/prints-filter-toolbar-prototype.html
+  s_9259110c780d1a::t_48a136c42b3d1b 219
+  s_9259110c780d1a::t_8410ee87367ae6 161
+  s_9259110c780d1a::t_797afc396e73b2 1-160,162-218,220-293
+src/components/LsFilterRow.module.css
+  s_9259110c780d1a::t_984dc548c984ae 85-89
+  s_9259110c780d1a::t_736c51a6689319 20-30
+src/components/LsFilterRow.astro
+  s_9259110c780d1a::t_bd86769b13fc4d 3-6,13-14,18-27,44,51-53,65-86,91-92,98-99,117-125,128-131,135,137,143-150,153-158,161-172,174-175,177,179-181,183-184
+  s_9259110c780d1a::t_809b833cd618ef 173
+src/pages/prints/index.astro
+  s_9259110c780d1a::t_8206d412fc230f 28-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "a7763c7b70b4f4565c6bee66892c8efabf8cf065",
+  "prompts": {},
+  "sessions": {
+    "s_9259110c780d1a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4fea67eeffeyxVTsweuDiJfP1",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
