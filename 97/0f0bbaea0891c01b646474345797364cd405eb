@@ -1,0 +1,57 @@
+src/pages/studies/index.astro
+  s_59e2f1334d8f8d::t_953e4f55b381c9 5,9-11,13
+  s_59e2f1334d8f8d::t_f95be978a1a984 1-4,6-8,12,14-89
+src/pages/studies/listing.module.css
+  s_59e2f1334d8f8d::t_4f3ff3436289ea 1-149
+src/lib/constants.ts
+  s_59e2f1334d8f8d::t_0059843ebcb4a8 135-141,143-149,151-152
+  s_59e2f1334d8f8d::t_ed03f5f24f9569 142,150
+src/content/studies/draft-tokens-notes.md
+  s_59e2f1334d8f8d::t_1fa6b0bee54525 1-10
+.scratch/personal-site/issues/25-studies-section-and-join.md
+  s_4c13706a6cdff9::t_e1ce25f92c39a5 1-12
+src/lib/studies.ts
+  s_59e2f1334d8f8d::t_f27b6bd79bd096 1-60
+src/pages/projects/[slug].astro
+  s_59e2f1334d8f8d::t_96369412ac0e1f 123,129-144
+  s_59e2f1334d8f8d::t_4d7ecaf56c8d90 6,13-14,17,21
+src/content.config.ts
+  s_59e2f1334d8f8d::t_65d64ecb78b7f4 108-128
+src/pages/studies/[slug].astro
+  s_59e2f1334d8f8d::t_2863f69f70f6cf 21
+  s_59e2f1334d8f8d::t_767f3b98e7f73b 79
+  s_59e2f1334d8f8d::t_890797c8f9a8e1 1-5,7-20,22-78,80-96
+  s_59e2f1334d8f8d::t_e6769190ed0715 6
+src/pages/studies/detail.module.css
+  s_59e2f1334d8f8d::t_c64efce49abc96 1-212
+src/content/studies/hex-dump-annotation.md
+  s_59e2f1334d8f8d::t_2c365f3924dbf5 1-12
+src/content/studies/atlas-tracer-sampling.md
+  s_59e2f1334d8f8d::t_07e01e3c30a325 1-18
+src/content/studies/deterministic-brackets.md
+  s_59e2f1334d8f8d::t_2fc25da037ebbe 1-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "970f0bbaea0891c01b646474345797364cd405eb",
+  "prompts": {},
+  "sessions": {
+    "s_4c13706a6cdff9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f509b7f11ffepoU6pb9JxCAj64",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_59e2f1334d8f8d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4fbeb8efffeBQ2FIfaPK92G2E",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
