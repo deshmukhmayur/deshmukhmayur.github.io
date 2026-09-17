@@ -1,0 +1,74 @@
+src/lib/constants.ts
+  s_660552af7128c4::t_ef40fdacaf5c4c 44-50
+  s_660552af7128c4::t_95dbe8bf75b0cb 1-7,9,11-14,16-21,31-43
+  s_660552af7128c4::t_9436c80ed3ea9e 8,10,15,22-30
+src/components/Breadcrumb.astro
+  s_660552af7128c4::t_158d8937d6189e 1-31
+src/components/Nav.astro
+  s_660552af7128c4::t_5855afec314d30 1-20
+src/components/Nav.module.css
+  s_660552af7128c4::t_31a500de95a8ab 1-37
+src/pages/index.astro
+  s_660552af7128c4::t_61c760f293bff1 4,11,29-30
+  s_660552af7128c4::t_a5b483d396472f 1-3,5-10,12-28,31
+src/styles/tokens.css
+  s_660552af7128c4::t_77109ab6fa5839 1-121
+src/pages/index.module.css
+  s_660552af7128c4::t_6f3f80091278fe 1-46
+astro.config.mjs
+  s_25b109c057f181::t_e1f41fcb4fdfdb 1-4,10
+  s_660552af7128c4::t_73fbb08b164d4e 5-9
+.scratch/personal-site/issues/21-terminal-shell-tokens-fonts-theme-chrome.md
+  s_660552af7128c4::t_b3a7c8325af19c 7-22
+  s_4c13706a6cdff9::t_c62d7fdd677efe 1-6
+src/components/Breadcrumb.module.css
+  s_660552af7128c4::t_d43c11703ee51c 1-39
+src/components/ThemeToggle.astro
+  s_660552af7128c4::t_c282a46918d67d 1,4-11,13-15,17-20,22-37
+  s_660552af7128c4::t_93778a15e7718e 12
+  s_660552af7128c4::t_8174dc3c741c12 3
+  s_660552af7128c4::t_f277ab7c9934d4 2
+  s_660552af7128c4::t_60c5cbbf94aa5e 16,21
+src/components/ThemeToggle.module.css
+  s_660552af7128c4::t_42c79a84d9b92b 1-15
+src/components/Footer.module.css
+  s_660552af7128c4::t_8986da8c411c67 1-43
+src/components/Footer.astro
+  s_660552af7128c4::t_145062d5deb8b0 2-13
+  s_660552af7128c4::t_fcc7e794d2ed12 1
+src/layouts/TerminalLayout.astro
+  s_660552af7128c4::t_a0df15d64fb49a 30,69
+  s_660552af7128c4::t_8ae5a00dabc9e5 1-29,31-68,70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d806409b08fe7266c1697715eecda6e2c3db83ae",
+  "prompts": {},
+  "sessions": {
+    "s_25b109c057f181": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f93829f36ffed4OxT2d30ZmAg9",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_4c13706a6cdff9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f509b7f11ffepoU6pb9JxCAj64",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_660552af7128c4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f506abe57ffeCDRO6bW6E0fojs",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
