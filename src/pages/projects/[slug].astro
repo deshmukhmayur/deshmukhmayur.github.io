@@ -1,0 +1,130 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Picture } from 'astro:assets';
+import TerminalLayout from '../../layouts/TerminalLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { PROMPTS, PROJECTS } from '../../lib/constants';
+import styles from './detail.module.css';
+
+export async function getStaticPaths() {
+  // draft entries are a separate publication flag — never published
+  const entries = await getCollection('projects', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+---
+
+<TerminalLayout title={data.title}>
+  <Breadcrumb
+    prompt={PROMPTS.section("projects")}
+    trail={[
+      { label: "home", href: "/" },
+      { label: "projects", href: "/projects/" },
+      { label: entry.id },
+    ]}
+  />
+
+  <div class={styles.detail}>
+    <article class={styles.readme}>
+      <div class={styles.titlebar}>
+        <span class={styles.fn}>{PROJECTS.readmeTitlebar(entry.id)}</span>
+        <span class={styles.res}>{PROJECTS.rendered}</span>
+      </div>
+      <div class={styles.body}>
+        <h1>{data.title}</h1>
+        <Content />
+        {
+          data.screenshots.length > 0 && (
+            <>
+              <h2>{PROJECTS.screenshotsHeading}</h2>
+              {data.screenshots.map((shot) => (
+                <figure class={styles.shot}>
+                  <Picture
+                    src={shot.src}
+                    alt={shot.alt}
+                    widths={[480, 960]}
+                    sizes="(min-width: 760px) 620px, 100vw"
+                    formats={["avif", "webp"]}
+                    loading="lazy"
+                  />
+                </figure>
+              ))}
+            </>
+          )
+        }
+      </div>
+    </article>
+
+    <aside class={styles.side}>
+      <p class={styles.cmd} aria-hidden="true">{PROJECTS.identify(entry.id)}</p>
+      <div class={styles.panel}>
+        <dl>
+          <dt>{PROJECTS.datasheet.kinds}</dt>
+          <dd>{data.kinds.join(" · ")}</dd>
+          <dt>{PROJECTS.datasheet.status}</dt>
+          <dd>
+            <span
+              class:list={[styles.sta, data.status === "archived" && styles.off]}
+            >
+              {data.status}
+            </span>
+          </dd>
+          <dt>{PROJECTS.datasheet.dates}</dt>
+          <dd class={styles.dt}>{PROJECTS.dates(data.started, data.ended)}</dd>
+          {
+            data.role && (
+              <>
+                <dt>{PROJECTS.datasheet.role}</dt>
+                <dd>{data.role}</dd>
+              </>
+            )
+          }
+          {
+            data.tech.length > 0 && (
+              <>
+                <dt>{PROJECTS.datasheet.tech}</dt>
+                <dd>{data.tech.join(" · ")}</dd>
+              </>
+            )
+          }
+          {
+            data.links.length > 0 && (
+              <>
+                <dt>{PROJECTS.datasheet.links}</dt>
+                <dd class={styles.links}>
+                  {data.links.map((l, i) => (
+                    <>
+                      {i > 0 && (
+                        <span class={styles.sep} aria-hidden="true">
+                          ·
+                        </span>
+                      )}
+                      <a href={l.url} rel="noopener noreferrer" target="_blank">
+                        {l.platform} ↗
+                      </a>
+                    </>
+                  ))}
+                </dd>
+              </>
+            )
+          }
+        </dl>
+      </div>
+
+      <!-- related studies: join filled by ticket 25 (studies whose projects[] contains this slug) -->
+      <div class={styles.rel}>
+        <h2>
+          <span class={styles.hash} aria-hidden="true">#</span>
+          {PROJECTS.relatedHeading}
+        </h2>
+        <p class={styles.relEmpty}>{PROJECTS.relatedEmpty}</p>
+      </div>
+    </aside>
+  </div>
+</TerminalLayout>

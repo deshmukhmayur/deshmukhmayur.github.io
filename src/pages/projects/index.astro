@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import TerminalLayout from '../../layouts/TerminalLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import LsFilterRow from '../../components/LsFilterRow.astro';
+import { Picture } from 'astro:assets';
+import { PROMPTS, PROJECTS } from '../../lib/constants';
+import styles from './listing.module.css';
+
+const entries = await getCollection('projects', ({ data }) => !data.draft);
+entries.sort((a, b) => b.data.started.localeCompare(a.data.started));
+
+const kindOptions = PROJECTS.kindOptions.map((k) => ({ value: k, label: k }));
+---
+
+<TerminalLayout title="projects">
+  <Breadcrumb
+    prompt={PROMPTS.section("projects")}
+    trail={[{ label: "home", href: "/" }, { label: "projects" }]}
+  />
+
+  <LsFilterRow
+    command={PROJECTS.filterCommand}
+    flag={PROJECTS.flag}
+    options={kindOptions}
+    targetId="project-rows"
+    countSingular={PROJECTS.countSingular}
+    countPlural={PROJECTS.countPlural}
+    emptyPrefix={PROJECTS.emptyPrefix}
+    initialCount={entries.length}
+  />
+
+  <ul class={styles.rows} id="project-rows">
+    {
+      entries.map((entry) => {
+        const { data } = entry;
+        const shot = data.screenshots[0];
+        return (
+          <li
+            class:list={[styles.row, shot && styles.hasShot]}
+            data-filter-values={data.kinds.join(" ")}
+          >
+            <a href={`/projects/${entry.id}/`}>
+              <span class={styles.nm}>{entry.id}</span>
+              <span class={styles.sum}>{data.summary}</span>
+              <span class={styles.rl}>
+                <span class={styles.kd}>{data.kinds.join(" · ")}</span>
+                {data.tech.length > 0 && (
+                  <>
+                    <span class={styles.sep} aria-hidden="true">
+                      ·
+                    </span>
+                    <span class={styles.te}>{data.tech.join(" · ")}</span>
+                  </>
+                )}
+                <span class={styles.sep} aria-hidden="true">·</span>
+                <span
+                  class:list={[styles.sta, data.status === "archived" && styles.off]}
+                >
+                  {data.status}
+                </span>{" "}
+                <span>{PROJECTS.dates(data.started, data.ended)}</span>
+              </span>
+              {shot && (
+                <span class={styles.pop} aria-hidden="true">
+                  <span class={styles.popBar}>
+                    <span class={styles.popFn}>
+                      {PROJECTS.screenshotTitlebar(
+                        entry.id,
+                        1,
+                        data.screenshots.length,
+                      )}
+                    </span>
+                  </span>
+                  <Picture
+                    src={shot.src}
+                    alt=""
+                    widths={[480]}
+                    sizes="260px"
+                    formats={["avif", "webp"]}
+                    loading="lazy"
+                  />
+                </span>
+              )}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</TerminalLayout>

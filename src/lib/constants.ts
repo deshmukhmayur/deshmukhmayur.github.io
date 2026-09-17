@@ -48,3 +48,38 @@ export const DEMO = {
   comment: "# demo page — real sections land in tickets 22–29",
   toggleLabel: (theme: string) => `· ${theme}`,
 } as const;
+
+/*
+ * Projects section chrome (ticket 22). Voice per ADR 0007: lowercase, terse,
+ * real POSIX verbs; errors dry with a real command-link reset.
+ */
+export const PROJECTS = {
+  filterCommand: "ls projects --kind",
+  flag: "kind",
+  // "all" is the reset value, the rest mirror the closed kinds enum
+  kindOptions: ["all", "work", "open-source", "personal"],
+  countSingular: "project",
+  countPlural: "projects",
+  // real-ls-error convention (ADR 0007): "ls: no matches for --kind <value>"
+  emptyPrefix: "ls: no matches for --",
+  readmeTitlebar: (slug: string) => `${slug}/README.md`,
+  rendered: "rendered",
+  identify: (slug: string) => `identify ${slug}`,
+  // datasheet keys (the `$ identify` output vocabulary)
+  datasheet: {
+    kinds: "kinds",
+    status: "status",
+    dates: "dates",
+    role: "role",
+    tech: "tech",
+    links: "links",
+  },
+  screenshotsHeading: "screenshots",
+  relatedHeading: "related studies",
+  relatedEmpty: "# no linked studies yet",
+  ongoing: "→",
+  dates: (started: string, ended?: string | null) =>
+    ended ? `${started} → ${ended}` : `${started} →`,
+  screenshotTitlebar: (slug: string, index: number, total: number) =>
+    `${slug}.png · ${index}/${total}`,
+} as const;

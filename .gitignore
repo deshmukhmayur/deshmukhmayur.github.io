@@ -1,5 +1,7 @@
 # project
+dist/
 build/
+.astro/
 tmp/
 
 # secrets

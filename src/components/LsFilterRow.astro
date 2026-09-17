@@ -1,0 +1,142 @@
+---
+/*
+ * Shared `ls <dir> --flag` filter row (spec §2 vocabulary). One active value
+ * at a time; rows in the target container carry data-filter-values.
+ * Filtering is client-side (static output); supports deep links via ?<flag>=.
+ */
+export interface FilterOption {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  /** full command shown as the decorative label, e.g. "ls projects --kind" */
+  command: string;
+  /** flag name, e.g. "kind" — also used as the URL param */
+  flag: string;
+  /** first option is the reset ("all"); the rest are real values */
+  options: FilterOption[];
+  /** id of the element holding [data-filter-values] rows */
+  targetId: string;
+  countSingular: string;
+  countPlural: string;
+  /** error-message prefix, e.g. "ls: no matches for --" */
+  emptyPrefix: string;
+  /** server-rendered initial count */
+  initialCount: number;
+}
+
+import styles from "./LsFilterRow.module.css";
+
+const {
+  command,
+  flag,
+  options,
+  targetId,
+  countSingular,
+  countPlural,
+  emptyPrefix,
+  initialCount,
+} = Astro.props;
+---
+
+<div
+  class={styles.filters}
+  data-ls-filter
+  data-target={targetId}
+  data-flag={flag}
+  data-count-singular={countSingular}
+  data-count-plural={countPlural}
+  data-empty-prefix={emptyPrefix}
+>
+  <span class={styles.lbl} aria-hidden="true">{command}</span>
+  <div class={styles.group} role="group" aria-label={`${flag} filter`}>
+    {
+      options.map((o, i) => (
+        <button
+          type="button"
+          class={styles.opt}
+          data-value={o.value}
+          data-flag={flag}
+          aria-pressed={i === 0 ? "true" : "false"}
+        >
+          {o.label}
+        </button>
+      ))
+    }
+  </div>
+  <span class={styles.count} aria-live="polite">
+    <span data-count>{initialCount} {initialCount === 1 ? countSingular : countPlural}</span>
+  </span>
+  <p class={styles.empty} data-empty hidden>
+    <span data-empty-text />
+    {" "}
+    <button type="button" class={styles.reset} data-reset>{command}</button>
+  </p>
+</div>
+
+<script>
+  function initFilters(): void {
+    const roots = document.querySelectorAll<HTMLElement>("[data-ls-filter]");
+
+    for (const root of roots) {
+      const targetId = root.dataset.target ?? "";
+      const target = document.getElementById(targetId);
+      const rows = target
+        ? Array.from(target.querySelectorAll<HTMLElement>("[data-filter-values]"))
+        : [];
+      const buttons = Array.from(
+        root.querySelectorAll<HTMLButtonElement>("button[data-value]"),
+      );
+      const countEl = root.querySelector<HTMLElement>("[data-count]");
+      const emptyEl = root.querySelector<HTMLElement>("[data-empty]");
+      const emptyText = root.querySelector<HTMLElement>("[data-empty-text]");
+      const resetBtn = root.querySelector<HTMLButtonElement>("[data-reset]");
+      const flag = root.dataset.flag ?? "";
+      const singular = root.dataset.countSingular ?? "";
+      const plural = root.dataset.countPlural ?? "";
+      const emptyPrefix = root.dataset.emptyPrefix ?? "ls: no matches for --";
+      if (!buttons.length || !rows.length) continue;
+
+      const apply = (value: string, push: boolean): void => {
+        let visible = 0;
+        for (const row of rows) {
+          const values = (row.dataset.filterValues ?? "").split(" ").filter(Boolean);
+          const show = value === "all" || values.includes(value);
+          row.hidden = !show;
+          if (show) visible++;
+        }
+        for (const b of buttons) {
+          b.setAttribute("aria-pressed", String(b.dataset.value === value));
+        }
+        if (countEl) {
+          countEl.textContent = `${visible} ${visible === 1 ? singular : plural}`;
+        }
+        if (emptyEl && emptyText) {
+          emptyEl.hidden = visible !== 0;
+          if (visible === 0) {
+            emptyText.textContent = `${emptyPrefix}${flag} ${value}`;
+          }
+        }
+        if (push) {
+          const url = new URL(window.location.href);
+          if (value === "all") url.searchParams.delete(flag);
+          else url.searchParams.set(flag, value);
+          history.replaceState(null, "", url);
+        }
+      };
+
+      for (const b of buttons) {
+        b.addEventListener("click", () => apply(b.dataset.value ?? "all", true));
+      }
+      resetBtn?.addEventListener("click", () => apply("all", true));
+
+      const initial = new URLSearchParams(window.location.search).get(flag);
+      const valid =
+        initial !== null && buttons.some((b) => b.dataset.value === initial);
+      apply(valid && initial ? initial : "all", false);
+    }
+  }
+
+  initFilters();
+</script>
