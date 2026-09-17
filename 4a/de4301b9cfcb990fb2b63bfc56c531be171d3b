@@ -1,0 +1,38 @@
+.scratch/personal-site/map.md
+  s_9259110c780d1a::t_a65e0a41452c48 50
+  s_e19227dbc79435::t_465610665e61c2 46
+  s_4c13706a6cdff9::t_1d0d6a6488e0ba 60-63
+  s_e19227dbc79435::t_c7455366e27669 45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "4ade4301b9cfcb990fb2b63bfc56c531be171d3b",
+  "prompts": {},
+  "sessions": {
+    "s_4c13706a6cdff9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f509b7f11ffepoU6pb9JxCAj64",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_9259110c780d1a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4fea67eeffeyxVTsweuDiJfP1",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_e19227dbc79435": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f575d349dffe3QvpfRDgCxfaZX",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
