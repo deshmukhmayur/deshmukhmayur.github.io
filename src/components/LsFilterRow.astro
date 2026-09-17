@@ -1,21 +1,30 @@
 ---
 /*
- * Shared `ls <dir> --flag` filter row (spec §2 vocabulary). One active value
- * at a time; rows in the target container carry data-filter-values.
- * Filtering is client-side (static output); supports deep links via ?<flag>=.
+ * Shared `ls <dir> --flag` filter toolbar (spec §2 vocabulary). One active
+ * value per flag at a time; rows in the target container carry
+ * data-filter-values. Supports several flag groups in one toolbar (they
+ * AND together); deep links via ?<flag>=.
  */
 export interface FilterOption {
   value: string;
   label: string;
 }
 
-interface Props {
-  /** full command shown as the decorative label, e.g. "ls projects --kind" */
-  command: string;
-  /** flag name, e.g. "kind" — also used as the URL param */
+export interface FilterGroup {
+  /** flag name, e.g. "material" — also used as the URL param */
   flag: string;
   /** first option is the reset ("all"); the rest are real values */
   options: FilterOption[];
+}
+
+interface Props {
+  /** full command shown as the decorative label, e.g. "ls prints/" */
+  command: string;
+  /** single-flag shorthand; merged into groups */
+  flag?: string;
+  options?: FilterOption[];
+  /** multiple flag groups in one toolbar */
+  groups?: FilterGroup[];
   /** id of the element holding [data-filter-values] rows */
   targetId: string;
   countSingular: string;
@@ -32,79 +41,68 @@ const {
   command,
   flag,
   options,
+  groups: groupsProp,
   targetId,
   countSingular,
   countPlural,
   emptyPrefix,
   initialCount,
 } = Astro.props;
+
+const groups: FilterGroup[] =
+  groupsProp ?? (flag && options ? [{ flag, options }] : []);
 ---
 
 <div
   class={styles.filters}
   data-ls-filter
   data-target={targetId}
-  data-flag={flag}
   data-count-singular={countSingular}
   data-count-plural={countPlural}
   data-empty-prefix={emptyPrefix}
 >
   <span class={styles.lbl} aria-hidden="true">{command}</span>
-  <div class={styles.group} role="group" aria-label={`${flag} filter`}>
-    {
-      options.map((o, i) => (
-        <button
-          type="button"
-          class={styles.opt}
-          data-value={o.value}
-          data-flag={flag}
-          aria-pressed={i === 0 ? "true" : "false"}
-        >
-          {o.label}
-        </button>
-      ))
-    }
-  </div>
+  {
+    groups.map((g) => (
+      <span class={styles.flaggroup}>
+        <span class={styles.flagname} aria-hidden="true">
+          --{g.flag}=
+        </span>
+        <span class={styles.group} role="group" aria-label={`${g.flag} filter`}>
+          {g.options.map((o, i) => (
+            <button
+              type="button"
+              class={styles.opt}
+              data-value={o.value}
+              data-flag={g.flag}
+              aria-pressed={i === 0 ? "true" : "false"}
+            >
+              {o.label}
+            </button>
+          ))}
+        </span>
+      </span>
+    ))
+  }
   <span class={styles.count} aria-live="polite">
     <span data-count>{initialCount} {initialCount === 1 ? countSingular : countPlural}</span>
   </span>
   <p class={styles.empty} data-empty hidden>
-    <span data-empty-text />
-    {" "}
-    <button type="button" class={styles.reset} data-reset>{command}</button>
+    <span data-empty-text />{" "}·{" "}
+    <button type="button" class={styles.reset} data-reset>reset with {command}</button>
   </p>
 </div>
 
 <script>
   /*
-   * Roots sharing one target combine: each root owns one flag, and a row is
-   * visible only when it matches every active flag. Counts and empty states
-   * update on all roots after any change.
+   * One root owns all its flag groups; a row is visible only when it matches
+   * every active flag. The count and empty state are shared across the root.
    */
   function initFilters(): void {
     const roots = Array.from(
       document.querySelectorAll<HTMLElement>("[data-ls-filter]"),
     );
 
-    interface Root {
-      root: HTMLElement;
-      flag: string;
-      buttons: HTMLButtonElement[];
-      countEl: HTMLElement | null;
-      emptyEl: HTMLElement | null;
-      emptyText: HTMLElement | null;
-      resetBtn: HTMLButtonElement | null;
-      singular: string;
-      plural: string;
-      emptyPrefix: string;
-    }
-    interface Group {
-      rows: HTMLElement[];
-      flags: Map<string, string>;
-      roots: Root[];
-    }
-
-    const groups = new Map<string, Group>();
     for (const root of roots) {
       const targetId = root.dataset.target ?? "";
       const target = document.getElementById(targetId);
@@ -115,79 +113,75 @@ const {
         root.querySelectorAll<HTMLButtonElement>("button[data-value]"),
       );
       if (!buttons.length || !rows.length) continue;
-      let group = groups.get(targetId);
-      if (!group) {
-        group = { rows, flags: new Map(), roots: [] };
-        groups.set(targetId, group);
-      }
-      group.roots.push({
-        root,
-        flag: root.dataset.flag ?? "",
-        buttons,
-        countEl: root.querySelector<HTMLElement>("[data-count]"),
-        emptyEl: root.querySelector<HTMLElement>("[data-empty]"),
-        emptyText: root.querySelector<HTMLElement>("[data-empty-text]"),
-        resetBtn: root.querySelector<HTMLButtonElement>("[data-reset]"),
-        singular: root.dataset.countSingular ?? "",
-        plural: root.dataset.countPlural ?? "",
-        emptyPrefix: root.dataset.emptyPrefix ?? "ls: no matches for --",
-      });
-    }
 
-    for (const group of groups.values()) {
+      const flags = new Map<string, string>();
+      const countEl = root.querySelector<HTMLElement>("[data-count]");
+      const emptyEl = root.querySelector<HTMLElement>("[data-empty]");
+      const emptyText = root.querySelector<HTMLElement>("[data-empty-text]");
+      const resetBtn = root.querySelector<HTMLButtonElement>("[data-reset]");
+      const singular = root.dataset.countSingular ?? "";
+      const plural = root.dataset.countPlural ?? "";
+      const emptyPrefix = root.dataset.emptyPrefix ?? "ls: no matches for --";
+
       const refresh = (pushFlag?: string, pushValue?: string): void => {
         if (pushFlag && pushValue !== undefined) {
-          group.flags.set(pushFlag, pushValue);
-          const r = group.roots.find((x) => x.flag === pushFlag);
-          if (r) {
-            for (const b of r.buttons) {
-              b.setAttribute(
-                "aria-pressed",
-                String(b.dataset.value === pushValue),
-              );
+          flags.set(pushFlag, pushValue);
+          for (const b of buttons) {
+            if (b.dataset.flag === pushFlag) {
+              b.setAttribute("aria-pressed", String(b.dataset.value === pushValue));
             }
           }
         }
-        const active = [...group.flags.entries()].filter(
-          ([, v]) => v !== "all",
-        );
+        const active = [...flags.entries()].filter(([, v]) => v !== "all");
         let visible = 0;
-        for (const row of group.rows) {
+        for (const row of rows) {
           const values = (row.dataset.filterValues ?? "").split(" ").filter(Boolean);
           const show = active.every(([, v]) => values.includes(v));
           row.hidden = !show;
           if (show) visible++;
         }
-        for (const r of group.roots) {
-          if (r.countEl) {
-            r.countEl.textContent = `${visible} ${visible === 1 ? r.singular : r.plural}`;
+        if (countEl) {
+          countEl.textContent = `${visible} ${visible === 1 ? singular : plural}`;
+        }
+        if (emptyEl && emptyText) {
+          emptyEl.hidden = !(visible === 0 && active.length > 0);
+          if (!emptyEl.hidden) {
+            emptyText.textContent =
+              emptyPrefix + active.map(([f, v]) => `${f} ${v}`).join(" --");
           }
-          const value = group.flags.get(r.flag) ?? "all";
-          if (r.emptyEl && r.emptyText) {
-            r.emptyEl.hidden = !(visible === 0 && value !== "all");
-            if (!r.emptyEl.hidden) {
-              r.emptyText.textContent = `${r.emptyPrefix}${r.flag} ${value}`;
-            }
-          }
-          if (pushFlag === r.flag && pushValue !== undefined) {
-            const url = new URL(window.location.href);
-            if (value === "all") url.searchParams.delete(r.flag);
-            else url.searchParams.set(r.flag, value);
-            history.replaceState(null, "", url);
-          }
+        }
+        if (pushFlag && pushValue !== undefined) {
+          const url = new URL(window.location.href);
+          if (pushValue === "all") url.searchParams.delete(pushFlag);
+          else url.searchParams.set(pushFlag, pushValue);
+          history.replaceState(null, "", url);
         }
       };
 
-      for (const r of group.roots) {
-        for (const b of r.buttons) {
-          b.addEventListener("click", () => refresh(r.flag, b.dataset.value ?? "all"));
+      for (const b of buttons) {
+        b.addEventListener("click", () =>
+          refresh(b.dataset.flag, b.dataset.value ?? "all"),
+        );
+      }
+      resetBtn?.addEventListener("click", () => {
+        const url = new URL(window.location.href);
+        for (const f of flags.keys()) {
+          url.searchParams.delete(f);
         }
-        r.resetBtn?.addEventListener("click", () => refresh(r.flag, "all"));
+        history.replaceState(null, "", url);
+        flags.clear();
+        refresh();
+        for (const b of buttons) {
+          b.setAttribute("aria-pressed", String(b.dataset.value === "all"));
+        }
+      });
 
-        const initial = new URLSearchParams(window.location.search).get(r.flag);
+      const params = new URLSearchParams(window.location.search);
+      for (const f of new Set(buttons.map((b) => b.dataset.flag ?? ""))) {
+        const initial = params.get(f);
         const valid =
-          initial !== null && r.buttons.some((b) => b.dataset.value === initial);
-        refresh(r.flag, valid && initial ? initial : "all");
+          initial !== null && buttons.some((b) => b.dataset.flag === f && b.dataset.value === initial);
+        refresh(f, valid && initial ? initial : "all");
       }
     }
   }

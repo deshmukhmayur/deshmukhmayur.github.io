@@ -25,28 +25,18 @@ const printerOptions = [{ value: 'all', label: 'all' }].concat(
     trail={[{ label: "home", href: "/" }, { label: "prints" }]}
   />
 
-  <div class={styles.filters}>
-    <LsFilterRow
-      command={PRINTS.filterCommand}
-      flag={PRINTS.materialFlag}
-      options={materialOptions}
-      targetId="print-sheet"
-      countSingular={PRINTS.countSingular}
-      countPlural={PRINTS.countPlural}
-      emptyPrefix={PRINTS.emptyPrefix}
-      initialCount={entries.length}
-    />
-    <LsFilterRow
-      command={PRINTS.filterCommand}
-      flag={PRINTS.printerFlag}
-      options={printerOptions}
-      targetId="print-sheet"
-      countSingular={PRINTS.countSingular}
-      countPlural={PRINTS.countPlural}
-      emptyPrefix={PRINTS.emptyPrefix}
-      initialCount={entries.length}
-    />
-  </div>
+  <LsFilterRow
+    command={PRINTS.filterCommand}
+    groups={[
+      { flag: PRINTS.materialFlag, options: materialOptions },
+      { flag: PRINTS.printerFlag, options: printerOptions },
+    ]}
+    targetId="print-sheet"
+    countSingular={PRINTS.countSingular}
+    countPlural={PRINTS.countPlural}
+    emptyPrefix={PRINTS.emptyPrefix}
+    initialCount={entries.length}
+  />
 
   <div class={styles.sheet} id="print-sheet">
     {

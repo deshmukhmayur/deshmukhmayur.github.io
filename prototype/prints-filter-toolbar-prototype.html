@@ -1,0 +1,293 @@
+<!doctype html>
+<!-- PROTOTYPE, throwaway: one combined prints filter toolbar (two variants) for deshmukhmayur.com/prints/,
+     switchable via ?variant=a|b plus an "empty state" toggle in the proto bar.
+     Question it answers: "Should the two filter rows on /prints/ merge into one single-line toolbar (A)
+     or one grouped two-line block (B), and how does the combined empty state read?"
+     See /tmp/opencode/handoff-prints-filter-toolbar.md and .scratch/personal-site/issues/24-prints-section.md -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prints filter toolbar prototype — Mayur Deshmukh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1317; --panel: #141a20; --edge: #262f38; --ink: #c9d4dc;
+    --dim: #6d7a84; --green: #58c470; --cyan: #5ac8d8; --amber: #e0b45e; --pink: #e07a9a;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "JetBrains Mono", monospace; font-size: 14px; line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 2px; }
+  .page { min-height: 100vh; padding-bottom: 120px; }
+  .term { max-width: 1160px; margin: 0 auto; padding: 48px 40px 0; }
+
+  /* ---------- shared chrome ---------- */
+  .crumb { margin-bottom: 8px; font-size: 13px; color: var(--dim); }
+  .crumb a { color: var(--dim); text-decoration: none; }
+  .crumb a:hover, .crumb a:focus-visible { color: var(--cyan); }
+  .crumb .here { color: var(--amber); }
+  .crumb::before { content: "~/prints $ "; }
+
+  /* filter toolbar, shared bits */
+  .toolbar { margin: 22px 0 34px; font-size: 13px; color: var(--ink); }
+  .toolbar .prompt { color: var(--green); }
+  .toolbar .cmd { color: var(--dim); }
+  .toolbar .flag { color: var(--dim); white-space: nowrap; }
+  .toolbar button {
+    background: none; border: 0; padding: 2px 4px; cursor: pointer;
+    font: inherit; color: var(--ink);
+  }
+  .toolbar button.on { color: var(--pink); text-decoration: underline; text-underline-offset: 4px; }
+  .toolbar button:hover, .toolbar button:focus-visible { color: var(--pink); }
+  .toolbar .count { color: var(--dim); }
+  .toolbar .count::before { content: "# "; color: var(--amber); }
+
+  /* ---------- variant A: single line, wraps ---------- */
+  .va .toolbar { display: flex; flex-wrap: wrap; gap: 2px 18px; align-items: baseline; }
+  .va .toolbar .count { margin-left: auto; }
+
+  /* ---------- variant B: grouped block, two lines ---------- */
+  .vb .toolbar { border: 1px solid var(--edge); border-radius: 8px; background: var(--panel); padding: 10px 16px; }
+  .vb .row { display: flex; flex-wrap: wrap; gap: 2px 18px; align-items: baseline; }
+  .vb .row + .row { margin-top: 2px; }
+  .vb .row .count { margin-left: auto; }
+
+  /* ---------- placeholder tiles ---------- */
+  .sheet { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .win { border: 1px solid var(--edge); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .titlebar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 12px; font-size: 11.5px; color: var(--dim);
+    border-bottom: 1px solid var(--edge);
+  }
+  .titlebar .fn { color: var(--cyan); }
+  .win a { display: block; text-decoration: none; line-height: 0; }
+  .win a:hover .ph, .win a:focus-visible .ph { filter: brightness(1.08); }
+  .cap { display: flex; flex-wrap: wrap; column-gap: 10px; padding: 8px 12px; font-size: 11.5px; color: var(--dim); border-top: 1px solid var(--edge); }
+  .cap .prn { color: var(--cyan); }
+  .cap .mat { color: var(--amber); }
+  .ph { width: 100%; display: block; position: relative; overflow: hidden; background: var(--panel); }
+  .ph::after {
+    content: attr(data-name); position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.85); font-size: 12px; letter-spacing: .08em; text-shadow: 0 1px 4px rgba(0,0,0,.4);
+  }
+  .ph.g1 { background: linear-gradient(160deg, #2c3e6b, #6b4a7a 60%, #c98ba3); }
+  .ph.g2 { background: linear-gradient(200deg, #d8a25a, #a05a3a 70%, #5a3428); }
+  .ph.g3 { background: linear-gradient(140deg, #4a6b5a, #7a9a6b 55%, #d8d0a2); }
+  .ph.g4 { background: linear-gradient(170deg, #3a3f4a, #6b7484 60%, #c4ccd8); }
+
+  /* ---------- empty state (shared wording in both variants) ---------- */
+  .empty { margin-top: 34px; font-size: 13.5px; color: var(--dim); }
+  .empty .err { color: var(--pink); }
+  .empty a { color: var(--cyan); text-decoration: none; }
+  .empty a:hover, .empty a:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+  .empty a::before { content: "$ "; color: var(--green); }
+
+  /* ---------- prototype bar (not part of design) ---------- */
+  .proto-bar {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    background: #111; color: #fff; border-radius: 999px; padding: 8px 10px;
+    font: 600 13px "JetBrains Mono", monospace; box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  .proto-bar button { background: none; border: 0; color: #fff; font: inherit; cursor: pointer; padding: 4px 10px; }
+  .proto-bar .label { min-width: 300px; text-align: center; }
+  .proto-bar .sep { color: #555; }
+
+  @media (max-width: 760px) {
+    .term { padding: 28px 20px 0; }
+    .sheet { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== VARIANT A — SINGLE LINE ==================== -->
+<div id="variant-a" class="va page">
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">prints</span></p>
+
+    <div class="toolbar" role="toolbar" aria-label="filter prints">
+      <span class="prompt">$ </span><span class="cmd">ls prints/</span>
+      <span class="flag">--material=
+        <button data-flag="material" class="on">all</button>
+        <button data-flag="material">pla</button>
+        <button data-flag="material">petg</button>
+        <button data-flag="material">resin</button>
+        <button data-flag="material">abs</button>
+      </span>
+      <span class="flag">--printer=
+        <button data-flag="printer" class="on">all</button>
+        <button data-flag="printer">a1-mini</button>
+        <button data-flag="printer">ender-3</button>
+      </span>
+      <span class="count" id="count-a">4 prints</span>
+    </div>
+
+    <div class="sheet" id="grid-a">
+      <div class="win">
+        <div class="titlebar"><span class="fn">mecha-bust.gcode</span><span>9.2h</span></div>
+        <a href="#"><div class="ph g1" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">A1 mini</span><span class="mat">PLA</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">desk-organizer.3mf</span><span>4.1h</span></div>
+        <a href="#"><div class="ph g3" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">A1 mini</span><span class="mat">PETG</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">brushed-alu-rx7.stl</span><span>6.8h</span></div>
+        <a href="#"><div class="ph g2" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">Ender 3</span><span class="mat">PLA</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">plant-pot-lattice.stl</span><span>14.0h</span></div>
+        <a href="#"><div class="ph g4" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">Ender 3</span><span class="mat">ABS</span></div>
+      </div>
+    </div>
+
+    <div class="empty" id="empty-a" hidden>
+      <span class="err">ls: no matches for --material pla --printer ender-3</span>
+      <br>reset with <a href="#">ls prints/</a>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== VARIANT B — GROUPED BLOCK ==================== -->
+<div id="variant-b" class="vb page" hidden>
+  <div class="term">
+    <p class="crumb"><a href="#">home</a> / <span class="here">prints</span></p>
+
+    <div class="toolbar" role="toolbar" aria-label="filter prints">
+      <div class="row">
+        <span class="prompt">$ </span><span class="cmd">ls prints/</span>
+        <span class="count" id="count-b">4 prints</span>
+      </div>
+      <div class="row">
+        <span class="flag">--material=
+          <button data-flag="material" class="on">all</button>
+          <button data-flag="material">pla</button>
+          <button data-flag="material">petg</button>
+          <button data-flag="material">resin</button>
+          <button data-flag="material">abs</button>
+        </span>
+      </div>
+      <div class="row">
+        <span class="flag">--printer=
+          <button data-flag="printer" class="on">all</button>
+          <button data-flag="printer">a1-mini</button>
+          <button data-flag="printer">ender-3</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="sheet" id="grid-b">
+      <div class="win">
+        <div class="titlebar"><span class="fn">mecha-bust.gcode</span><span>9.2h</span></div>
+        <a href="#"><div class="ph g1" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">A1 mini</span><span class="mat">PLA</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">desk-organizer.3mf</span><span>4.1h</span></div>
+        <a href="#"><div class="ph g3" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">A1 mini</span><span class="mat">PETG</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">brushed-alu-rx7.stl</span><span>6.8h</span></div>
+        <a href="#"><div class="ph g2" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">Ender 3</span><span class="mat">PLA</span></div>
+      </div>
+      <div class="win">
+        <div class="titlebar"><span class="fn">plant-pot-lattice.stl</span><span>14.0h</span></div>
+        <a href="#"><div class="ph g4" data-name="print" style="aspect-ratio: 4/3"></div></a>
+        <div class="cap"><span class="prn">Ender 3</span><span class="mat">ABS</span></div>
+      </div>
+    </div>
+
+    <div class="empty" id="empty-b" hidden>
+      <span class="err">ls: no matches for --material pla --printer ender-3</span>
+      <br>reset with <a href="#">ls prints/</a>
+    </div>
+  </div>
+</div>
+
+<!-- prototype switcher (never part of the design) -->
+<div class="proto-bar" role="navigation" aria-label="Prototype variant switcher">
+  <button id="prev" aria-label="Previous variant">←</button>
+  <span class="label" id="vlabel">a · single line</span>
+  <button id="next" aria-label="Next variant">→</button>
+  <span class="sep">|</span>
+  <button id="emptyBtn" aria-label="Toggle empty state">empty?</button>
+</div>
+
+<script>
+  // question: one toolbar, single line (a) vs grouped two-line block (b)?
+  const VARIANTS = [
+    { key: 'a', el: document.getElementById('variant-a'), name: 'a · single line (wraps on mobile)' },
+    { key: 'b', el: document.getElementById('variant-b'), name: 'b · grouped block (two lines, one prompt)' },
+  ];
+  const params = new URLSearchParams(location.search);
+  let i = Math.max(0, VARIANTS.findIndex(v => v.key === params.get('variant')));
+  let empty = params.get('empty') === '1';
+
+  function render() {
+    VARIANTS.forEach((v, idx) => v.el.hidden = idx !== i);
+    const cur = VARIANTS[i];
+    document.getElementById('vlabel').textContent = cur.name;
+    const suffix = empty ? ' · empty state' : '';
+    document.getElementById('vlabel').textContent += suffix;
+    cur.el.querySelector('.sheet').hidden = empty;
+    cur.el.querySelector('.empty').hidden = !empty;
+    const url = new URL(location);
+    url.searchParams.set('variant', cur.key);
+    url.searchParams.set('empty', empty ? '1' : '0');
+    history.replaceState(null, '', url);
+    scrollTo(0, 0);
+  }
+  function cycle(d) { i = (i + d + VARIANTS.length) % VARIANTS.length; render(); }
+
+  document.getElementById('prev').onclick = () => cycle(-1);
+  document.getElementById('next').onclick = () => cycle(1);
+  document.getElementById('emptyBtn').onclick = () => { empty = !empty; render(); };
+  addEventListener('keydown', e => {
+    if (/input|textarea/i.test(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+
+  // per-variant filter buttons: exclusive pick within a flag group; count + empty-state wording update
+  for (const v of VARIANTS) {
+    const root = v.el;
+    const picks = { material: 'all', printer: 'all' };
+    root.querySelectorAll('button[data-flag]').forEach(btn => {
+      btn.onclick = () => {
+        picks[btn.dataset.flag] = btn.textContent;
+        root.querySelectorAll(`button[data-flag="${btn.dataset.flag}"]`)
+          .forEach(b => b.classList.toggle('on', b === btn));
+        // fake data: no pla print exists on the ender-3, so that combo is the empty case
+        const isEmpty = picks.material === 'pla' && picks.printer === 'ender-3';
+        root.querySelector('.sheet').hidden = isEmpty;
+        root.querySelector('.empty').hidden = !isEmpty;
+        const active = [picks.material !== 'all' ? `--material ${picks.material}` : null,
+                        picks.printer !== 'all' ? `--printer ${picks.printer}` : null].filter(Boolean);
+        if (isEmpty) root.querySelector('.empty .err').textContent =
+          'ls: no matches for ' + active.join(' ');
+        root.querySelector('.count').textContent = isEmpty ? '0 prints' : '4 prints';
+      };
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>
