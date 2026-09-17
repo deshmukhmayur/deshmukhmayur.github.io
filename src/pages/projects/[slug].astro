@@ -4,7 +4,7 @@ import { Picture } from 'astro:assets';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { getStudies, studiesForProject } from '../../lib/studies';
-import { PROMPTS, PROJECTS } from '../../lib/constants';
+import { PROMPTS, PROJECTS, STUDIES } from '../../lib/constants';
 import styles from './detail.module.css';
 
 export async function getStaticPaths() {
@@ -134,6 +134,9 @@ const { Content } = await render(entry);
               {studies.map((s) => (
                 <li>
                   <a href={`/studies/${s.id}/`}>
+                    <span class={styles.relDate}>
+                      {STUDIES.dateISO(s.data.date)}
+                    </span>
                     <span class={styles.relTitle}>{s.data.title}</span>
                     <span class={styles.relSummary}>{s.data.summary}</span>
                   </a>

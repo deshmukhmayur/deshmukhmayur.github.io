@@ -232,12 +232,19 @@
   text-underline-offset: 4px;
 }
 
+.relDate {
+  display: block;
+  color: var(--pink);
+  font-size: 10.5px;
+  margin-bottom: 2px;
+}
+
 .relSummary {
   display: block;
   color: var(--dim);
-  font-family: var(--serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: 12px;
+  margin-top: 2px;
 }
 
 @media (max-width: 760px) {

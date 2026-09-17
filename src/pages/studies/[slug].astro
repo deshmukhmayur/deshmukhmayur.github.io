@@ -34,6 +34,7 @@ const date = STUDIES.dateISO(data.date);
   <div class={styles.detail}>
     <article class={styles.article}>
       <h1>{data.title}</h1>
+      <p class={styles.summary}>{data.summary}</p>
       <Content />
     </article>
 
@@ -82,6 +83,9 @@ const date = STUDIES.dateISO(data.date);
               {related.map((e) => (
                 <li>
                   <a href={`/studies/${e.id}/`}>
+                    <span class={styles.relDate}>
+                      {STUDIES.dateISO(e.data.date)}
+                    </span>
                     <span class={styles.relTitle}>{e.data.title}</span>
                     <span class={styles.relSummary}>{e.data.summary}</span>
                   </a>

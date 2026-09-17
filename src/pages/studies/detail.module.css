@@ -12,10 +12,23 @@
 }
 
 .article h1 {
-  font-size: 22px;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 26px;
   line-height: 1.25;
   color: var(--ink);
-  margin: 24px 0 12px;
+  margin: 24px 0 10px;
+}
+
+/* editorial byline summary — Spectral italic, the one prose line above the body */
+.summary {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--dim);
+  margin: 0 0 18px;
+  max-width: 58ch;
 }
 
 /* editorial prose — Spectral, normal-capitalization casual first person */
@@ -192,12 +205,19 @@
   text-underline-offset: 4px;
 }
 
+.relDate {
+  display: block;
+  color: var(--pink);
+  font-size: 10.5px;
+  margin-bottom: 2px;
+}
+
 .relSummary {
   display: block;
   color: var(--dim);
-  font-family: var(--serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: 12px;
+  margin-top: 2px;
 }
 
 @media (max-width: 760px) {
