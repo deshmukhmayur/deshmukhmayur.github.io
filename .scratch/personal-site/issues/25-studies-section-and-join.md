@@ -4,9 +4,9 @@
 
 **Blocked by:** 21 (terminal shell), 22 (projects section — receiving end of the join).
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `/studies/` shows featured lead + ledger rows under hairline dividers
-- [ ] `/studies/<slug>/` renders article + `#`-prefixed datasheet sidebar + related studies
-- [ ] Project detail pages list their related studies
-- [ ] Build fails when `projects[]` references an unknown project slug; `draft` entries excluded from all pages
+- [x] `/studies/` shows featured lead + ledger rows under hairline dividers
+- [x] `/studies/<slug>/` renders article + `#`-prefixed datasheet sidebar + related studies
+- [x] Project detail pages list their related studies
+- [x] Build fails when `projects[]` references an unknown project slug; `draft` entries excluded from all pages
