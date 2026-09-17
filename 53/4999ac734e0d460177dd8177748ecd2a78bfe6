@@ -1,0 +1,28 @@
+src/pages/studies/[slug].astro
+  s_59e2f1334d8f8d::t_eb6173d39ef96b 86-88
+  s_59e2f1334d8f8d::t_9cc78e86af6b6c 37
+src/pages/studies/detail.module.css
+  s_59e2f1334d8f8d::t_a6681e4e5ceb46 208-214,219-220
+  s_59e2f1334d8f8d::t_26b0e19a6babcd 15-17,20-31
+src/pages/projects/detail.module.css
+  s_59e2f1334d8f8d::t_b4c81fd2bf44ea 235-241,246-247
+src/pages/projects/[slug].astro
+  s_59e2f1334d8f8d::t_659b64a0fc9c8d 7
+  s_59e2f1334d8f8d::t_cfd4ec082af3dd 137-139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "534999ac734e0d460177dd8177748ecd2a78bfe6",
+  "prompts": {},
+  "sessions": {
+    "s_59e2f1334d8f8d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4fbeb8efffeBQ2FIfaPK92G2E",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
