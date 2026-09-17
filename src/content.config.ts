@@ -105,4 +105,24 @@ const prints = defineCollection({
     }),
 });
 
-export const collections = { art, prints, projects };
+/*
+ * Studies (spec §4): unframed editorial. tags[] open vocabulary shared with
+ * Soliloquy; projects[] is the many-to-many join edge to project slugs —
+ * validated against the projects collection at build (src/lib/studies.ts,
+ * the schema layer can't cross-reference collections). draft entries are
+ * excluded from every page.
+ */
+const studies = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/studies' }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    summary: z.string().min(1),
+    tags: z.array(z.string()).default([]),
+    featured: z.boolean().optional(),
+    status: z.enum(['draft', 'published']),
+    projects: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { art, prints, projects, studies };

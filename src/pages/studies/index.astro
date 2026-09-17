@@ -1,0 +1,89 @@
+---
+import { getStudies } from '../../lib/studies';
+import TerminalLayout from '../../layouts/TerminalLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { PROMPTS, STUDIES } from '../../lib/constants';
+import styles from './listing.module.css';
+
+const entries = await getStudies();
+// featured lead study (spec §4); newest entry leads when none is featured
+const lead = entries.find((e) => e.data.featured) ?? entries[0];
+const rest = entries.filter((e) => e !== lead);
+
+const dateISO = STUDIES.dateISO;
+
+const taxo = (projects: string[], tags: string[]) =>
+  [
+    ...projects.map((p) => ({ label: `${p}/`, href: `/projects/${p}/` })),
+    ...tags.map((t) => ({ label: `#${t}`, href: undefined })),
+  ];
+---
+
+<TerminalLayout title="studies">
+  <Breadcrumb
+    prompt={PROMPTS.section("studies")}
+    trail={[{ label: "home", href: "/" }, { label: "studies" }]}
+  />
+
+  <div class={styles.ledger}>
+    {
+      lead && (
+        <article class={styles.lead}>
+          <p class={styles.leadDate}>{dateISO(lead.data.date)}</p>
+          <h2 class={styles.leadTitle}>
+            <a href={`/studies/${lead.id}/`}>{lead.data.title}</a>
+          </h2>
+          <p class={styles.leadSummary}>{lead.data.summary}</p>
+          <p class={styles.meta}>
+            {taxo(lead.data.projects, lead.data.tags).map((t, i) => (
+              <>
+                {i > 0 && (
+                  <span class={styles.sep} aria-hidden="true">
+                    ·
+                  </span>
+                )}
+                {t.href ? (
+                  <a href={t.href}>{t.label}</a>
+                ) : (
+                  <span class={styles.tag}>{t.label}</span>
+                )}
+              </>
+            ))}
+          </p>
+        </article>
+      )
+    }
+
+    <ul class={styles.rows}>
+      {
+        rest.map((entry) => (
+          <li class={styles.row}>
+            <span class={styles.date}>{dateISO(entry.data.date)}</span>
+            <div class={styles.main}>
+              <h3 class={styles.title}>
+                <a href={`/studies/${entry.id}/`}>{entry.data.title}</a>
+              </h3>
+              <span class={styles.summary}>{entry.data.summary}</span>
+            </div>
+            <span class={styles.taxo}>
+              {taxo(entry.data.projects, entry.data.tags).map((t, i) => (
+                <>
+                  {i > 0 && (
+                    <span class={styles.sep} aria-hidden="true">
+                      ·
+                    </span>
+                  )}
+                  {t.href ? (
+                    <a href={t.href}>{t.label}</a>
+                  ) : (
+                    <span class={styles.tag}>{t.label}</span>
+                  )}
+                </>
+              ))}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</TerminalLayout>

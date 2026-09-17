@@ -1,0 +1,96 @@
+---
+import { getStudies, relatedStudies } from '../../lib/studies';
+import TerminalLayout from '../../layouts/TerminalLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { render } from 'astro:content';
+import { PROMPTS, STUDIES } from '../../lib/constants';import styles from './detail.module.css';
+
+export async function getStaticPaths() {
+  // draft entries are excluded from all pages
+  const entries = await getStudies();
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, all: entries },
+  }));
+}
+
+const { entry, all } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const related = relatedStudies(all, entry);
+const date = STUDIES.dateISO(data.date);
+---
+
+<TerminalLayout title={data.title}>
+  <Breadcrumb
+    prompt={PROMPTS.section("studies")}
+    trail={[
+      { label: "home", href: "/" },
+      { label: "studies", href: "/studies/" },
+      { label: entry.id },
+    ]}
+  />
+
+  <div class={styles.detail}>
+    <article class={styles.article}>
+      <h1>{data.title}</h1>
+      <Content />
+    </article>
+
+    <aside class={styles.side}>
+      <p class={styles.cmd} aria-hidden="true">{STUDIES.identify(entry.id)}</p>
+      <dl class={styles.sheet}>
+        <dt>{STUDIES.datasheet.date}</dt>
+        <dd class={styles.dt}>{date}</dd>
+        <dt>{STUDIES.datasheet.status}</dt>
+        <dd>{data.status}</dd>
+        {
+          data.projects.length > 0 && (
+            <>
+              <dt>{STUDIES.datasheet.projects}</dt>
+              <dd>
+                {data.projects.map((slug, i) => (
+                  <>
+                    {i > 0 && <span> · </span>}
+                    <a href={`/projects/${slug}/`}>{slug}/</a>
+                  </>
+                ))}
+              </dd>
+            </>
+          )
+        }
+        {
+          data.tags.length > 0 && (
+            <>
+              <dt>{STUDIES.datasheet.tags}</dt>
+              <dd>{data.tags.map((t) => `#${t}`).join(" ")}</dd>
+            </>
+          )
+        }
+      </dl>
+
+      <section class={styles.rel}>
+        <h2>
+          <span class={styles.hash} aria-hidden="true">#</span>
+          {STUDIES.relatedHeading}
+        </h2>
+        {
+          related.length === 0 ? (
+            <p class={styles.relEmpty}>{STUDIES.relatedEmpty}</p>
+          ) : (
+            <ul>
+              {related.map((e) => (
+                <li>
+                  <a href={`/studies/${e.id}/`}>
+                    <span class={styles.relTitle}>{e.data.title}</span>
+                    <span class={styles.relSummary}>{e.data.summary}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </section>
+    </aside>
+  </div>
+</TerminalLayout>

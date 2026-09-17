@@ -3,19 +3,22 @@ import { getCollection, render } from 'astro:content';
 import { Picture } from 'astro:assets';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import { getStudies, studiesForProject } from '../../lib/studies';
 import { PROMPTS, PROJECTS } from '../../lib/constants';
 import styles from './detail.module.css';
 
 export async function getStaticPaths() {
   // draft entries are a separate publication flag — never published
   const entries = await getCollection('projects', ({ data }) => !data.draft);
+  // the join's receiving end: published studies whose projects[] contains slug
+  const studies = await getStudies();
   return entries.map((entry) => ({
     params: { slug: entry.id },
-    props: { entry },
+    props: { entry, studies: studiesForProject(studies, entry.id) },
   }));
 }
 
-const { entry } = Astro.props;
+const { entry, studies } = Astro.props;
 const { data } = entry;
 const { Content } = await render(entry);
 ---
@@ -117,13 +120,28 @@ const { Content } = await render(entry);
         </dl>
       </div>
 
-      <!-- related studies: join filled by ticket 25 (studies whose projects[] contains this slug) -->
+      <!-- related studies: the Studies ↔ Projects join (ticket 25) -->
       <div class={styles.rel}>
         <h2>
           <span class={styles.hash} aria-hidden="true">#</span>
           {PROJECTS.relatedHeading}
         </h2>
-        <p class={styles.relEmpty}>{PROJECTS.relatedEmpty}</p>
+        {
+          studies.length === 0 ? (
+            <p class={styles.relEmpty}>{PROJECTS.relatedEmpty}</p>
+          ) : (
+            <ul>
+              {studies.map((s) => (
+                <li>
+                  <a href={`/studies/${s.id}/`}>
+                    <span class={styles.relTitle}>{s.data.title}</span>
+                    <span class={styles.relSummary}>{s.data.summary}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
       </div>
     </aside>
   </div>

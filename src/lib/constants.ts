@@ -132,6 +132,24 @@ export const PRINTS = {
   failedLabel: " — failed attempt",
 } as const;
 
+/*
+ * Studies section chrome (ticket 25). Voice per ADR 0007: lowercase, terse,
+ * real POSIX verbs. Tags are open vocabulary, shared with Soliloquy.
+ */
+export const STUDIES = {
+  // `$ identify <slug>.md` datasheet (spec §4)
+  identify: (slug: string) => `identify ${slug}.md`,
+  dateISO: (d: Date) => d.toISOString().slice(0, 10),
+  datasheet: {
+    date: "date",
+    status: "status",
+    tags: "tags",
+    projects: "projects",
+  },
+  relatedHeading: "related studies",
+  relatedEmpty: "# no related studies yet",
+} as const;
+
 export const PROJECTS = {
   filterCommand: "ls projects --kind",
   flag: "kind",

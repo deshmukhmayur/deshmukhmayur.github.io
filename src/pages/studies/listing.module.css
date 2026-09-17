@@ -1,0 +1,149 @@
+.ledger {
+  margin: 0 0 40px;
+  max-width: 760px;
+}
+
+/* featured lead study — unframed editorial, Spectral prose */
+.lead {
+  margin: 26px 0 34px;
+}
+
+.leadDate {
+  font-size: 12px;
+  color: var(--pink);
+  margin-bottom: 6px;
+}
+
+.leadTitle {
+  font-size: 22px;
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+
+.leadTitle a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.leadTitle a:hover,
+.leadTitle a:focus-visible {
+  color: var(--cyan);
+}
+
+.leadSummary {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--dim);
+  max-width: 58ch;
+  margin: 0 0 10px;
+}
+
+.meta {
+  font-size: 11.5px;
+  color: var(--dim);
+}
+
+.meta a {
+  color: var(--cyan);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--dotted);
+}
+
+.meta a:hover,
+.meta a:focus-visible {
+  border-bottom-color: var(--cyan);
+}
+
+.tag {
+  color: var(--amber);
+}
+
+/* dated ledger rows — date | title + italic summary | project/tags */
+.rows {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr) auto;
+  gap: 4px 24px;
+  align-items: baseline;
+  padding: 14px 2px;
+  border-bottom: 1px solid var(--edge); /* hairline divider */
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.date {
+  font-size: 12px;
+  color: var(--pink);
+  white-space: nowrap;
+}
+
+.main {
+  min-width: 0;
+}
+
+.title {
+  font-size: 14.5px;
+  margin: 0;
+}
+
+.title a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.title a:hover,
+.title a:focus-visible {
+  color: var(--cyan);
+}
+
+.summary {
+  display: block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--dim);
+  margin-top: 3px;
+}
+
+.taxo {
+  text-align: right;
+  font-size: 11.5px;
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+.taxo a {
+  color: var(--cyan);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--dotted);
+}
+
+.taxo a:hover,
+.taxo a:focus-visible {
+  border-bottom-color: var(--cyan);
+}
+
+.sep {
+  margin: 0 6px;
+  color: var(--dim);
+}
+
+@media (max-width: 620px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .taxo {
+    text-align: left;
+    white-space: normal;
+  }
+}
