@@ -1,0 +1,69 @@
+.scratch/personal-site/issues/24-prints-section.md
+  s_271d0af66e0c04::t_4e304885f68f2f 7,9-12
+  s_4c13706a6cdff9::t_172824655f78db 1-6,8
+src/components/LsFilterRow.astro
+  s_271d0af66e0c04::t_c0d945a4fdae61 190
+  s_271d0af66e0c04::t_98c341e04b60bf 139-150,172
+  s_271d0af66e0c04::t_6eb54682d13321 79-83,85-87,89-107,118-135,137-138,151-153,155,157,161-171,173-176,181-185,187-189
+  s_271d0af66e0c04::t_68acdcd4e0bc01 191
+src/pages/prints/[id].astro
+  s_271d0af66e0c04::t_802d87796a663a 19-58
+  s_271d0af66e0c04::t_f91ef03362c1fe 59
+  s_271d0af66e0c04::t_0cec28d2b83ac5 60-89,91-140,142-180
+  s_271d0af66e0c04::t_6d40e9777f0310 90
+  s_271d0af66e0c04::t_b419def90ec33b 141
+  s_271d0af66e0c04::t_840d801b90ea71 1-18
+src/content/prints/2026-06-20-desk-organizer.md
+  s_271d0af66e0c04::t_b02b9779d8b5e7 1-19
+src/content/prints/2026-04-15-cat-ear-headband.md
+  s_271d0af66e0c04::t_608562ca7ca130 1-16
+src/pages/prints/index.astro
+  s_271d0af66e0c04::t_7253a5ecaaa453 1-86
+src/components/WindowedTile.astro
+  s_271d0af66e0c04::t_1cdde33705a13a 4-5,9-11,17
+  s_271d0af66e0c04::t_809e578c333af5 23
+src/lib/constants.ts
+  s_271d0af66e0c04::t_6d1910b8b991c7 119-126
+  s_271d0af66e0c04::t_228682559dcaee 89-118,127-134
+src/content/prints/2026-07-12-brushed-alu-rx7.md
+  s_271d0af66e0c04::t_bf70e7c080fea0 1-16
+src/content/prints/2026-05-08-plant-pot-lattice.md
+  s_271d0af66e0c04::t_11086dfcc9c9fe 1-16
+src/pages/prints/listing.module.css
+  s_271d0af66e0c04::t_c7399efea5ea77 1-38
+src/pages/prints/detail.module.css
+  s_271d0af66e0c04::t_412a8a58e0dea4 1-125,127-129,132-241
+  s_271d0af66e0c04::t_a45b208f717a04 126,130-131
+src/content/prints/2026-08-02-keycaps-v2.md
+  s_271d0af66e0c04::t_0db1d904555749 1-23
+src/content/prints/2026-08-30-mecha-bust.md
+  s_271d0af66e0c04::t_d6c254bb4f7c75 1-8,10-38
+  s_271d0af66e0c04::t_eaac0a57e458d4 9
+src/content.config.ts
+  s_271d0af66e0c04::t_f8a544eaa01546 3
+  s_271d0af66e0c04::t_730faecca00f46 78-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "4afddd704c534fa54b4fbcfd4f16a3f47675b639",
+  "prompts": {},
+  "sessions": {
+    "s_271d0af66e0c04": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f50037c64ffe2zv6b5LQAtbAmn",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_4c13706a6cdff9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f509b7f11ffepoU6pb9JxCAj64",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
