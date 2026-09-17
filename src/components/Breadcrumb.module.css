@@ -1,0 +1,39 @@
+.crumb {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.prompt {
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+.crumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+}
+
+.crumb li {
+  white-space: nowrap;
+}
+
+.crumb a {
+  color: var(--dim);
+  text-decoration: none;
+}
+
+.crumb a:hover,
+.crumb a:focus-visible {
+  color: var(--cyan);
+}
+
+.here {
+  color: var(--amber);
+}

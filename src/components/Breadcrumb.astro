@@ -1,0 +1,31 @@
+---
+interface Props {
+  /** trail of { label, href? } — last item is current location */
+  trail: { label: string; href?: string }[];
+  /** section prompt, e.g. "~ $" or "~/art $" */
+  prompt: string;
+}
+
+import styles from "./Breadcrumb.module.css";
+const { trail, prompt } = Astro.props;
+---
+
+<nav class={styles.crumb} aria-label="breadcrumb">
+  <span class={styles.prompt} aria-hidden="true">{prompt}</span>
+  <ol>
+    {
+      trail.map((item, i) => (
+        <li>
+          {item.href && i < trail.length - 1 ? (
+            <a href={item.href}>{item.label}</a>
+          ) : (
+            <span class={styles.here} aria-current="location">
+              {item.label}
+            </span>
+          )}
+          {i < trail.length - 1 && <span aria-hidden="true"> / </span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

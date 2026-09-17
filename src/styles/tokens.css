@@ -1,0 +1,121 @@
+/*
+ * Single source of color truth. Re-theming = editing this file only.
+ * Dark is the default (terminal aesthetic); light flips via [data-theme="light"].
+ * Components reference tokens only — never raw colors.
+ */
+
+:root {
+  /* terminal palette — dark default */
+  --bg: #0f1317;
+  --panel: #141a20;
+  --edge: #262f38;
+  --ink: #c9d4dc;
+  --dim: #6d7a84;
+  --green: #58c470;
+  --cyan: #5ac8d8;
+  --amber: #e0b45e;
+  --pink: #e07a9a;
+
+  /* type */
+  --mono: "Space Mono", ui-monospace, monospace;
+  --serif: "Spectral", Georgia, serif;
+
+  /* hairline dotted underline used by footer/nav links */
+  --dotted: #3a464f;
+}
+
+[data-theme="light"] {
+  --bg: #f4f6f7;
+  --panel: #ffffff;
+  --edge: #d9dfe4;
+  --ink: #2a3238;
+  --dim: #6d7a84;
+  --green: #1c8a48;
+  --cyan: #0d7d8e;
+  --amber: #a06f14;
+  --pink: #b0446c;
+  --dotted: #b3bcc2;
+}
+
+/* minimal reset — nothing else global */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+html {
+  background: var(--bg);
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* self-hosted typefaces, latin subset, ADR 0006 */
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/space-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/space-mono-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Spectral";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/spectral-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Spectral";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/spectral-400-italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Spectral";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/spectral-700.woff2") format("woff2");
+}

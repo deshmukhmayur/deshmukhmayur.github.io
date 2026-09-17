@@ -1,0 +1,31 @@
+---
+import TerminalLayout from "../layouts/TerminalLayout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import { PROMPTS, DEMO } from "../lib/constants";
+import styles from "./index.module.css";
+---
+
+<TerminalLayout title="home">
+  <Breadcrumb trail={[{ label: "home" }]} prompt={PROMPTS.home} />
+
+  <p class={styles.cmd} aria-hidden="true">{DEMO.commands[0]}</p>
+
+  <div class={styles.prose}>
+    <h1>shell up and running</h1>
+    <p>
+      every route renders inside this terminal shell. chrome is space mono and
+      stays lowercase; prose like this paragraph is spectral.
+    </p>
+    <p>
+      the toggle in the top-right flips the palette — <span class={styles.cyan}
+        >--cyan</span
+      >, <span class={styles.pink}>--pink</span>, <span class={styles.amber}
+        >--amber</span
+      >, <span class={styles.green}>--green</span> — and your choice persists
+      across reloads.
+    </p>
+  </div>
+
+  <p class={styles.cmd} aria-hidden="true">{DEMO.commands[1]}</p>
+  <p class={styles.dim}>{DEMO.comment}</p>
+</TerminalLayout>

@@ -1,0 +1,37 @@
+---
+import { THEME, DEMO } from "../lib/constants";
+import styles from "./ThemeToggle.module.css";
+---
+
+<button
+  type="button"
+  class={styles.toggle}
+  data-theme-toggle
+  aria-label="toggle light/dark theme"
+>
+  <span data-theme-label>{DEMO.toggleLabel("dark")}</span>
+</button>
+
+<script>
+  import { THEME, DEMO } from "../lib/constants";
+
+  function apply(theme: string): void {
+    document.documentElement.dataset.theme = theme;
+    const label = document.querySelector<HTMLElement>("[data-theme-label]");
+    if (label) label.textContent = DEMO.toggleLabel(theme);
+  }
+
+  const stored = localStorage.getItem(THEME.key);
+  apply(stored === "light" ? "light" : THEME.default);
+
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")
+    .forEach((btn) =>
+      btn.addEventListener("click", () => {
+        const next =
+          document.documentElement.dataset.theme === "light" ? "dark" : "light";
+        localStorage.setItem(THEME.key, next);
+        apply(next);
+      }),
+    );
+</script>
