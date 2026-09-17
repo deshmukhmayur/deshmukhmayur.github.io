@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { ART } from './lib/constants';
 
 const art = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/art' }),
@@ -11,7 +12,8 @@ const art = defineCollection({
       medium: z.enum(['digital', 'pencil', 'ink', 'mixed']),
       tools: z.array(z.string()).default([]),
       collection: z.string().optional(),
-      tags: z.array(z.string()).default([]),
+      // closed starter subject tags (spec §4) — extended deliberately
+      tags: z.array(z.enum(ART.startTags as [string, ...string[]])).default([]),
       description: z.string().optional(),
       images: z.object({
         main: image(),

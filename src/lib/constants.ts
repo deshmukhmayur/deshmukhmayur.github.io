@@ -50,6 +50,39 @@ export const DEMO = {
 } as const;
 
 /*
+ * Art section chrome (ticket 23). Voice per ADR 0007: lowercase, terse,
+ * real POSIX verbs; errors dry with a real command-link reset.
+ */
+export const ART = {
+  filterCommand: "ls art --tag",
+  flag: "tag",
+  // closed starter subject tags (spec §4) — the schema validates against these
+  startTags: ["anime", "car", "doodle", "portrait", "fanart", "original"],
+  tagOptions: ["all", "anime", "car", "doodle", "portrait", "fanart", "original"],
+  countSingular: "piece",
+  countPlural: "pieces",
+  emptyPrefix: "ls: no matches for --",
+  // titlebar `filename … date` — bare filename (id is `YYYY-MM-DD-<slug>`)
+  filename: (id: string) => `${id.slice(11)}.jpg`,
+  dateISO: (d: Date) => d.toISOString().slice(0, 10),
+  caption: (collection: string | undefined, medium: string, tags: string[]) =>
+    [collection, medium, ...tags.map((t) => `#${t}`)].filter(Boolean).join(" · "),
+  identify: (id: string) => `identify ${id}.jpg`,
+  // `$ identify` datasheet keys
+  datasheet: {
+    date: "date",
+    medium: "medium",
+    tools: "tools",
+    collection: "collection",
+    tags: "tags",
+  },
+  processHeading: "process/",
+  processTitlebar: (id: string, index: number, total: number) =>
+    `${id}/process-${index}.jpg · ${index}/${total}`,
+  relatedHeading: "related works",
+} as const;
+
+/*
  * Projects section chrome (ticket 22). Voice per ADR 0007: lowercase, terse,
  * real POSIX verbs; errors dry with a real command-link reset.
  */

@@ -1,0 +1,159 @@
+---
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import TerminalLayout from '../../layouts/TerminalLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import WindowedTile from '../../components/WindowedTile.astro';
+import { PROMPTS, ART } from '../../lib/constants';
+import styles from './detail.module.css';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('art');
+  return entries.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+
+/*
+ * Related works (spec §4): same collection → same tags → hide; up to 3.
+ */
+const all = await getCollection('art');
+const date = ART.dateISO(data.publishDate);
+const related = data.collection
+  ? all.filter((e) => e.id !== entry.id && e.data.collection === data.collection)
+  : [];
+if (related.length < 3) {
+  const pool = all.filter(
+    (e) =>
+      e.id !== entry.id &&
+      !related.includes(e) &&
+      e.data.tags.some((t) => data.tags.includes(t)),
+  );
+  related.push(...pool);
+}
+related.length = Math.min(related.length, 3);
+---
+
+<TerminalLayout title={data.title} description={data.description}>
+  <Breadcrumb
+    prompt={PROMPTS.section("art")}
+    trail={[
+      { label: "home", href: "/" },
+      { label: "art", href: "/art/" },
+      { label: entry.id },
+    ]}
+  />
+
+  <article class={styles.detail}>
+    <p class={styles.title}>{data.title}</p>
+    <Picture
+      src={data.images.main}
+      alt={data.alt}
+      widths={[480, 960, 1600]}
+      sizes="(min-width: 1160px) 1080px, 100vw"
+      formats={['avif', 'webp']}
+      loading="eager"
+    />
+
+    <div class={styles.out}>
+      <p class={styles.cmd} aria-hidden="true">{ART.identify(entry.id)}</p>
+      <dl class={styles.identify}>
+        <dt>{ART.datasheet.date}</dt>
+        <dd class={styles.dt}>{date}</dd>
+        <dt>{ART.datasheet.medium}</dt>
+        <dd>{data.medium}</dd>
+        {
+          data.tools.length > 0 && (
+            <>
+              <dt>{ART.datasheet.tools}</dt>
+              <dd>{data.tools.join(" · ")}</dd>
+            </>
+          )
+        }
+        {
+          data.collection && (
+            <>
+              <dt>{ART.datasheet.collection}</dt>
+              <dd>{data.collection}</dd>
+            </>
+          )
+        }
+        <dt>{ART.datasheet.tags}</dt>
+        <dd>{data.tags.map((t) => `#${t}`).join(" ")}</dd>
+      </dl>
+      {data.description && <p class={styles.desc}>{data.description}</p>}
+    </div>
+
+    {
+      data.images.process && data.images.process.length > 0 && (
+        <section class={styles.process}>
+          <h2>
+            <span class={styles.hash} aria-hidden="true">#</span>
+            {ART.processHeading}
+          </h2>
+          <div class={styles.pane}>
+            <span class={styles.paneBar}>
+              <span class={styles.paneFn}>{entry.id}/process/</span>
+              <span class={styles.paneDt}>{date}</span>
+            </span>
+            <div class={styles.thumbs}>
+              {data.images.process.map((img, i) => (
+                <figure class={styles.thumb}>
+                  <span class={styles.thumbBar} aria-hidden="true">
+                    {ART.processTitlebar(entry.id, i + 1, data.images.process!.length)}
+                  </span>
+                  <Picture
+                    src={img}
+                    alt={`${data.title} process, step ${i + 1}`}
+                    widths={[480, 960, 1600]}
+                    sizes="240px"
+                    formats={["avif", "webp"]}
+                    loading="lazy"
+                  />
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <section class={styles.rel}>
+          <h2>
+            <span class={styles.hash} aria-hidden="true">#</span>
+            {ART.relatedHeading}
+          </h2>
+          <div class={styles.relGrid}>
+            {related.map((e) => {
+              const rDate = ART.dateISO(e.data.publishDate);
+              return (
+                <div class={styles.relCell}>
+                  <WindowedTile
+                    filename={ART.filename(e.id)}
+                    date={rDate}
+                    href={`/art/${e.id}/`}
+                  >
+                    <Picture
+                      src={e.data.images.main}
+                      alt={e.data.alt}
+                      widths={[480, 960, 1600]}
+                      sizes="33vw"
+                      formats={['avif', 'webp']}
+                      loading="lazy"
+                    />
+                  </WindowedTile>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )
+    }
+  </article>
+</TerminalLayout>

@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import TerminalLayout from '../../layouts/TerminalLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import LsFilterRow from '../../components/LsFilterRow.astro';
+import WindowedTile from '../../components/WindowedTile.astro';
+import { Picture } from 'astro:assets';
+import { PROMPTS, ART } from '../../lib/constants';
+import styles from './listing.module.css';
+
+const entries = await getCollection('art');
+entries.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+
+const tagOptions = ART.tagOptions.map((t) => ({ value: t, label: t }));
+---
+
+<TerminalLayout title="art">
+  <Breadcrumb
+    prompt={PROMPTS.section("art")}
+    trail={[{ label: "home", href: "/" }, { label: "art" }]}
+  />
+
+  <LsFilterRow
+    command={ART.filterCommand}
+    flag={ART.flag}
+    options={tagOptions}
+    targetId="art-masonry"
+    countSingular={ART.countSingular}
+    countPlural={ART.countPlural}
+    emptyPrefix={ART.emptyPrefix}
+    initialCount={entries.length}
+  />
+
+  <div class={styles.masonry} id="art-masonry">
+    {
+      entries.map((entry) => {
+        const { data } = entry;
+        const date = ART.dateISO(data.publishDate);
+        return (
+          <div class={styles.cell} data-filter-values={data.tags.join(" ")}>
+            <WindowedTile
+              filename={ART.filename(entry.id)}
+              date={date}
+              href={`/art/${entry.id}/`}
+            >
+              <Picture
+                src={data.images.main}
+                alt={data.alt}
+                widths={[480, 960, 1600]}
+                sizes="(min-width: 700px) 33vw, 100vw"
+                formats={["avif", "webp"]}
+                loading="lazy"
+              />
+              <span slot="caption">{ART.caption(data.collection, data.medium, data.tags)}</span>
+            </WindowedTile>
+          </div>
+        );
+      })
+    }
+  </div>
+</TerminalLayout>

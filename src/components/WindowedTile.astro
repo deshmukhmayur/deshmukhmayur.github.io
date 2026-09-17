@@ -1,0 +1,24 @@
+---
+/*
+ * Shared terminal-window tile (spec §2 vocabulary): filename titlebar +
+ * `…` date, media children, caption row slot. Reused by art/prints listings.
+ */
+interface Props {
+  filename: string;
+  date: string;
+  href: string;
+}
+
+import styles from "./WindowedTile.module.css";
+
+const { filename, date, href } = Astro.props;
+---
+
+<a class={styles.tile} href={href}>
+  <span class={styles.bar}>
+    <span class={styles.fn}>{filename}</span>
+    <span class={styles.dt}>{date}</span>
+  </span>
+  <span class={styles.media}><slot /></span>
+  <span class={styles.caption}><slot name="caption" /></span>
+</a>
