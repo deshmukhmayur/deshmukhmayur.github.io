@@ -1,0 +1,84 @@
+.gitignore
+  s_25b109c057f181::t_683722fbd05fa8 2
+src/content.config.ts
+  s_25b109c057f181::t_76dafb5c5b7237 6-20
+  s_25b109c057f181::t_52383d62496000 1-5,21-23
+  s_c98b43f222900d::t_b45c6a7c821a1f 24-32,39-76
+  s_c98b43f222900d::t_1e49eb21683afb 33-38
+.scratch/personal-site/issues/22-projects-section.md
+  s_4c13706a6cdff9::t_fa664758a0dd56 1-6
+  s_c98b43f222900d::t_6e64d56cea236e 7-17,19-21
+  s_c98b43f222900d::t_6dda19e403af9c 22-28
+  s_c98b43f222900d::t_22bd8c6b9d8932 18
+src/content/projects/stillcounts.md
+  s_c98b43f222900d::t_5886f7328a343a 1-19
+src/content/projects/hexparse.md
+  s_c98b43f222900d::t_a19966c74fc5cf 1-19
+src/pages/projects/[slug].astro
+  s_c98b43f222900d::t_17de8eeac640eb 1-67,69,71-77,79-82,84-90,92-98,100-130
+  s_c98b43f222900d::t_1ca8257c97a762 68,70,78,83,91,99
+src/content/projects/bracketeer.md
+  s_c98b43f222900d::t_eee57b5aba43d4 1-22
+src/components/LsFilterRow.module.css
+  s_c98b43f222900d::t_a1b04300b06ca7 1-82
+src/pages/projects/listing.module.css
+  s_c98b43f222900d::t_8543c776efad85 1-148
+src/content/projects/atlas-tracer.md
+  s_c98b43f222900d::t_9754b494227cb1 1-25
+src/content/projects/ledgerline.md
+  s_c98b43f222900d::t_27242ab6c39c62 1-20
+src/pages/projects/detail.module.css
+  s_c98b43f222900d::t_db931ee047d76a 1-256
+src/pages/projects/index.astro
+  s_c98b43f222900d::t_e6bc4725c3f41c 40
+  s_c98b43f222900d::t_b4be2407d3e382 27-28
+  s_c98b43f222900d::t_7cd197fcc0a178 1-26,30-39,41-57,59-61,63-91
+  s_c98b43f222900d::t_03cf8a91290645 29
+  s_c98b43f222900d::t_1f2a5a7514ae77 62
+  s_c98b43f222900d::t_7bba729e8e2b8f 58
+src/lib/constants.ts
+  s_c98b43f222900d::t_2e3b6ae00b6a7d 51-60,65-67,77-80,83-85
+  s_c98b43f222900d::t_4c11728ba71231 81-82
+  s_c98b43f222900d::t_ce76a4cb2f8212 61-62,68-76
+  s_c98b43f222900d::t_ea769e903884d8 63-64
+src/content/projects/sidequest.md
+  s_c98b43f222900d::t_3a1bbc5a939c30 1-12
+src/content/projects/quietcast.md
+  s_c98b43f222900d::t_5f29951dc2eb5d 1-21
+src/components/LsFilterRow.astro
+  s_c98b43f222900d::t_cd3476ec3e8bd4 38
+  s_c98b43f222900d::t_cce26f63ee2a01 1-22,25-37,39-49,51-97,99-117,119-142
+  s_c98b43f222900d::t_5a2af3dd3857ba 23-24,50,98,118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "05345b701f0d438b966fe09d53b608513c006d1a",
+  "prompts": {},
+  "sessions": {
+    "s_25b109c057f181": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f93829f36ffed4OxT2d30ZmAg9",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_4c13706a6cdff9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f509b7f11ffepoU6pb9JxCAj64",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_c98b43f222900d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5057d7acffez39Ko4THPJ6A6U",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
