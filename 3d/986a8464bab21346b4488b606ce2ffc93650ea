@@ -1,0 +1,21 @@
+src/pages/studies/index.astro
+  s_1d0acc36278933::t_c1be63384dd037 4-5,15-18,27-36,38,41,70
+src/lib/constants.ts
+  s_1d0acc36278933::t_376c301fbbb744 158-162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "3d986a8464bab21346b4488b606ce2ffc93650ea",
+  "prompts": {},
+  "sessions": {
+    "s_1d0acc36278933": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4a461526ffeDae97mEI6EwinE",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
