@@ -63,6 +63,7 @@
 .body :global(img) {
   display: block;
   max-width: 100%;
+  height: auto; /* let the width/height attrs' aspect-ratio rescale */
   margin: 14px 0;
   border: 1px solid var(--edge);
   border-radius: 8px;
