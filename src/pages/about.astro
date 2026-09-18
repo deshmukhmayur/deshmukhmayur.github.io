@@ -21,8 +21,8 @@ const printers = [...new Set(prints.map((p) => p.data.printer))].sort();
 const stats = [
   { label: "soliloquies", value: soliloquies.length },
   { label: "studies", value: studies.length },
-  { label: "prints", value: prints.length },
   { label: "drawings", value: art.length },
+  { label: "prints", value: prints.length },
   { label: "printers", value: `${printers.length} (${printers.join(" · ")})` },
 ];
 ---

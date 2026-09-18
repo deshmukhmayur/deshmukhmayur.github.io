@@ -17,7 +17,7 @@ const dirs = NOT_FOUND.dirs;
     <pre class="logo" aria-hidden="true">{NOT_FOUND.logoPlaceholder}</pre>
     <div class="info">
       <p class="host">
-        404<span class="at">@</span>deshmukhmayur.com
+        <span class="err">404</span><span class="at">@</span><span class="dom">deshmukhmayur.com</span>
       </p>
       <p class="rule" aria-hidden="true">---------------------------</p>
       <dl>
@@ -26,7 +26,7 @@ const dirs = NOT_FOUND.dirs;
         <dt>os</dt><dd>{NOT_FOUND.os}<span class="d">{NOT_FOUND.osNote}</span></dd>
         <dt>host</dt><dd>{NOT_FOUND.host}</dd>
         <dt>uptime</dt><dd>{NOT_FOUND.uptime}<span class="d">{NOT_FOUND.uptimeNote}</span></dd>
-        <dt>status</dt><dd>{NOT_FOUND.status}<span class="d">{NOT_FOUND.statusNote}</span></dd>
+        <dt>status</dt><dd><span class="okdot" aria-hidden="true"></span>{NOT_FOUND.status}<span class="d">{NOT_FOUND.statusNote}</span></dd>
       </dl>
     </div>
   </section>
@@ -65,8 +65,24 @@ const dirs = NOT_FOUND.dirs;
     .host {
       font-size: 16px;
     }
-    .at {
+    .err {
       color: var(--pink);
+      font-weight: 700;
+    }
+    .at {
+      color: var(--dim);
+    }
+    .dom {
+      color: var(--cyan);
+    }
+    .okdot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-right: 8px;
+      vertical-align: 1px;
     }
     .rule {
       color: var(--dim);
