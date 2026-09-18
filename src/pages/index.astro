@@ -44,7 +44,7 @@ const latestSol = soliloquy[0];
 
 /* pane heading → section page (skills pane points at about) */
 const paneHref: Record<string, string> = {
-  work: "/projects/",
+  projects: "/projects/",
   skills: "/about/",
   art: "/art/",
   prints: "/prints/",
@@ -88,8 +88,8 @@ const paneHref: Record<string, string> = {
           <a href={l.href} rel="me noopener" target="_blank">{l.label}</a>
         ))}
       </span>
-      <h2><a href={paneHref.work}>work<span class={styles.slash} aria-hidden="true">/</span></a></h2>
-      <p class={styles.desc}>projects &amp; open source</p>
+      <h2><a href={paneHref.projects}>projects<span class={styles.slash} aria-hidden="true">/</span></a></h2>
+      <p class={styles.desc}>things i've built</p>
       <ul>
         {featuredProjects.map((p) => (
           <li>
