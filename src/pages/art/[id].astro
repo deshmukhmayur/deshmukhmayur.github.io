@@ -4,7 +4,8 @@ import { Picture } from 'astro:assets';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import WindowedTile from '../../components/WindowedTile.astro';
-import { PROMPTS, ART } from '../../lib/constants';
+import { PROMPTS, ART, SEO } from '../../lib/constants';
+import JsonLd from '../../components/JsonLd.astro';
 import styles from './detail.module.css';
 
 export async function getStaticPaths() {
@@ -36,9 +37,33 @@ if (related.length < 3) {
   related.push(...pool);
 }
 related.length = Math.min(related.length, 3);
+
+/*
+ * SEO (ticket 30): og:image — generated terminal card unless the entry
+ * ships its own image (opt-in frontmatter arrives with real content, 32).
+ * CreativeWork JSON-LD on art details (spec §8).
+ */
+const ogImage = SEO.og.generatedFor('art', entry.id);
+const creativeWork = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: data.title,
+  url: new URL(Astro.url.pathname, Astro.site).toString(),
+  datePublished: data.publishDate.toISOString(),
+  description: data.description,
+  creator: { '@type': 'Person', name: 'Mayur Deshmukh' },
+  keywords: data.tags.join(', '),
+};
 ---
 
-<TerminalLayout title={data.title} description={data.description}>
+<TerminalLayout
+  title={data.title}
+  description={data.description}
+  publishedTime={data.publishDate}
+  ogImage={ogImage}
+  type="article"
+>
+  <JsonLd schemas={[creativeWork]} />
   <Breadcrumb
     prompt={PROMPTS.section("art")}
     trail={[

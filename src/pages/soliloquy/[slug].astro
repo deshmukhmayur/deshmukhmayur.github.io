@@ -3,7 +3,7 @@ import { getSoliloquy } from '../../lib/soliloquy';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { render } from 'astro:content';
-import { PROMPTS, SOLILOQUY } from '../../lib/constants';
+import { PROMPTS, SOLILOQUY, SEO } from '../../lib/constants';
 import styles from './detail.module.css';
 
 export async function getStaticPaths() {
@@ -18,9 +18,23 @@ export async function getStaticPaths() {
 
 const { e, prev, next, total } = Astro.props;
 const { Content } = await render(e.entry);
+
+/*
+ * SEO (ticket 30): entries opt in via colocated `ogImage` frontmatter
+ * (spec §8); absent that, a satori-generated terminal card.
+ */
+const ogImage = e.entry.data.ogImage
+  ? e.entry.data.ogImage.src
+  : SEO.og.generatedFor('soliloquy', e.slug);
 ---
 
-<TerminalLayout title={e.title ?? SOLILOQUY.dayISO(e.datetime)}>
+<TerminalLayout
+  title={e.title ?? SOLILOQUY.dayISO(e.datetime)}
+  description={e.excerpt}
+  publishedTime={e.datetime}
+  ogImage={ogImage}
+  type="article"
+>
   <Breadcrumb
     prompt={PROMPTS.section("soliloquy")}
     trail={[

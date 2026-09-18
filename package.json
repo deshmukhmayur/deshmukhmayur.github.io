@@ -1,0 +1,25 @@
+{
+  "name": "deshmukhmayur-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "@resvg/resvg-js": "^2.6.2",
+    "astro": "^5.12.0",
+    "satori": "^0.33.4",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@fontsource/space-mono": "^5.3.0",
+    "wawoff2": "^2.0.1",
+    "woff2otf": "^1.0.0"
+  }
+}

@@ -20,7 +20,7 @@ for (const e of entries) {
 const tagOptions = ['all', ...tagOptionsOf(entries)].map((t) => ({ value: t, label: t }));
 ---
 
-<TerminalLayout title="soliloquy">
+<TerminalLayout section="soliloquy">
   <Breadcrumb
     prompt={PROMPTS.section("soliloquy")}
     trail={[{ label: "home", href: "/" }, { label: "soliloquy" }]}

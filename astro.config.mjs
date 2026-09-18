@@ -1,7 +1,10 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://deshmukhmayur.com',
+  // SEO (ticket 30): sitemap-index.xml; robots.txt in public/ is allow-all
+  integrations: [sitemap()],
   // i18n seam (spec §1): en-only, no prefixes — later locales add prefixes without URL churn
   i18n: {
     defaultLocale: 'en',

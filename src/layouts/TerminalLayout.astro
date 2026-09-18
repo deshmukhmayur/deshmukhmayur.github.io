@@ -1,16 +1,21 @@
 ---
 import "../styles/tokens.css";
-import { SITE } from "../lib/constants";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import BaseHead from "../components/BaseHead.astro";
 
 interface Props {
   title?: string;
   description?: string;
+  // listing pages: `<Section> — Mayur Deshmukh` + per-section description
+  section?: string;
+  // detail pages: og:type article + published_time (spec §8)
+  publishedTime?: Date | string;
+  ogImage?: string;
+  type?: "article" | "website";
 }
 
-const { title, description = SITE.description } = Astro.props;
-const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
+const { title, description, section, publishedTime, ogImage, type } = Astro.props;
 ---
 
 <!doctype html>
@@ -18,10 +23,14 @@ const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{pageTitle}</title>
-    <meta name="description" content={description} />
-    <meta name="generator" content={Astro.generator} />
-    <link rel="icon" href="/favicon.png" />
+    <BaseHead
+      title={title}
+      description={description}
+      section={section}
+      publishedTime={publishedTime}
+      ogImage={ogImage}
+      type={type}
+    />
 
     <!-- analytics beacon slot: token wired later (spec §7) -->
     <slot name="beacon" />

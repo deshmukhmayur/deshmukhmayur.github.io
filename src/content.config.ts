@@ -114,15 +114,18 @@ const prints = defineCollection({
  */
 const studies = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/studies' }),
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    summary: z.string().min(1),
-    tags: z.array(z.string()).default([]),
-    featured: z.boolean().optional(),
-    status: z.enum(['draft', 'published']),
-    projects: z.array(z.string()).default([]),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      date: z.coerce.date(),
+      summary: z.string().min(1),
+      tags: z.array(z.string()).default([]),
+      featured: z.boolean().optional(),
+      status: z.enum(['draft', 'published']),
+      projects: z.array(z.string()).default([]),
+      // SEO (ticket 30): opt-in colocated OG image
+      ogImage: image().optional(),
+    }),
 });
 
 /*
@@ -136,15 +139,18 @@ const studies = defineCollection({
  */
 const soliloquy = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/soliloquy' }),
-  schema: z.object({
-    title: z.string().optional(),
-    datetime: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, 'YYYY-MM-DDTHH:MM'),
-    slug: z
-      .string()
-      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'slug must be lowercase kebab-case')
-      .optional(),
-    tags: z.array(z.string()).default([]),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string().optional(),
+      datetime: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, 'YYYY-MM-DDTHH:MM'),
+      slug: z
+        .string()
+        .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'slug must be lowercase kebab-case')
+        .optional(),
+      tags: z.array(z.string()).default([]),
+      // SEO (ticket 30): opt-in colocated OG image
+      ogImage: image().optional(),
+    }),
 });
 
 export const collections = { art, prints, projects, studies, soliloquy };

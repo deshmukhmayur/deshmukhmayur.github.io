@@ -1,0 +1,28 @@
+---
+/*
+ * JsonLd (ticket 30, spec §8): schema.org JSON-LD. Person sits on every
+ * page (rendered inside BaseHead); detail pages compose Article /
+ * CreativeWork via the `schemas` prop. Scripts land in the body, which
+ * Google accepts for structured data.
+ */
+import { SEO } from "../lib/constants";
+
+interface Props {
+  person?: boolean;
+  schemas?: Record<string, unknown>[];
+}
+
+const { person = false, schemas = [] } = Astro.props;
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Mayur Deshmukh",
+  url: Astro.site?.toString(),
+  sameAs: SEO.sameAs,
+};
+
+const all = [person ? personSchema : null, ...schemas].filter(Boolean);
+---
+
+{all.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}

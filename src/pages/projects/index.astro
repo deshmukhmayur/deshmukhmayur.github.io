@@ -13,7 +13,7 @@ entries.sort((a, b) => b.data.started.localeCompare(a.data.started));
 const kindOptions = PROJECTS.kindOptions.map((k) => ({ value: k, label: k }));
 ---
 
-<TerminalLayout title="projects">
+<TerminalLayout section="projects">
   <Breadcrumb
     prompt={PROMPTS.section("projects")}
     trail={[{ label: "home", href: "/" }, { label: "projects" }]}

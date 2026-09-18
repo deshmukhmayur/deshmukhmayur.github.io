@@ -381,3 +381,56 @@ export const NOT_FOUND = {
     { label: "contact/", href: "/contact/" },
   ],
 } as const;
+
+/*
+ * SEO layer (ticket 30, spec §8). Locked strings: title cascade
+ * (homepage bare / detail ` — deshmukhmayur.com` / listing ` — Mayur
+ * Deshmukh`), twitter:site, og:site_name, sameAs (all six identity
+ * profiles — identity, not navigation; spec §9).
+ */
+export const SEO = {
+  siteName: "Mayur Deshmukh",
+  host: "deshmukhmayur.com",
+  twitterSite: "@deshmukhmayur_",
+  // hand-written per-section fallback descriptions (template `<Section> — …`)
+  sections: {
+    projects: "Projects — software built and maintained, from work tools to open-source and personal experiments.",
+    art: "Art — digital and ink drawings, anime-style illustrations, sketches, and process shots.",
+    prints: "Prints — 3D printing makes: specs, settings, model links, and maker logs.",
+    soliloquy: "Soliloquy — casual entries, as they happen.",
+    studies: "Studies — substantive write-ups: case studies, findings, experiments.",
+    about: "About — whoami, how i got here, and where else to find me.",
+    contact: "Contact — one short form, straight to mayur's inbox.",
+    resume: "Resume — grab the pdf.",
+    "404": "Nothing lives at this url.",
+  },
+  feeds: {
+    sitewide: {
+      title: "Mayur Deshmukh",
+      description: SITE.description,
+    },
+    studies: {
+      title: "Mayur Deshmukh — Studies",
+      description: "Substantive write-ups: case studies, findings, experiments.",
+    },
+    soliloquy: {
+      title: "Mayur Deshmukh — Soliloquy",
+      description: "Casual entries, as they happen.",
+    },
+  },
+  // all six identity profiles (spec §9): displayed socials + ArtStation/Twitter
+  sameAs: [
+    "https://github.com/deshmukhmayur",
+    "https://linkedin.com/in/deshmukhmayur",
+    "https://instagram.com/deshmukhmayur",
+    "https://youtube.com/@deshmukhmayur",
+    "https://artstation.com/deshmukhmayur",
+    "https://twitter.com/deshmukhmayur_",
+  ],
+  // static per-section 1200×630 OG cards (public/og/); placeholders until 32
+  og: {
+    staticFor: (section: string) => `/og/${section}.png`,
+    // satori-generated fallback card for entry details
+    generatedFor: (section: string, slug: string) => `/og/gen/${section}/${slug}.png`,
+  },
+} as const;

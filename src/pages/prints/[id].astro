@@ -3,7 +3,8 @@ import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import { PROMPTS, PRINTS } from '../../lib/constants';
+import { PROMPTS, PRINTS, SEO } from '../../lib/constants';
+import JsonLd from '../../components/JsonLd.astro';
 import styles from './detail.module.css';
 
 export async function getStaticPaths() {
@@ -56,9 +57,32 @@ for (const line of (entry.body ?? "").split("\n")) {
   }
 }
 log.reverse();
+
+/*
+ * SEO (ticket 30): generated terminal card as og:image; CreativeWork
+ * JSON-LD on prints details (spec §8).
+ */
+const ogImage = SEO.og.generatedFor('prints', entry.id);
+const creativeWork = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: data.title,
+  url: new URL(Astro.url.pathname, Astro.site).toString(),
+  datePublished: data.date.toISOString(),
+  description: data.description,
+  creator: { '@type': 'Person', name: 'Mayur Deshmukh' },
+  keywords: data.tags.join(', '),
+};
 ---
 
-<TerminalLayout title={data.title} description={data.description}>
+<TerminalLayout
+  title={data.title}
+  description={data.description}
+  publishedTime={data.date}
+  ogImage={ogImage}
+  type="article"
+>
+  <JsonLd schemas={[creativeWork]} />
   <Breadcrumb
     prompt={PROMPTS.section("prints")}
     trail={[

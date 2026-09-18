@@ -3,7 +3,9 @@ import { getStudies, relatedStudies } from '../../lib/studies';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { render } from 'astro:content';
-import { PROMPTS, STUDIES } from '../../lib/constants';import styles from './detail.module.css';
+import { PROMPTS, STUDIES, SEO } from '../../lib/constants';
+import JsonLd from '../../components/JsonLd.astro';
+import styles from './detail.module.css';
 
 export async function getStaticPaths() {
   // draft entries are excluded from all pages
@@ -19,9 +21,33 @@ const { data } = entry;
 const { Content } = await render(entry);
 const related = relatedStudies(all, entry);
 const date = STUDIES.dateISO(data.date);
+
+/*
+ * SEO (ticket 30): entries opt in via colocated `ogImage` frontmatter
+ * (spec §8); absent that, a satori-generated terminal card. Article
+ * JSON-LD on study details.
+ */
+const ogImage = data.ogImage ? data.ogImage.src : SEO.og.generatedFor('studies', entry.id);
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.title,
+  description: data.summary,
+  datePublished: data.date.toISOString(),
+  author: { '@type': 'Person', name: 'Mayur Deshmukh' },
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).toString(),
+  keywords: data.tags.join(', '),
+};
 ---
 
-<TerminalLayout title={data.title}>
+<TerminalLayout
+  title={data.title}
+  description={data.summary}
+  publishedTime={data.date}
+  ogImage={ogImage}
+  type="article"
+>
+  <JsonLd schemas={[article]} />
   <Breadcrumb
     prompt={PROMPTS.section("studies")}
     trail={[

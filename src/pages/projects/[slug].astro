@@ -4,7 +4,7 @@ import { Picture } from 'astro:assets';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { getStudies, studiesForProject } from '../../lib/studies';
-import { PROMPTS, PROJECTS, STUDIES } from '../../lib/constants';
+import { PROMPTS, PROJECTS, STUDIES, SEO } from '../../lib/constants';
 import styles from './detail.module.css';
 
 export async function getStaticPaths() {
@@ -21,9 +21,12 @@ export async function getStaticPaths() {
 const { entry, studies } = Astro.props;
 const { data } = entry;
 const { Content } = await render(entry);
+
+// SEO (ticket 30): generated terminal card as og:image; details are articles
+const ogImage = SEO.og.generatedFor('projects', entry.id);
 ---
 
-<TerminalLayout title={data.title}>
+<TerminalLayout title={data.title} ogImage={ogImage} type="article">
   <Breadcrumb
     prompt={PROMPTS.section("projects")}
     trail={[
