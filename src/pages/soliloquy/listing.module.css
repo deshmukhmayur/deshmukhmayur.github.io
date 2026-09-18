@@ -10,11 +10,11 @@
 .rail {
   position: sticky;
   top: 24px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .rail h2 {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--amber);
   font-weight: 700;
   margin-bottom: 10px;
@@ -64,7 +64,7 @@
 
 .stamp {
   color: var(--pink);
-  font-size: 12px;
+  font-size: 0.75rem;
   white-space: nowrap;
 }
 
@@ -73,7 +73,7 @@
 }
 
 .title {
-  font-size: 14.5px;
+  font-size: 0.9063rem;
   font-weight: 700;
   margin: 0;
 }
@@ -91,7 +91,7 @@
 
 .body {
   margin-top: 4px;
-  font-size: 13.5px;
+  font-size: 0.8438rem;
   color: var(--ink);
   max-width: 60ch;
   white-space: pre-line;
@@ -120,7 +120,7 @@
 
 .meta {
   margin-top: 6px;
-  font-size: 11.5px;
+  font-size: 0.75rem;
   color: var(--dim);
 }
 

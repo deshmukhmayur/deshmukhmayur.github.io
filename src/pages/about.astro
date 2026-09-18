@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import TerminalLayout from "../layouts/TerminalLayout.astro";
-import Breadcrumb from "../components/Breadcrumb.astro";
 import { PROMPTS, ABOUT } from "../lib/constants";
 import styles from "./about.module.css";
 
@@ -28,11 +27,6 @@ const stats = [
 ---
 
 <TerminalLayout section="about">
-  <Breadcrumb
-    trail={[{ label: "home", href: "/" }, { label: "about" }]}
-    prompt={PROMPTS.section("about")}
-  />
-
   <div class={styles.cols}>
     <div>
       <section class={styles.whoami} aria-label="who i am">

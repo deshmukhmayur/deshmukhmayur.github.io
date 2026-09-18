@@ -3,7 +3,7 @@
 
 .session {
   max-width: 660px;
-  font-size: 13.5px;
+  font-size: 0.8438rem;
 }
 
 .pane {
@@ -24,7 +24,7 @@
 .reply {
   color: var(--dim);
   padding-left: 14px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin: 2px 0 18px;
 }
 
@@ -44,7 +44,7 @@
 
 .frow label {
   color: var(--amber);
-  font-size: 13.5px;
+  font-size: 0.8438rem;
   padding-top: 4px;
   white-space: nowrap;
 }
@@ -100,7 +100,7 @@ textarea {
   border: 1px dashed var(--edge);
   border-radius: 6px;
   padding: 10px 14px;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--dim);
   margin: 6px 0 14px 14px;
   min-height: 65px;
@@ -156,7 +156,7 @@ textarea {
 }
 
 .status {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--dim);
   padding-left: 14px;
   margin-top: 10px;

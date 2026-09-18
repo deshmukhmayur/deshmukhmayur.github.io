@@ -1,6 +1,5 @@
 ---
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
-import Breadcrumb from '../../components/Breadcrumb.astro';
 import LsFilterRow from '../../components/LsFilterRow.astro';
 import { getSoliloquy, monthsOf, tagOptionsOf } from '../../lib/soliloquy';
 import type { SolEntryResolved } from '../../lib/soliloquy';
@@ -21,10 +20,6 @@ const tagOptions = ['all', ...tagOptionsOf(entries)].map((t) => ({ value: t, lab
 ---
 
 <TerminalLayout section="soliloquy">
-  <Breadcrumb
-    prompt={PROMPTS.section("soliloquy")}
-    trail={[{ label: "home", href: "/" }, { label: "soliloquy" }]}
-  />
 
   <LsFilterRow
     command={SOLILOQUY.filterCommand}

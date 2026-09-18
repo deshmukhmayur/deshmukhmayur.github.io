@@ -1,0 +1,29 @@
+.line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.8125rem;
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+.line a {
+  color: var(--dim);
+  text-decoration: none;
+}
+
+.line a:hover,
+.line a:focus-visible {
+  color: var(--cyan);
+}
+
+.dollar {
+  color: var(--green);
+}
+
+.cmd {
+  color: var(--amber);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

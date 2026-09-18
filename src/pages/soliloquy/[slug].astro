@@ -1,7 +1,7 @@
 ---
 import { getSoliloquy } from '../../lib/soliloquy';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
-import Breadcrumb from '../../components/Breadcrumb.astro';
+import PromptLine from '../../components/PromptLine.astro';
 import { render } from 'astro:content';
 import { PROMPTS, SOLILOQUY, SEO } from '../../lib/constants';
 import styles from './detail.module.css';
@@ -35,13 +35,10 @@ const ogImage = e.entry.data.ogImage
   ogImage={ogImage}
   type="article"
 >
-  <Breadcrumb
+  <PromptLine
     prompt={PROMPTS.section("soliloquy")}
-    trail={[
-      { label: "home", href: "/" },
-      { label: "soliloquy", href: "/soliloquy/" },
-      { label: e.slug },
-    ]}
+    href="/soliloquy/"
+    command={`show ${e.slug}`}
   />
 
   <div class={styles.wrap}>

@@ -1,6 +1,5 @@
 .ledger {
   margin: 0 0 40px;
-  max-width: 760px;
 }
 
 /* featured lead study — unframed editorial, Spectral prose */
@@ -9,13 +8,13 @@
 }
 
 .leadDate {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--pink);
   margin-bottom: 6px;
 }
 
 .leadTitle {
-  font-size: 22px;
+  font-size: 1.375rem;
   line-height: 1.25;
   margin: 0 0 8px;
 }
@@ -33,14 +32,14 @@
 .leadSummary {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--dim);
   max-width: 58ch;
   margin: 0 0 10px;
 }
 
 .meta {
-  font-size: 11.5px;
+  font-size: 0.75rem;
   color: var(--dim);
 }
 
@@ -80,7 +79,7 @@
 }
 
 .date {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--pink);
   white-space: nowrap;
 }
@@ -90,7 +89,7 @@
 }
 
 .title {
-  font-size: 14.5px;
+  font-size: 0.9063rem;
   margin: 0;
 }
 
@@ -108,14 +107,14 @@
   display: block;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--dim);
   margin-top: 3px;
 }
 
 .taxo {
   text-align: right;
-  font-size: 11.5px;
+  font-size: 0.75rem;
   color: var(--dim);
   white-space: nowrap;
 }

@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
-import Breadcrumb from '../../components/Breadcrumb.astro';
+import PromptLine from '../../components/PromptLine.astro';
 import WindowedTile from '../../components/WindowedTile.astro';
 import { PROMPTS, ART, SEO } from '../../lib/constants';
 import JsonLd from '../../components/JsonLd.astro';
@@ -64,13 +64,10 @@ const creativeWork = {
   type="article"
 >
   <JsonLd schemas={[creativeWork]} />
-  <Breadcrumb
+  <PromptLine
     prompt={PROMPTS.section("art")}
-    trail={[
-      { label: "home", href: "/" },
-      { label: "art", href: "/art/" },
-      { label: entry.id },
-    ]}
+    href="/art/"
+    command={`show ${entry.id}`}
   />
 
   <article class={styles.detail}>

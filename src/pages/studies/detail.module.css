@@ -14,7 +14,7 @@
 .article h1 {
   font-family: var(--serif);
   font-weight: 700;
-  font-size: 26px;
+  font-size: 1.625rem;
   line-height: 1.25;
   color: var(--ink);
   margin: 24px 0 10px;
@@ -24,7 +24,7 @@
 .summary {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.5;
   color: var(--dim);
   margin: 0 0 18px;
@@ -34,7 +34,7 @@
 /* editorial prose — Spectral, normal-capitalization casual first person */
 .article :global(p) {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.65;
   color: var(--ink);
   margin-top: 14px;
@@ -43,7 +43,7 @@
 .article :global(ul),
 .article :global(ol) {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.65;
   color: var(--ink);
   padding-left: 1.4em;
@@ -51,7 +51,9 @@
 }
 
 .article :global(h2) {
-  font-size: 16px;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.125rem;
   color: var(--ink);
   margin: 26px 0 4px;
 }
@@ -68,6 +70,9 @@
 }
 
 .article :global(blockquote) {
+  font-family: var(--serif);
+  font-size: 0.9375rem;
+  line-height: 1.65;
   margin: 14px 0;
   padding-left: 14px;
   border-left: 2px solid var(--edge);
@@ -76,7 +81,7 @@
 
 .article :global(code) {
   font-family: var(--mono, inherit);
-  font-size: 13px;
+  font-size: 0.8125rem;
   background: var(--panel);
   border: 1px solid var(--edge);
   border-radius: 4px;
@@ -89,7 +94,7 @@
   border-radius: 8px;
   padding: 14px 16px;
   overflow-x: auto;
-  font-size: 12.5px;
+  font-size: 0.7813rem;
 }
 
 .article :global(pre code) {
@@ -106,7 +111,7 @@
 
 .cmd {
   color: var(--green);
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin-bottom: 8px;
 }
 
@@ -119,7 +124,7 @@
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 7px 18px;
-  font-size: 12.5px;
+  font-size: 0.7813rem;
 }
 
 .sheet dt {
@@ -159,7 +164,7 @@
 }
 
 .rel h2 {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--amber);
   margin-bottom: 6px;
 }
@@ -171,7 +176,7 @@
 
 .relEmpty {
   color: var(--dim);
-  font-size: 12.5px;
+  font-size: 0.7813rem;
 }
 
 .rel ul {
@@ -196,7 +201,7 @@
 
 .relTitle {
   color: var(--cyan);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .rel li a:hover .relTitle,
@@ -208,7 +213,7 @@
 .relDate {
   display: block;
   color: var(--pink);
-  font-size: 10.5px;
+  font-size: 0.75rem;
   margin-bottom: 2px;
 }
 
@@ -216,7 +221,7 @@
   display: block;
   color: var(--dim);
   font-style: italic;
-  font-size: 12px;
+  font-size: 0.75rem;
   margin-top: 2px;
 }
 

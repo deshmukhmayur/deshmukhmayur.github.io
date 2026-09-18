@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
-import Breadcrumb from '../../components/Breadcrumb.astro';
 import LsFilterRow from '../../components/LsFilterRow.astro';
 import { Picture } from 'astro:assets';
 import { PROMPTS, PROJECTS } from '../../lib/constants';
@@ -14,10 +13,6 @@ const kindOptions = PROJECTS.kindOptions.map((k) => ({ value: k, label: k }));
 ---
 
 <TerminalLayout section="projects">
-  <Breadcrumb
-    prompt={PROMPTS.section("projects")}
-    trail={[{ label: "home", href: "/" }, { label: "projects" }]}
-  />
 
   <LsFilterRow
     command={PROJECTS.filterCommand}

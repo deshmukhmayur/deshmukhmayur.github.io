@@ -2,7 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import { Picture } from 'astro:assets';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
-import Breadcrumb from '../../components/Breadcrumb.astro';
+import PromptLine from '../../components/PromptLine.astro';
 import { getStudies, studiesForProject } from '../../lib/studies';
 import { PROMPTS, PROJECTS, STUDIES, SEO } from '../../lib/constants';
 import styles from './detail.module.css';
@@ -27,13 +27,10 @@ const ogImage = SEO.og.generatedFor('projects', entry.id);
 ---
 
 <TerminalLayout title={data.title} ogImage={ogImage} type="article">
-  <Breadcrumb
+  <PromptLine
     prompt={PROMPTS.section("projects")}
-    trail={[
-      { label: "home", href: "/" },
-      { label: "projects", href: "/projects/" },
-      { label: entry.id },
-    ]}
+    href="/projects/"
+    command={`show ${entry.id}`}
   />
 
   <div class={styles.detail}>

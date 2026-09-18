@@ -1,7 +1,7 @@
 ---
 import { getStudies, relatedStudies } from '../../lib/studies';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
-import Breadcrumb from '../../components/Breadcrumb.astro';
+import PromptLine from '../../components/PromptLine.astro';
 import { render } from 'astro:content';
 import { PROMPTS, STUDIES, SEO } from '../../lib/constants';
 import JsonLd from '../../components/JsonLd.astro';
@@ -48,13 +48,10 @@ const article = {
   type="article"
 >
   <JsonLd schemas={[article]} />
-  <Breadcrumb
+  <PromptLine
     prompt={PROMPTS.section("studies")}
-    trail={[
-      { label: "home", href: "/" },
-      { label: "studies", href: "/studies/" },
-      { label: entry.id },
-    ]}
+    href="/studies/"
+    command={`show ${entry.id}`}
   />
 
   <div class={styles.detail}>

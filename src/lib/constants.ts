@@ -20,14 +20,15 @@ export const PROMPTS = {
   notFoundHost: "404@deshmukhmayur.com",
 } as const;
 
+// nav labels are the section paths without the prompt "$" (user review, 12)
 export const NAV = [
-  { label: PROMPTS.section("projects"), href: "/projects/" },
-  { label: PROMPTS.section("art"), href: "/art/" },
-  { label: PROMPTS.section("prints"), href: "/prints/" },
-  { label: PROMPTS.section("soliloquy"), href: "/soliloquy/" },
-  { label: PROMPTS.section("studies"), href: "/studies/" },
-  { label: PROMPTS.section("about"), href: "/about/" },
-  { label: PROMPTS.section("contact"), href: "/contact/" },
+  { label: "~/projects", href: "/projects/" },
+  { label: "~/art", href: "/art/" },
+  { label: "~/prints", href: "/prints/" },
+  { label: "~/soliloquy", href: "/soliloquy/" },
+  { label: "~/studies", href: "/studies/" },
+  { label: "~/about", href: "/about/" },
+  { label: "~/contact", href: "/contact/" },
 ] as const;
 
 export const FOOTER = {
@@ -39,6 +40,20 @@ export const FOOTER = {
   contactLabel: "contact",
 } as const;
 
+/*
+ * Social identity (ticket 12). Brand keys map to SocialIcon's inline SVGs;
+ * the footer row and the homepage pane corners both read from here.
+ */
+export const SOCIALS = [
+  { brand: "github", label: "github", href: "https://github.com/deshmukhmayur" },
+  { brand: "linkedin", label: "linkedin", href: "https://linkedin.com/in/deshmukhmayur" },
+  { brand: "cara", label: "cara", href: "https://cara.app/deshmukhmayur" },
+  { brand: "instagram", label: "instagram", href: "https://instagram.com/deshmukhmayur" },
+  { brand: "printables", label: "printables", href: "https://printables.com/@mayur" },
+] as const;
+
+export type SocialBrand = (typeof SOCIALS)[number]["brand"];
+
 export const THEME = {
   key: "site-theme",
   default: "dark",
@@ -48,7 +63,8 @@ export const THEME = {
 export const DEMO = {
   commands: ["cat hello.md", "ls ~/"],
   comment: "# demo page — real sections land in tickets 22–29",
-  toggleLabel: (theme: string) => `· ${theme}`,
+  // compact chip label (ticket 12): [dark] / [light]
+  toggleLabel: (theme: string) => `[${theme}]`,
 } as const;
 
 /*
@@ -56,7 +72,7 @@ export const DEMO = {
  * real POSIX verbs; errors dry with a real command-link reset.
  */
 export const ART = {
-  filterCommand: "ls art --tag",
+  filterCommand: "ls art",
   flag: "tag",
   // closed starter subject tags (spec §4) — the schema validates against these
   startTags: ["anime", "car", "doodle", "portrait", "fanart", "original"],
@@ -93,7 +109,7 @@ export const ART = {
  * real POSIX verbs; errors dry with a real command-link reset.
  */
 export const PRINTS = {
-  filterCommand: "ls prints/",
+  filterCommand: "ls prints",
   // two chips share the one command; each flag renders as --<flag>=
   materialFlag: "material",
   printerFlag: "printer",
@@ -139,6 +155,11 @@ export const PRINTS = {
  * real POSIX verbs. Tags are open vocabulary, shared with Soliloquy.
  */
 export const STUDIES = {
+  filterCommand: "ls studies",
+  flag: "tag",
+  countSingular: "study",
+  countPlural: "studies",
+  emptyPrefix: "ls: no matches for --",
   // `$ identify <slug>.md` datasheet (spec §4)
   identify: (slug: string) => `identify ${slug}.md`,
   dateISO: (d: Date) => d.toISOString().slice(0, 10),
@@ -157,7 +178,7 @@ export const STUDIES = {
  * real POSIX verbs. Tags are open vocabulary, shared with Studies.
  */
 export const SOLILOQUY = {
-  filterCommand: "ls soliloquy --tag",
+  filterCommand: "ls soliloquy",
   flag: "tag",
   countSingular: "entry",
   countPlural: "entries",
@@ -264,7 +285,8 @@ export const HOME = {
 } as const;
 
 export const PROJECTS = {
-  filterCommand: "ls projects --kind",
+  // ticket 12: the static flag moved out of the command label — chips carry it
+  filterCommand: "ls projects",
   flag: "kind",
   // "all" is the reset value, the rest mirror the closed kinds enum
   kindOptions: ["all", "work", "open-source", "personal"],
@@ -329,7 +351,7 @@ export const ABOUT = {
   elsewhereCmd: "ls elsewhere/",
   elsewhere: [
     { label: "github", href: "https://github.com/deshmukhmayur" },
-    { label: "linkedin", href: "https://linkedin.com/in/deshmukhmayur" },
+    { label: "linkedin", href: "https://www.linkedin.com/in/deshmukhmayur204/" },
     { label: "instagram", href: "https://instagram.com/deshmukhmayur" },
     { label: "youtube", href: "https://youtube.com/@deshmukhmayur" },
   ],

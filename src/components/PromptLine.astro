@@ -1,0 +1,25 @@
+---
+/*
+ * Terminal-native prompt line (ticket 12), replaces Breadcrumb:
+ * `~/section $ show <slug>` — the section segment links back to the listing.
+ */
+interface Props {
+  /** canonical section prompt incl. "$", e.g. "~/projects $" (ADR 0007) */
+  prompt: string;
+  /** listing page the prompt links back to */
+  href: string;
+  /** command shown after the prompt, e.g. "show 2026-01-09-cold-front" */
+  command: string;
+}
+
+import styles from "./PromptLine.module.css";
+const { prompt, href, command } = Astro.props;
+/* strip the trailing "$" so it can be colored as its own token */
+const path = prompt.replace(/\s*\$\s*$/, "");
+---
+
+<p class={styles.line}>
+  <a href={href}>{path}</a>
+  <span class={styles.dollar} aria-hidden="true">$</span>
+  <span class={styles.cmd}>{command}</span>
+</p>

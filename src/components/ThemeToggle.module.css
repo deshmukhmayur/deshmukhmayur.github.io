@@ -1,11 +1,14 @@
 .toggle {
   border: 1px solid var(--edge);
-  border-radius: 8px;
+  border-radius: 4px;
   background: var(--panel);
   color: var(--dim);
-  font: 400 12.5px var(--mono);
-  padding: 5px 12px;
+  font: 400 0.75rem var(--mono);
+  line-height: 1;
+  height: 1.5rem;
+  padding: 0 8px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .toggle:hover,

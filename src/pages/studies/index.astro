@@ -1,8 +1,8 @@
 ---
 import { getStudies } from '../../lib/studies';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
-import Breadcrumb from '../../components/Breadcrumb.astro';
-import { PROMPTS, STUDIES } from '../../lib/constants';
+import LsFilterRow from '../../components/LsFilterRow.astro';
+import { STUDIES } from '../../lib/constants';
 import styles from './listing.module.css';
 
 const entries = await getStudies();
@@ -12,6 +12,10 @@ const rest = entries.filter((e) => e !== lead);
 
 const dateISO = STUDIES.dateISO;
 
+// open tag vocabulary → filter options ("all" leads, per the other listings)
+const tagOptions = ['all', ...[...new Set(entries.flatMap((e) => e.data.tags))].sort()]
+  .map((t) => ({ value: t, label: t }));
+
 const taxo = (projects: string[], tags: string[]) =>
   [
     ...projects.map((p) => ({ label: `${p}/`, href: `/projects/${p}/` })),
@@ -20,15 +24,21 @@ const taxo = (projects: string[], tags: string[]) =>
 ---
 
 <TerminalLayout section="studies">
-  <Breadcrumb
-    prompt={PROMPTS.section("studies")}
-    trail={[{ label: "home", href: "/" }, { label: "studies" }]}
+  <LsFilterRow
+    command={STUDIES.filterCommand}
+    flag={STUDIES.flag}
+    options={tagOptions}
+    targetId="study-ledger"
+    countSingular={STUDIES.countSingular}
+    countPlural={STUDIES.countPlural}
+    emptyPrefix={STUDIES.emptyPrefix}
+    initialCount={entries.length}
   />
 
-  <div class={styles.ledger}>
+  <div class={styles.ledger} id="study-ledger">
     {
       lead && (
-        <article class={styles.lead}>
+        <article class={styles.lead} data-filter-values={lead.data.tags.join(" ")}>
           <p class={styles.leadDate}>{dateISO(lead.data.date)}</p>
           <h2 class={styles.leadTitle}>
             <a href={`/studies/${lead.id}/`}>{lead.data.title}</a>
@@ -57,7 +67,7 @@ const taxo = (projects: string[], tags: string[]) =>
     <ul class={styles.rows}>
       {
         rest.map((entry) => (
-          <li class={styles.row}>
+          <li class={styles.row} data-filter-values={entry.data.tags.join(" ")}>
             <span class={styles.date}>{dateISO(entry.data.date)}</span>
             <div class={styles.main}>
               <h3 class={styles.title}>

@@ -3,18 +3,33 @@
   margin: 0 auto;
   padding: 20px 40px 0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 16px;
 }
 
+.mark {
+  display: inline-flex;
+  border-radius: 5px;
+  /* hard-reserve the box so nothing reflows while the svg loads */
+  width: 24px;
+  height: 24px;
+}
+
+.mark img {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
 .nav ul {
   display: flex;
+  flex: 1;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 4px 18px;
   list-style: none;
   padding: 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .nav a {
@@ -27,11 +42,35 @@
   color: var(--cyan);
 }
 
+.nav a.active {
+  color: var(--cyan);
+}
+
+.prefix {
+  color: var(--cyan);
+}
+
 @media (max-width: 760px) {
   .nav {
     padding: 16px 20px 0;
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+  .mark {
+    order: 1;
+  }
+  /* toggle joins row 1, right-aligned */
+  .nav > :global([data-theme-toggle]) {
+    order: 2;
+    margin-left: auto;
+  }
+  /* links wrap onto their own readable row */
+  .nav nav {
+    order: 3;
+    flex-basis: 100%;
   }
   .nav ul {
+    justify-content: flex-start;
     gap: 2px 12px;
   }
 }

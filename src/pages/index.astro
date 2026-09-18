@@ -3,7 +3,8 @@ import { getCollection } from "astro:content";
 import TerminalLayout from "../layouts/TerminalLayout.astro";
 import { getSoliloquy } from "../lib/soliloquy";
 import { getStudies } from "../lib/studies";
-import { HOME } from "../lib/constants";
+import { HOME, SOCIALS } from "../lib/constants";
+import SocialIcon from "../components/SocialIcon.astro";
 import styles from "./index.module.css";
 
 /*
@@ -84,8 +85,8 @@ const paneHref: Record<string, string> = {
   <div class={styles.panes}>
     <section class={`${styles.pane} ${styles.pWork}`}>
       <span class={styles.paneLinks} aria-label="elsewhere">
-        {HOME.paneLinks.work.map((l) => (
-          <a href={l.href} rel="me noopener" target="_blank">{l.label}</a>
+        {SOCIALS.filter((soc) => ["github", "linkedin"].includes(soc.brand)).map((soc) => (
+          <SocialIcon brand={soc.brand} href={soc.href} ariaLabel={soc.label} />
         ))}
       </span>
       <h2><a href={paneHref.projects}>projects<span class={styles.slash} aria-hidden="true">/</span></a></h2>
@@ -117,8 +118,8 @@ const paneHref: Record<string, string> = {
 
     <section class={`${styles.pane} ${styles.pArt}`}>
       <span class={styles.paneLinks} aria-label="elsewhere">
-        {HOME.paneLinks.art.map((l) => (
-          <a href={l.href} rel="me noopener" target="_blank">{l.label}</a>
+        {SOCIALS.filter((soc) => ["cara", "instagram"].includes(soc.brand)).map((soc) => (
+          <SocialIcon brand={soc.brand} href={soc.href} ariaLabel={soc.label} />
         ))}
       </span>
       <h2><a href={paneHref.art}>art<span class={styles.slash} aria-hidden="true">/</span></a></h2>
@@ -137,8 +138,8 @@ const paneHref: Record<string, string> = {
 
     <section class={`${styles.pane} ${styles.pPrints}`}>
       <span class={styles.paneLinks} aria-label="elsewhere">
-        {HOME.paneLinks.prints.map((l) => (
-          <a href={l.href} rel="me noopener" target="_blank">{l.label}</a>
+        {SOCIALS.filter((soc) => ["printables"].includes(soc.brand)).map((soc) => (
+          <SocialIcon brand={soc.brand} href={soc.href} ariaLabel={soc.label} />
         ))}
       </span>
       <h2><a href={paneHref.prints}>prints<span class={styles.slash} aria-hidden="true">/</span></a></h2>

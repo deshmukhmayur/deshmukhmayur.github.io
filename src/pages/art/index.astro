@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import TerminalLayout from '../../layouts/TerminalLayout.astro';
-import Breadcrumb from '../../components/Breadcrumb.astro';
 import LsFilterRow from '../../components/LsFilterRow.astro';
 import WindowedTile from '../../components/WindowedTile.astro';
 import { Picture } from 'astro:assets';
@@ -15,10 +14,6 @@ const tagOptions = ART.tagOptions.map((t) => ({ value: t, label: t }));
 ---
 
 <TerminalLayout section="art">
-  <Breadcrumb
-    prompt={PROMPTS.section("art")}
-    trail={[{ label: "home", href: "/" }, { label: "art" }]}
-  />
 
   <LsFilterRow
     command={ART.filterCommand}

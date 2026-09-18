@@ -18,7 +18,10 @@ export interface FilterGroup {
 }
 
 interface Props {
-  /** full command shown as the decorative label, e.g. "ls prints/" */
+  /** canonical prompt incl. "$", e.g. "~ $" (ADR 0007); the "$" is
+      re-rendered as its own green token */
+  prompt?: string;
+  /** command shown as the decorative label, e.g. "ls projects" */
   command: string;
   /** single-flag shorthand; merged into groups */
   flag?: string;
@@ -38,6 +41,7 @@ interface Props {
 import styles from "./LsFilterRow.module.css";
 
 const {
+  prompt = "~ $",
   command,
   flag,
   options,
@@ -61,7 +65,11 @@ const groups: FilterGroup[] =
   data-count-plural={countPlural}
   data-empty-prefix={emptyPrefix}
 >
-  <span class={styles.lbl} aria-hidden="true">{command}</span>
+  <span class={styles.lbl} aria-hidden="true">
+    <span class={styles.prompt}>{prompt.replace(/\s*\$\s*$/, "")}</span>
+    <span class={styles.dollar}>$</span>
+    <span class={styles.cmd}>{command}</span>
+  </span>
   {
     groups.map((g) => (
       <span class={styles.flaggroup}>

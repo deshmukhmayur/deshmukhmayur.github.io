@@ -25,7 +25,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 6px 10px;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--dim);
   border-bottom: 1px solid var(--edge);
 }
@@ -67,7 +67,7 @@
 }
 
 .title {
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
   color: var(--pink);
   margin-bottom: 2px;
@@ -86,7 +86,7 @@
   display: flex;
   justify-content: space-between;
   padding: 6px 10px;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--dim);
   border-bottom: 1px solid var(--edge);
 }
@@ -102,7 +102,7 @@
 .specs {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .specs td {
@@ -135,7 +135,7 @@
 .links a {
   display: block;
   padding: 8px 14px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--cyan);
   text-decoration: none;
   border-bottom: 1px dashed var(--edge);
@@ -159,7 +159,7 @@
 
 .notes {
   padding: 12px 14px;
-  font-size: 13.5px;
+  font-size: 0.8438rem;
   color: var(--ink);
   max-width: 48ch;
 }
@@ -174,7 +174,7 @@
 }
 
 .log h2 {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--amber);
   margin-bottom: 8px;
 }
@@ -217,7 +217,7 @@
 }
 
 .entryH {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--dim);
 }
 
@@ -226,7 +226,7 @@
 }
 
 .entryM {
-  font-size: 13.5px;
+  font-size: 0.8438rem;
   color: var(--ink);
   max-width: 44ch;
 }

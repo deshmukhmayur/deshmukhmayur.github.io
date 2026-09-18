@@ -4,16 +4,21 @@
   align-items: baseline;
   gap: 8px 18px;
   margin: 22px 0 26px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .lbl {
   color: var(--dim);
   white-space: nowrap;
+  display: inline-flex;
+  gap: 8px;
 }
 
-.lbl::before {
-  content: "$ ";
+.prompt {
+  color: var(--dim);
+}
+
+.dollar {
   color: var(--green);
 }
 
@@ -69,7 +74,7 @@
   flex-basis: 100%;
   margin: 0;
   color: var(--pink);
-  font-size: 12.5px;
+  font-size: 0.78125rem;
 }
 
 .reset {

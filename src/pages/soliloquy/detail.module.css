@@ -15,7 +15,7 @@
 .title {
   font-family: var(--mono);
   font-weight: 700;
-  font-size: 18px;
+  font-size: 1.125rem;
   color: var(--cyan);
   margin: 0;
 }
@@ -31,7 +31,7 @@
   display: block;
   margin-top: 2px;
   color: var(--pink);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 /* editorial prose — Spectral, per ADR 0006 */
@@ -41,7 +41,7 @@
 
 .body :global(p) {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.65;
   color: var(--ink);
   margin-top: 14px;
@@ -52,7 +52,7 @@
 .body :global(ul),
 .body :global(ol) {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.65;
   color: var(--ink);
   padding-left: 1.4em;
@@ -82,7 +82,7 @@
 
 .body :global(code) {
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: 0.8125rem;
   background: var(--panel);
   border: 1px solid var(--edge);
   border-radius: 4px;
@@ -90,7 +90,7 @@
 }
 
 .body :global(h2) {
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--ink);
   margin: 24px 0 4px;
 }
@@ -99,7 +99,7 @@
 .eof {
   text-align: center;
   color: var(--dim);
-  font-size: 12px;
+  font-size: 0.75rem;
   padding-top: 12px;
   letter-spacing: 0.3em;
 }
@@ -110,7 +110,7 @@
   margin: 18px auto 0;
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .nav a {

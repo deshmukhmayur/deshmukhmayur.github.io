@@ -16,7 +16,7 @@
 }
 
 .fetchRight h2 {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: var(--amber);
 }
@@ -28,7 +28,7 @@
 
 .whoami {
   color: var(--ink);
-  font-size: 13.5px;
+  font-size: 0.8438rem;
   margin-top: 4px;
 }
 
@@ -77,7 +77,7 @@
 }
 
 .pane h2 {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
   margin-bottom: 4px;
 }
@@ -98,7 +98,7 @@
 
 .desc {
   color: var(--dim);
-  font-size: 13px;
+  font-size: 0.8125rem;
   margin-bottom: 14px;
 }
 
@@ -129,7 +129,7 @@
 
 .pane li a .meta {
   color: var(--dim);
-  font-size: 12px;
+  font-size: 0.75rem;
   margin-left: 10px;
 }
 
@@ -153,7 +153,7 @@
 .pane dd {
   margin: 0;
   color: var(--dim);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .paneLinks {
@@ -162,7 +162,7 @@
   right: 24px;
   display: flex;
   gap: 14px;
-  font-size: 12.5px;
+  font-size: 0.7813rem;
 }
 
 .paneLinks a {
@@ -221,7 +221,7 @@
 .latest {
   margin-top: 36px;
   color: var(--dim);
-  font-size: 12.5px;
+  font-size: 0.7813rem;
   opacity: 0.85;
 }
 

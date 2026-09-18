@@ -1,15 +1,16 @@
 ---
 import TerminalLayout from "../layouts/TerminalLayout.astro";
-import Breadcrumb from "../components/Breadcrumb.astro";
+import PromptLine from "../components/PromptLine.astro";
 import ContactForm from "../components/ContactForm.astro";
 import { PROMPTS, CONTACT } from "../lib/constants";
 import styles from "./contact.module.css";
 ---
 
 <TerminalLayout section="contact">
-  <Breadcrumb
-    trail={[{ label: "home", href: "/" }, { label: "contact" }]}
+  <PromptLine
     prompt={PROMPTS.section("contact")}
+    href="/contact/"
+    command="show contact"
   />
 
   <div class={styles.cols}>
