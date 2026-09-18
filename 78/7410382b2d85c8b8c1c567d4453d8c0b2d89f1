@@ -1,0 +1,19 @@
+src/pages/soliloquy/detail.module.css
+  s_2ac268618fe951::t_3ad82593414a54 66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "787410382b2d85c8b8c1c567d4453d8c0b2d89f1",
+  "prompts": {},
+  "sessions": {
+    "s_2ac268618fe951": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4c8fd742ffemvf3FoC5CHF7yd",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
