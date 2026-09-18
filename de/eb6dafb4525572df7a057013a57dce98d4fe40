@@ -1,0 +1,47 @@
+worker/.gitignore
+  s_48df01d02b1989::t_3bbe6e64c409c7 1-3
+src/pages/contact.astro
+  s_48df01d02b1989::t_7200b2dca006c3 51
+.scratch/personal-site/issues/27-contact-form-worker.md
+  s_48df01d02b1989::t_869a11f69f0c3d 9
+src/lib/constants.ts
+  s_48df01d02b1989::t_fb2f3c65a9369d 222,226
+  s_48df01d02b1989::t_36a6883002b01d 194-195,200
+worker/tsconfig.json
+  s_48df01d02b1989::t_7200b2dca006c3 12
+worker/README.md
+  s_48df01d02b1989::t_7200b2dca006c3 39
+worker/package.json
+  s_48df01d02b1989::t_7200b2dca006c3 15
+worker/src/index.ts
+  s_48df01d02b1989::t_7200b2dca006c3 120
+  s_48df01d02b1989::t_ed3cecece784f3 27,34-35
+  s_48df01d02b1989::t_95a0c122a765de 84-89,101,106
+  s_48df01d02b1989::t_e37f2de22dbd6d 36
+src/components/ContactForm.astro
+  s_48df01d02b1989::t_fb02b433cfba25 68
+  s_48df01d02b1989::t_dcf47de7dbf56f 16
+  s_48df01d02b1989::t_7200b2dca006c3 150
+worker/schema.sql
+  s_48df01d02b1989::t_7200b2dca006c3 10
+worker/wrangler.jsonc
+  s_48df01d02b1989::t_7200b2dca006c3 20
+src/pages/contact.module.css
+  s_48df01d02b1989::t_7200b2dca006c3 91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "deeb6dafb4525572df7a057013a57dce98d4fe40",
+  "prompts": {},
+  "sessions": {
+    "s_48df01d02b1989": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4bff2b2affex517XuwBFI7V1Q",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
