@@ -27,6 +27,7 @@ export const NAV = [
   { label: PROMPTS.section("soliloquy"), href: "/soliloquy/" },
   { label: PROMPTS.section("studies"), href: "/studies/" },
   { label: PROMPTS.section("about"), href: "/about/" },
+  { label: PROMPTS.section("contact"), href: "/contact/" },
 ] as const;
 
 export const FOOTER = {
@@ -169,6 +170,61 @@ export const SOLILOQUY = {
   eof: "· · ·",
   // `$ cd ../entry-NN` prev/next (spec §4)
   navCmd: (n: number) => `cd ../entry-${n}`,
+} as const;
+
+/*
+ * Contact form (ticket 27). One shared component for /contact/ and the
+ * homepage pane. Voice per ADR 0007; status lines are real, never faked.
+ */
+export const CONTACT = {
+  // session opens with the canonical mail command (ADR 0007 prompt anchor)
+  sessionPrompt: PROMPTS.contactMail,
+  sessionReply: "starting a new message… ok. three questions, then send.",
+  fields: {
+    name: "name:",
+    email: "email:",
+    message: "message:",
+  },
+  placeholders: {
+    name: "who's asking",
+    email: "you@somewhere.tld",
+    message: "what's on your mind?",
+  },
+  honeypotLabel: "website:",
+  // truthful placeholder when the site key isn't provisioned yet (HITL, 31)
+  turnstileNote: "turnstile slot — keys provision at deploy",
+  sendButton: "send",
+  sending: "sending…",
+  ok: "$ send ok — message queued. i'll try my best to respond.",
+  error: "$ send: error — something ate the message. try again?",
+  // 413/429 variants keep the dry unix tone (ADR 0007)
+  errorTooLarge: "$ send: error — message too long. trim it and resend.",
+  errorRateLimit: "$ send: error — rate limited. try again in a minute.",
+manHeading: "man contact",
+  manIntro:
+    "one short form, straight to my inbox. replies come from my actual email — no ticket numbers, no \"do not reply\".",
+  manSections: [
+    {
+      name: "name",
+      text: "contact — send mayur a message",
+    },
+    {
+      name: "description",
+      text: "sends a short message to mayur's inbox — commissions, collabs, questions, kind words. fields: name, email, message.",
+    },
+    {
+      name: "options",
+      text: "--faster   quicker channels, listed below under elsewhere/",
+    },
+  ],
+  manFaster: "ls elsewhere/ --faster",
+  manAlt: [
+    { label: "github issues", href: "https://github.com/deshmukhmayur" },
+    { label: "instagram dm", href: "https://instagram.com/deshmukhmayur" },
+    { label: "reply on a soliloquy", href: "/soliloquy/" },
+  ],
+  manReplyTime: "i usually reply within a few days.",
+  endpoint: "/api/send",
 } as const;
 
 export const PROJECTS = {

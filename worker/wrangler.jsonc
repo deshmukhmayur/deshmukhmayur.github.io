@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "deshmukhmayur-contact",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-04-01",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "contact-inbox",
+      "database_id": "<provision at deploy — ticket 31 HITL>"
+    }
+  ],
+  // route on the site domain; the static site itself has no worker
+  "routes": [{ "pattern": "deshmukhmayur.com/api/send", "zone_name": "deshmukhmayur.com" }],
+  // secrets (set via `wrangler secret put`, HITL at deploy — ticket 31):
+  //   TURNSTILE_SECRET  server-side Turnstile key
+  //   RESEND_API_KEY    Resend free-tier API key
+  //   NOTIFY_EMAIL      Mayur's own inbox (sender = recipient)
+  "observability": { "enabled": true }
+}

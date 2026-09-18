@@ -1,0 +1,58 @@
+---
+import TerminalLayout from "../layouts/TerminalLayout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import ContactForm from "../components/ContactForm.astro";
+import { PROMPTS, CONTACT } from "../lib/constants";
+import styles from "./contact.module.css";
+---
+
+<TerminalLayout title="contact">
+  <Breadcrumb
+    trail={[{ label: "home", href: "/" }, { label: "contact" }]}
+    prompt={PROMPTS.section("contact")}
+  />
+
+  <div class={styles.cols}>
+    <div>
+      <ContactForm variant="session" idPrefix="contact" />
+    </div>
+
+    <aside class={styles.man} aria-label={`${CONTACT.manHeading} documentation`}>
+      <h2>{CONTACT.manHeading}</h2>
+      <p class={styles.intro}>{CONTACT.manIntro}</p>
+      {
+        CONTACT.manSections.map((section) => (
+          <div class={styles.manSection}>
+            <h3>{section.name}</h3>
+            <p>{section.text}</p>
+          </div>
+        ))
+      }
+      <div class={styles.faster}>
+        <h3>
+          <span class={styles.dollar} aria-hidden="true">$</span>
+          <span class={styles.cmd}>{CONTACT.manFaster}</span>
+        </h3>
+        <ul>
+          {
+            CONTACT.manAlt.map((alt) => (
+              <li>
+                <a
+                  href={alt.href}
+                  rel={alt.href.startsWith("/") ? undefined : "me noopener"}
+                  target={alt.href.startsWith("/") ? undefined : "_blank"}
+                >
+                  <span class={styles.open} aria-hidden="true">
+                    ↗
+                  </span>
+                  {alt.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <p class={styles.replyTime}>{CONTACT.manReplyTime}</p>
+      </div>
+    </aside>
+  </div>
+</TerminalLayout>

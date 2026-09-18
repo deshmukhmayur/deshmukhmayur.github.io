@@ -1,0 +1,110 @@
+/* /contact/ (ticket 27) — mail session + unboxed `man contact` rail */
+
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: 32px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+@media (max-width: 800px) {
+  .cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+.man {
+  font-size: 12.5px;
+  color: var(--dim);
+}
+
+.man h2 {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  color: var(--cyan);
+  font-weight: 400;
+}
+
+.man h2::before {
+  content: "$ ";
+  color: var(--dim);
+}
+
+.intro {
+  max-width: 56ch;
+  margin-top: 8px;
+}
+
+.manSection {
+  margin-top: 18px;
+}
+
+.manSection h3 {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.manSection p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.faster {
+  margin-top: 18px;
+  border-top: 1px dashed var(--edge);
+  padding-top: 14px;
+}
+
+.faster h3 {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.dollar {
+  color: var(--dim);
+}
+
+/* `$ ls …` reads as a command: green like the session prompt */
+.cmd {
+  color: var(--green);
+  margin-left: 6px;
+}
+
+.faster ul {
+  list-style: none;
+  padding: 0;
+}
+
+.faster li {
+  margin-bottom: 2px;
+}
+
+.faster a {
+  color: var(--dim);
+  text-decoration: none;
+}
+
+.open {
+  font-size: 11px;
+  margin-right: 5px;
+}
+
+.faster a:hover,
+.faster a:focus-visible {
+  color: var(--cyan);
+}
+
+.faster a:hover .open,
+.faster a:focus-visible .open {
+  color: var(--cyan);
+}
+
+.replyTime {
+  margin-top: 10px;
+}

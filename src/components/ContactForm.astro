@@ -1,0 +1,150 @@
+---
+/*
+ * Shared contact form (ticket 27). Mail-session vocabulary from the interiors
+ * prototype (variant D). Used by /contact/ and the homepage contact pane —
+ * the component is identical, only `variant` changes the width.
+ *
+ * Turnstile: the widget renders only when PUBLIC_TURNSTILE_SITE_KEY is set
+ * (provisioned at deploy — HITL, ticket 31). Without it the slot shows the
+ * dashed placeholder; the Worker skips verification when its secret is unset,
+ * so local end-to-end sends work against `wrangler dev` with no keys.
+ */
+import { CONTACT } from "../lib/constants";
+import styles from "./ContactForm.module.css";
+
+interface Props {
+  /** "session" = /contact/ full-width session; "pane" = homepage contact pane */
+  variant?: "session" | "pane";
+  /** unique id prefix so both variants can coexist on one page */
+  idPrefix?: string;
+}
+
+const { variant = "session", idPrefix = "c" } = Astro.props;
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
+---
+
+<form
+  class={variant === "pane" ? `${styles.session} ${styles.pane}` : styles.session}
+  data-contact-form
+>
+  <p class={styles.prompt} aria-hidden="true">{CONTACT.sessionPrompt}</p>
+  <p class={styles.reply} aria-hidden="true">{CONTACT.sessionReply}</p>
+
+  <div class={styles.frow}>
+    <label for={`${idPrefix}-name`}>{CONTACT.fields.name}</label>
+    <input
+      id={`${idPrefix}-name`}
+      name="name"
+      type="text"
+      autocomplete="name"
+      placeholder={CONTACT.placeholders.name}
+      required
+      maxlength="200"
+    />
+  </div>
+  <div class={styles.frow}>
+    <label for={`${idPrefix}-email`}>{CONTACT.fields.email}</label>
+    <input
+      id={`${idPrefix}-email`}
+      name="email"
+      type="email"
+      autocomplete="email"
+      placeholder={CONTACT.placeholders.email}
+      required
+      maxlength="320"
+    />
+  </div>
+  <div class={styles.frow}>
+    <label for={`${idPrefix}-message`}>{CONTACT.fields.message}</label>
+    <textarea
+      id={`${idPrefix}-message`}
+      name="message"
+      rows={variant === "pane" ? 3 : 5}
+      placeholder={CONTACT.placeholders.message}
+      required
+      maxlength="5000"></textarea>
+  </div>
+
+  {/* honeypot — bots see it, humans never do (off-screen via .hpGhost) */}
+  <div class={styles.hpGhost} aria-hidden="true">
+    <label for={`${idPrefix}-website`}>{CONTACT.honeypotLabel}</label>
+    <input id={`${idPrefix}-website`} name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class={styles.turnstile}>
+    {
+      siteKey ? (
+        <div class="cf-turnstile" data-sitekey={siteKey} data-theme="auto" />
+      ) : (
+        <span>{CONTACT.turnstileNote}</span>
+      )
+    }
+  </div>
+
+  <div class={styles.sendrow}>
+    <button type="submit" class={styles.send}>{CONTACT.sendButton}</button>
+  </div>
+  <p class={styles.status} role="status" aria-live="polite" data-contact-status></p>
+</form>
+
+<script>
+  import { CONTACT } from "../lib/constants";
+
+  type Form = HTMLFormElement & { dataset: { busy?: string } };
+
+  async function send(form: Form, status: HTMLElement) {
+    if (form.dataset.busy) return;
+    form.dataset.busy = "1";
+    const button = form.querySelector<HTMLButtonElement>("button[type=submit]");
+    const data = new FormData(form);
+    const turnstileToken =
+      form.querySelector<HTMLInputElement>("input[name=cf-turnstile-response]")?.value ?? "";
+    const body = {
+      name: data.get("name"),
+      email: data.get("email"),
+      message: data.get("message"),
+      honeypot: data.get("website") ?? "",
+      turnstileToken,
+    };
+
+    button.disabled = true;
+    status.className = "";
+    status.textContent = CONTACT.sending;
+
+    try {
+      const res = await fetch(CONTACT.endpoint, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        status.textContent = CONTACT.ok;
+        status.classList.add("statusOk");
+        form.reset();
+        (window as { turnstile?: { reset: () => void } }).turnstile?.reset();
+      } else {
+        status.textContent =
+          res.status === 413
+            ? CONTACT.errorTooLarge
+            : res.status === 429
+              ? CONTACT.errorRateLimit
+              : CONTACT.error;
+        status.classList.add("statusErr");
+      }
+    } catch {
+      status.textContent = CONTACT.error;
+      status.classList.add("statusErr");
+    } finally {
+      button.disabled = false;
+      delete form.dataset.busy;
+    }
+  }
+
+  document.querySelectorAll("[data-contact-form]").forEach((form) => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const status = form.querySelector<HTMLElement>("[data-contact-status]");
+      if (status) send(form as Form, status);
+    });
+  });
+</script>
