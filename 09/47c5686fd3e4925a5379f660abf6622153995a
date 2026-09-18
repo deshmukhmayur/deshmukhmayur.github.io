@@ -1,0 +1,32 @@
+src/pages/index.astro
+  s_5addad47d25d14::t_8400fa8ee96e27 7
+  s_5addad47d25d14::t_e37475833e8c45 157
+  s_5addad47d25d14::t_b76728da3eb36c 94
+  s_5addad47d25d14::t_d947af482cb4f2 177
+  s_5addad47d25d14::t_0bf17679846072 2,4-6,9-44,47-73,75-93,96-156,158-176,178-180,183-190
+.scratch/personal-site/issues/28-homepage-panes.md
+  s_5addad47d25d14::t_e5229f2733419d 7-12
+  s_5addad47d25d14::t_57aad0b3398ccd 4-6
+  s_5addad47d25d14::t_b67467ec9726df 1-3
+src/pages/index.module.css
+  s_5addad47d25d14::t_11ffaeeaaab67f 1-55,57-86,88-103,106-107,111-113,116,118-119,122-126,129-132,135-136,139-151,154-156,159-160,163-165,167-168,170-174,177-182,184-188,192-215,218-245
+  s_5addad47d25d14::t_796809385107ba 117,120-121,127-128,152-153,157-158,169,183
+src/lib/constants.ts
+  s_5addad47d25d14::t_0ffcb65b2afadb 230-266
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "0947c5686fd3e4925a5379f660abf6622153995a",
+  "prompts": {},
+  "sessions": {
+    "s_5addad47d25d14": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4bab084cffeQhNHfWUuc7pWXI",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
