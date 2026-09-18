@@ -1,0 +1,72 @@
+---
+import { getSoliloquy } from '../../lib/soliloquy';
+import TerminalLayout from '../../layouts/TerminalLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { render } from 'astro:content';
+import { PROMPTS, SOLILOQUY } from '../../lib/constants';
+import styles from './detail.module.css';
+
+export async function getStaticPaths() {
+  // entries are newest-first, so the neighbor above i is older (prev) and
+  // below i is newer (next); numbering stays chronological across all pages
+  const entries = await getSoliloquy();
+  return entries.map((e, i) => ({
+    params: { slug: e.slug },
+    props: { e, prev: entries[i + 1], next: entries[i - 1], total: entries.length },
+  }));
+}
+
+const { e, prev, next, total } = Astro.props;
+const { Content } = await render(e.entry);
+---
+
+<TerminalLayout title={e.title ?? SOLILOQUY.dayISO(e.datetime)}>
+  <Breadcrumb
+    prompt={PROMPTS.section("soliloquy")}
+    trail={[
+      { label: "home", href: "/" },
+      { label: "soliloquy", href: "/soliloquy/" },
+      { label: e.slug },
+    ]}
+  />
+
+  <div class={styles.wrap}>
+    <article class={styles.printout}>
+      {e.title && <h1 class={styles.title}>{e.title}</h1>}
+      <p class={styles.stamp}>
+        {SOLILOQUY.stamp(e.datetime)} · {SOLILOQUY.entryNo(e.number, total)}
+      </p>
+      <div class={styles.body}>
+        <Content />
+      </div>
+      <p class={styles.eof} aria-hidden="true">{SOLILOQUY.eof}</p>
+    </article>
+
+    <nav class={styles.nav} aria-label="nearby entries">
+      {
+        prev ? (
+          <a href={`/soliloquy/${prev.slug}/`}>
+            <span class={styles.navCmd}>{SOLILOQUY.navCmd(prev.number)}</span>
+            <span class={styles.navHint}>
+              {prev.title ?? `${SOLILOQUY.dayISO(prev.datetime)} · ${SOLILOQUY.time(prev.datetime)}`}
+            </span>
+          </a>
+        ) : (
+          <span class={styles.navEnd}># nothing earlier</span>
+        )
+      }
+      {
+        next ? (
+          <a href={`/soliloquy/${next.slug}/`}>
+            <span class={styles.navCmd}>{SOLILOQUY.navCmd(next.number)}</span>
+            <span class={styles.navHint}>
+              {next.title ?? `${SOLILOQUY.dayISO(next.datetime)} · ${SOLILOQUY.time(next.datetime)}`}
+            </span>
+          </a>
+        ) : (
+          <span class={styles.navEnd}># nothing later</span>
+        )
+      }
+    </nav>
+  </div>
+</TerminalLayout>

@@ -1,0 +1,104 @@
+---
+import TerminalLayout from '../../layouts/TerminalLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import LsFilterRow from '../../components/LsFilterRow.astro';
+import { getSoliloquy, monthsOf, tagOptionsOf } from '../../lib/soliloquy';
+import type { SolEntryResolved } from '../../lib/soliloquy';
+import { PROMPTS, SOLILOQUY } from '../../lib/constants';
+import styles from './listing.module.css';
+
+const entries = await getSoliloquy();
+const months = monthsOf(entries);
+
+const byMonth = new Map<string, SolEntryResolved[]>();
+for (const e of entries) {
+  const month = e.dayISO.slice(0, 7);
+  if (!byMonth.has(month)) byMonth.set(month, []);
+  byMonth.get(month)!.push(e);
+}
+
+const tagOptions = ['all', ...tagOptionsOf(entries)].map((t) => ({ value: t, label: t }));
+---
+
+<TerminalLayout title="soliloquy">
+  <Breadcrumb
+    prompt={PROMPTS.section("soliloquy")}
+    trail={[{ label: "home", href: "/" }, { label: "soliloquy" }]}
+  />
+
+  <LsFilterRow
+    command={SOLILOQUY.filterCommand}
+    flag={SOLILOQUY.flag}
+    options={tagOptions}
+    targetId="soliloquy-rail"
+    countSingular={SOLILOQUY.countSingular}
+    countPlural={SOLILOQUY.countPlural}
+    emptyPrefix={SOLILOQUY.emptyPrefix}
+    initialCount={entries.length}
+  />
+
+  <div class={styles.railGrid} id="soliloquy-rail">
+    <nav class={styles.rail} aria-label="jump to month">
+      <h2>{SOLILOQUY.railHeading}</h2>
+      {
+        months.map((m) => (
+          <a href={`#m-${m.month}`}>
+            {m.month}
+            <span class={styles.railCount}>{m.count}</span>
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class={styles.entries}>
+      {
+        months.map((m) => (
+          <section class={styles.month} id={`m-${m.month}`}>
+            {
+              byMonth.get(m.month)!.map((e) => (
+                <article
+                  class={`${styles.entry} ${e.title ? '' : styles.micro}`}
+                  data-filter-values={e.entry.data.tags.join(' ')}
+                >
+                  <p class={styles.stamp}>{SOLILOQUY.stamp(e.datetime)}</p>
+                  {e.title && (
+                    <h3 class={styles.title}>
+                      <a href={`/soliloquy/${e.slug}/`}>{e.title}</a>
+                    </h3>
+                  )}
+                  <p class={styles.body}>{e.excerpt}</p>
+                  {e.images.length > 0 && (
+                    <div class={styles.pics}>
+                      {e.images.map((img) => (
+                        <a href={`/soliloquy/${e.slug}/`} tabindex="-1" aria-hidden="true">
+                          <img src={img.src.src} alt={img.alt} width={img.src.width} height={img.src.height} loading="lazy" />
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                  {e.entry.data.tags.length > 0 && (
+                    <p class={styles.meta}>
+                      {e.entry.data.tags.map((t, i) => (
+                        <>
+                          {i > 0 && <span class={styles.sep} aria-hidden="true"> · </span>}
+                          <span class={styles.tag}>#{t}</span>
+                        </>
+                      ))}
+                    </p>
+                  )}
+                  {!e.title && (
+                    <p class={styles.meta}>
+                      <a class={styles.more} href={`/soliloquy/${e.slug}/`}>
+                        {SOLILOQUY.entryNo(e.number, entries.length)}
+                      </a>
+                    </p>
+                  )}
+                </article>
+              ))
+            }
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</TerminalLayout>

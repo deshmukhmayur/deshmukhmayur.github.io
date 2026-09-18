@@ -150,6 +150,27 @@ export const STUDIES = {
   relatedEmpty: "# no related studies yet",
 } as const;
 
+/*
+ * Soliloquy section chrome (ticket 26). Voice per ADR 0007: lowercase, terse,
+ * real POSIX verbs. Tags are open vocabulary, shared with Studies.
+ */
+export const SOLILOQUY = {
+  filterCommand: "ls soliloquy --tag",
+  flag: "tag",
+  countSingular: "entry",
+  countPlural: "entries",
+  emptyPrefix: "ls: no matches for --",
+  railHeading: "tail -f by month",
+  dayISO: (dt: string) => dt.slice(0, 10),
+  time: (dt: string) => dt.slice(11, 16),
+  // `[2026-09-14 · 09:12]` — the pink timestamp
+  stamp: (dt: string) => `[${dt.slice(0, 10)} · ${dt.slice(11, 16)}]`,
+  entryNo: (n: number, total: number) => `entry #${n} of ${total}`,
+  eof: "· · ·",
+  // `$ cd ../entry-NN` prev/next (spec §4)
+  navCmd: (n: number) => `cd ../entry-${n}`,
+} as const;
+
 export const PROJECTS = {
   filterCommand: "ls projects --kind",
   flag: "kind",

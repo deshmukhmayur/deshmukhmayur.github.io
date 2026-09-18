@@ -1,0 +1,144 @@
+.wrap {
+  margin: 0 0 40px;
+}
+
+/* ---------- perforated printout — narrow paper column ---------- */
+.printout {
+  max-width: 620px;
+  margin: 26px 0 0;
+  padding: 26px 30px;
+  border-top: 1px dashed var(--edge);
+  border-bottom: 1px dashed var(--edge);
+  border-left: 1px dashed var(--edge);
+  border-right: 1px dashed var(--edge);
+  background:
+    radial-gradient(circle at 50% 12px, var(--bg) 0 3px, transparent 3px),
+    radial-gradient(circle at 50% calc(100% - 12px), var(--bg) 0 3px, transparent 3px),
+    var(--panel);
+  background-repeat: no-repeat, no-repeat;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+
+/* pink timestamp + `entry #N of M` byline */
+.stamp {
+  color: var(--pink);
+  font-size: 12px;
+  margin-bottom: 14px;
+}
+
+/* editorial prose — Spectral, per ADR 0006 */
+.body :global(p) {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink);
+  margin-top: 14px;
+  max-width: 58ch;
+}
+
+.body :global(ul),
+.body :global(ol) {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink);
+  padding-left: 1.4em;
+  margin-top: 14px;
+}
+
+/* body images — the only sanctioned image channel (spec §4) */
+.body :global(img) {
+  display: block;
+  max-width: 100%;
+  margin: 18px 0 4px;
+  border-radius: 6px;
+  border: 1px solid var(--edge);
+}
+
+.body :global(a) {
+  color: var(--cyan);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--dotted);
+}
+
+.body :global(a:hover),
+.body :global(a:focus-visible) {
+  border-bottom-color: var(--cyan);
+}
+
+.body :global(code) {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--bg);
+  border: 1px solid var(--edge);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.body :global(h2) {
+  font-size: 15px;
+  color: var(--ink);
+  margin: 24px 0 4px;
+}
+
+/* `· · ·` EOF mark */
+.eof {
+  text-align: center;
+  color: var(--dim);
+  margin-top: 30px;
+  letter-spacing: 6px;
+}
+
+/* ---------- `$ cd ../entry-NN` prev/next ---------- */
+.nav {
+  max-width: 620px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin-top: 18px;
+  font-size: 12.5px;
+}
+
+.nav a {
+  color: var(--dim);
+  text-decoration: none;
+}
+
+.nav a:hover .navCmd,
+.nav a:focus-visible .navCmd {
+  color: var(--pink);
+}
+
+.navCmd::before {
+  content: "$ ";
+  color: var(--dim);
+}
+
+.navCmd {
+  color: var(--green);
+}
+
+.navHint {
+  display: block;
+  color: var(--dim);
+  font-size: 11.5px;
+  margin-top: 2px;
+}
+
+.navEnd {
+  color: var(--dim);
+}
+
+@media (max-width: 700px) {
+  .printout {
+    padding: 22px 18px;
+  }
+}

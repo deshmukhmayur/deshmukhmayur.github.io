@@ -125,4 +125,26 @@ const studies = defineCollection({
   }),
 });
 
-export const collections = { art, prints, projects, studies };
+/*
+ * Soliloquy (spec §4): casual log, micro entries allowed (no title). datetime
+ * is kept as a `YYYY-MM-DDTHH:MM` string on purpose — coercing to Date would
+ * run it through UTC/local conversion and can shift same-day entries across
+ * midnight. slug is optional; titleless (and slugless) entries URL as
+ * `<YYYY-MM-DD>-<ordinal>` — the ordinal needs other entries' datetimes, so
+ * it's computed in src/lib/soliloquy.ts, not here. Tags are open vocabulary,
+ * shared with Studies; images live in the markdown body only.
+ */
+const soliloquy = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/soliloquy' }),
+  schema: z.object({
+    title: z.string().optional(),
+    datetime: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, 'YYYY-MM-DDTHH:MM'),
+    slug: z
+      .string()
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'slug must be lowercase kebab-case')
+      .optional(),
+    tags: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { art, prints, projects, studies, soliloquy };
