@@ -1,0 +1,24 @@
+src/pages/contact.astro
+  s_48df01d02b1989::t_0e8541ab8ba711 49
+  s_48df01d02b1989::t_80bd32ac097d91 28
+src/lib/constants.ts
+  s_48df01d02b1989::t_1b29293e5ab3ca 211,215
+src/pages/contact.module.css
+  s_48df01d02b1989::t_6307e6a5c316ac 99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d8834c90f1d76cfd3892cc234cf3a6baf74192bb",
+  "prompts": {},
+  "sessions": {
+    "s_48df01d02b1989": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4bff2b2affex517XuwBFI7V1Q",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
