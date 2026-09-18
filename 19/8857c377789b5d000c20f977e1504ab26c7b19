@@ -1,0 +1,77 @@
+src/lib/constants.ts
+  s_48df01d02b1989::t_eb004cd3333b94 175-230
+  s_48df01d02b1989::t_e961622cb3b5f0 30
+worker/package.json
+  s_48df01d02b1989::t_f34a487c081773 1-15
+src/components/ContactForm.module.css
+  s_48df01d02b1989::t_03488befefc642 1-193
+src/components/ContactForm.astro
+  s_48df01d02b1989::t_50f0a0324a1e4b 1
+  s_48df01d02b1989::t_8e54be3be5222b 125
+  s_48df01d02b1989::t_ceb180e6c05d42 2-24,26-124,126-151
+  s_48df01d02b1989::t_291c3c7d635e2c 25
+worker/schema.sql
+  s_48df01d02b1989::t_fe115317d91c57 1-10
+worker/wrangler.jsonc
+  s_48df01d02b1989::t_939737259520f0 1-20
+astro.config.mjs
+  s_48df01d02b1989::t_423606201f0552 15-23
+  s_9e6254a3effdb0::t_e434f852cb9f3c 10-13
+  s_660552af7128c4::t_98bf7a02d4f697 14
+src/pages/contact.astro
+  s_48df01d02b1989::t_ee6324dffcd0b5 1-51
+.scratch/personal-site/issues/27-contact-form-worker.md
+  s_4c13706a6cdff9::t_8716f5c29160b0 1-6,8,13
+  s_48df01d02b1989::t_360bad2489e511 7,9-12
+worker/README.md
+  s_48df01d02b1989::t_dc1dc091ab0e56 1-39
+src/pages/contact.module.css
+  s_48df01d02b1989::t_f02c5ae70a28a5 1-91
+worker/src/index.ts
+  s_48df01d02b1989::t_8388352cefdc6c 1-24,26-118
+  s_48df01d02b1989::t_205e50647389b6 25
+worker/tsconfig.json
+  s_48df01d02b1989::t_42ff502aa5d734 1-12
+worker/bun.lock
+  s_48df01d02b1989::t_cda2374da8df96 1-201
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "198857c377789b5d000c20f977e1504ab26c7b19",
+  "prompts": {},
+  "sessions": {
+    "s_48df01d02b1989": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4bff2b2affex517XuwBFI7V1Q",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_4c13706a6cdff9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f509b7f11ffepoU6pb9JxCAj64",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_660552af7128c4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f506abe57ffeCDRO6bW6E0fojs",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_9e6254a3effdb0": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f5035b95cffexpStU3N0wks660",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
