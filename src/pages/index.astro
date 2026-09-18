@@ -1,31 +1,194 @@
 ---
+import { getCollection } from "astro:content";
 import TerminalLayout from "../layouts/TerminalLayout.astro";
-import Breadcrumb from "../components/Breadcrumb.astro";
-import { PROMPTS, DEMO } from "../lib/constants";
+import { getSoliloquy } from "../lib/soliloquy";
+import { getStudies } from "../lib/studies";
+import { HOME } from "../lib/constants";
 import styles from "./index.module.css";
+
+/*
+ * Homepage (ticket 28, prototype variant F). Featured slots pull real
+ * collection data; recent entries pad slots that don't have enough featured
+ * flags yet, so the panes never render hollow.
+ */
+
+const projects = await getCollection("projects", ({ data }) => !data.draft);
+projects.sort((a, b) => b.data.started.localeCompare(a.data.started));
+const featuredProjects = [
+  ...projects.filter((p) => p.data.featured),
+  ...projects.filter((p) => !p.data.featured),
+].slice(0, HOME.slots.projects);
+
+const art = await getCollection("art");
+art.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+const featuredArt = [
+  ...art.filter((a) => a.data.featured),
+  ...art.filter((a) => !a.data.featured),
+].slice(0, HOME.slots.art);
+
+const prints = await getCollection("prints");
+prints.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const featuredPrints = [
+  ...prints.filter((p) => p.data.featured),
+  ...prints.filter((p) => !p.data.featured),
+].slice(0, HOME.slots.prints);
+
+const studies = await getStudies();
+const featuredStudies = [
+  ...studies.filter((s) => s.data.featured),
+  ...studies.filter((s) => !s.data.featured),
+].slice(0, HOME.slots.studies);
+
+const soliloquy = await getSoliloquy();
+const latestSol = soliloquy[0];
+
+/* pane heading → section page (skills pane points at about) */
+const paneHref: Record<string, string> = {
+  work: "/projects/",
+  skills: "/about/",
+  art: "/art/",
+  prints: "/prints/",
+  studies: "/studies/",
+  soliloquy: "/soliloquy/",
+};
 ---
 
-<TerminalLayout title="home">
-  <Breadcrumb trail={[{ label: "home" }]} prompt={PROMPTS.home} />
+<TerminalLayout>
+  <section class={styles.fetch} aria-label="about">
+    {/* placeholder doodle — real illustration lands with the art drop (spec §7) */}
+    <svg class={styles.doodle} width="200" height="200" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+      <path d="M100 22 C 62 24, 40 52, 42 92 C 43 128, 64 158, 100 160 C 136 158, 157 128, 158 92 C 160 52, 138 24, 100 22 Z" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round"></path>
+      <path d="M44 78 C 40 44, 66 18, 100 20 C 134 18, 160 44, 156 78 C 148 60, 136 52, 118 54 C 126 44, 120 36, 108 38 C 96 30, 78 34, 72 46 C 60 50, 48 62, 44 78 Z" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round" fill="var(--bg)"></path>
+      <path d="M70 96 C 76 90, 88 90, 94 96" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"></path>
+      <path d="M106 96 C 112 90, 124 90, 130 96" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"></path>
+      <path d="M96 98 C 96 104, 98 108, 100 110 C 102 108, 104 104, 104 98" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"></path>
+      <path d="M86 126 C 92 132, 108 132, 114 126" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"></path>
+      <path d="M36 176 C 60 156, 84 150, 100 150 C 116 150, 140 156, 164 176" stroke="var(--dim)" stroke-width="3" stroke-linecap="round"></path>
+      <path d="M42 168 l -6 14 M158 168 l 6 14" stroke="var(--dim)" stroke-width="3" stroke-linecap="round"></path>
+      <path d="M170 30 l 10 -8 M176 44 l 12 -3" stroke="var(--amber)" stroke-width="2.5" stroke-linecap="round"></path>
+      <path d="M22 40 l -10 -6 M18 56 l -12 0" stroke="var(--amber)" stroke-width="2.5" stroke-linecap="round"></path>
+    </svg>
+    <div class={styles.fetchRight}>
+      <h2><a href="/about/">about<span class={styles.slash} aria-hidden="true">/</span></a></h2>
+      <p class={styles.whoami}>
+        whoami → mayur deshmukh · <a href={HOME.resume.href}>{HOME.resume.label}</a>
+        <span class={styles.bio}>{HOME.bio}</span>
+        <span class={styles.workline}>
+          {HOME.now.role} at <a href={HOME.now.href} rel="noopener" target="_blank">{HOME.now.employer}</a>
+          <span class={styles.meta}> · {HOME.now.tenure}</span>
+        </span>
+      </p>
+    </div>
+  </section>
 
-  <p class={styles.cmd} aria-hidden="true">{DEMO.commands[0]}</p>
+  <div class={styles.panes}>
+    <section class={`${styles.pane} ${styles.pWork}`}>
+      <span class={styles.paneLinks} aria-label="elsewhere">
+        {HOME.paneLinks.work.map((l) => (
+          <a href={l.href} rel="me noopener" target="_blank">{l.label}</a>
+        ))}
+      </span>
+      <h2><a href={paneHref.work}>work<span class={styles.slash} aria-hidden="true">/</span></a></h2>
+      <p class={styles.desc}>projects &amp; open source</p>
+      <ul>
+        {featuredProjects.map((p) => (
+          <li>
+            <a href={`/projects/${p.id}/`}>
+              {p.id}
+              <span class={styles.meta}>{p.data.tech[0] ?? p.data.kinds[0]} · {p.data.started.slice(0, 4)}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
 
-  <div class={styles.prose}>
-    <h1>shell up and running</h1>
-    <p>
-      every route renders inside this terminal shell. chrome is space mono and
-      stays lowercase; prose like this paragraph is spectral.
-    </p>
-    <p>
-      the toggle in the top-right flips the palette — <span class={styles.cyan}
-        >--cyan</span
-      >, <span class={styles.pink}>--pink</span>, <span class={styles.amber}
-        >--amber</span
-      >, <span class={styles.green}>--green</span> — and your choice persists
-      across reloads.
-    </p>
+    <section class={`${styles.pane} ${styles.pSkills}`}>
+      <h2><a href={paneHref.skills}>skills<span class={styles.slash} aria-hidden="true">/</span></a></h2>
+      <p class={styles.desc}>things i reach for</p>
+      <dl>
+        {HOME.skills.map((s) => (
+          <>
+            <dt>{s.key}</dt>
+            <dd>{s.value}</dd>
+          </>
+        ))}
+      </dl>
+    </section>
+
+    <section class={`${styles.pane} ${styles.pArt}`}>
+      <span class={styles.paneLinks} aria-label="elsewhere">
+        {HOME.paneLinks.art.map((l) => (
+          <a href={l.href} rel="me noopener" target="_blank">{l.label}</a>
+        ))}
+      </span>
+      <h2><a href={paneHref.art}>art<span class={styles.slash} aria-hidden="true">/</span></a></h2>
+      <p class={styles.desc}>illustrations &amp; sketches</p>
+      <ul>
+        {featuredArt.map((a) => (
+          <li>
+            <a href={`/art/${a.id}/`}>
+              {a.id.slice(11)}
+              <span class={styles.meta}>{a.data.medium}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class={`${styles.pane} ${styles.pPrints}`}>
+      <span class={styles.paneLinks} aria-label="elsewhere">
+        {HOME.paneLinks.prints.map((l) => (
+          <a href={l.href} rel="me noopener" target="_blank">{l.label}</a>
+        ))}
+      </span>
+      <h2><a href={paneHref.prints}>prints<span class={styles.slash} aria-hidden="true">/</span></a></h2>
+      <p class={styles.desc}>3d printing builds</p>
+      <ul>
+        {featuredPrints.map((p) => (
+          <li>
+            <a href={`/prints/${p.id}/`}>
+              {p.id.slice(11)}
+              <span class={styles.meta}>{p.data.material}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class={`${styles.pane} ${styles.pStu}`}>
+      <h2><a href={paneHref.studies}>studies<span class={styles.slash} aria-hidden="true">/</span></a></h2>
+      <p class={styles.desc}>write-ups &amp; experiments</p>
+      <ul>
+        {featuredStudies.map((s) => (
+          <li>
+            <a href={`/studies/${s.id}/`}>
+              {s.id}
+              <span class={styles.meta}>{s.data.tags.join(" · ")}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class={`${styles.pane} ${styles.pSol}`}>
+      <h2><a href={paneHref.soliloquy}>soliloquy<span class={styles.slash} aria-hidden="true">/</span></a></h2>
+      <p class={styles.desc}>small casual thoughts</p>
+      <ul>
+        {soliloquy.slice(0, 2).map((e) => (
+          <li>
+            <a href={`/soliloquy/${e.slug}/`}>{e.title ?? e.slug}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
   </div>
 
-  <p class={styles.cmd} aria-hidden="true">{DEMO.commands[1]}</p>
-  <p class={styles.dim}>{DEMO.comment}</p>
+  {latestSol && (
+    <p class={styles.latest}>
+      <span class={styles.latestLabel}>{HOME.soliloquyHeading}</span>
+      {latestSol.title ?? latestSol.excerpt}
+      {` — `}
+      <a href={`/soliloquy/${latestSol.slug}/`}>{latestSol.time}</a>
+    </p>
+  )}
 </TerminalLayout>

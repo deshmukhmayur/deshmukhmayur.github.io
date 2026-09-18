@@ -36,6 +36,7 @@ export const FOOTER = {
   > ^ <    in the making of this site`,
   copyright: (year: number) => `© ${year} mayur deshmukh`,
   rssLabel: "rss",
+  contactLabel: "contact",
 } as const;
 
 export const THEME = {
@@ -225,6 +226,41 @@ manHeading: "man contact",
   ],
   manReplyTime: "i usually reply within a few days.",
   endpoint: "/api/send",
+} as const;
+
+/*
+ * Homepage (ticket 28, prototype variant F). Neofetch header + panes.
+ * Placeholder until real content lands (spec §7 HITL slots).
+ */
+export const HOME = {
+  bio: "software by day, drawings and plastic by night",
+  now: {
+    role: "software engineer",
+    employer: "acme corp",
+    href: "https://example.com",
+    tenure: "2022–present",
+  },
+  resume: { label: "résumé.pdf", href: "/about/" },
+  paneLinks: {
+    work: [
+      { label: "github", href: "https://github.com/deshmukhmayur" },
+      { label: "linkedin", href: "https://linkedin.com/in/deshmukhmayur" },
+    ],
+    art: [
+      { label: "cara", href: "https://cara.app/deshmukhmayur" },
+      { label: "instagram", href: "https://instagram.com/deshmukhmayur" },
+    ],
+    prints: [{ label: "printables", href: "https://printables.com/@mayur" }],
+  },
+  skills: [
+    { key: "languages", value: "typescript · python · go" },
+    { key: "web", value: "astro · react · node" },
+    { key: "tools", value: "docker · cloudflare · linux" },
+    { key: "extras", value: "fusion 360 · clip studio" },
+  ],
+  // featured slot minimums — featured entries first, recent entries pad the rest
+  slots: { projects: 2, art: 3, prints: 2, studies: 1 },
+  soliloquyHeading: "soliloquy of the day — ",
 } as const;
 
 export const PROJECTS = {

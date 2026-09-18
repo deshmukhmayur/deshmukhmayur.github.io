@@ -6,8 +6,8 @@ import styles from "./Footer.module.css";
 <footer class={styles.footer} aria-label="footer">
   <pre class={styles.ascii} aria-hidden="true">{FOOTER.ascii}</pre>
   <p>
-    {FOOTER.copyright(new Date().getFullYear())} · <a href={SITE.rss}
-      >{FOOTER.rssLabel}</a
-    >
+    {FOOTER.copyright(new Date().getFullYear())} ·{" "}
+    <a href={SITE.rss}>{FOOTER.rssLabel}</a> ·{" "}
+    <a href="/contact/">{FOOTER.contactLabel}</a>
   </p>
 </footer>
