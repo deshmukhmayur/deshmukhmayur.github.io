@@ -1,0 +1,108 @@
+---
+import { getCollection } from "astro:content";
+import TerminalLayout from "../layouts/TerminalLayout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import { PROMPTS, ABOUT } from "../lib/constants";
+import styles from "./about.module.css";
+
+/*
+ * /about/ (ticket 29, prototype variant D): unboxed `$ whoami --verbose` dl,
+ * `~/.history` timeline window, right rail (resume button → /resume/,
+ * `ls content --count` stats with real counts, `ls elsewhere/`).
+ */
+
+const soliloquies = await getCollection("soliloquy");
+const studies = await getCollection("studies", ({ data }) => data.status !== "draft");
+const prints = await getCollection("prints");
+const art = await getCollection("art");
+// printers = distinct printers across the prints collection (real data)
+const printers = [...new Set(prints.map((p) => p.data.printer))].sort();
+
+const stats = [
+  { label: "soliloquies", value: soliloquies.length },
+  { label: "studies", value: studies.length },
+  { label: "prints", value: prints.length },
+  { label: "drawings", value: art.length },
+  { label: "printers", value: `${printers.length} (${printers.join(" · ")})` },
+];
+---
+
+<TerminalLayout title="about" description="whoami — mayur deshmukh, software engineer. the three hobbies, one roof: projects, art, prints, writing.">
+  <Breadcrumb
+    trail={[{ label: "home", href: "/" }, { label: "about" }]}
+    prompt={PROMPTS.section("about")}
+  />
+
+  <div class={styles.cols}>
+    <div>
+      <section class={styles.whoami} aria-label="who i am">
+        <p class={styles.cmd}>{ABOUT.whoamiCommand}</p>
+        <dl>
+          <dt>name</dt><dd>{ABOUT.whoami.name}</dd>
+          <dt>role</dt><dd>{ABOUT.whoami.role}<span class={styles.dim}>{ABOUT.whoami.roleNote}</span></dd>
+          <dt>now</dt><dd>{ABOUT.whoami.now}<span class={styles.dim}> · {ABOUT.whoami.tenure}</span></dd>
+          <dt>focus</dt><dd>{ABOUT.whoami.focus}</dd>
+          <dt>this site</dt><dd>{ABOUT.whoami.site}<span class={styles.dim}>{ABOUT.whoami.siteNote}</span></dd>
+        </dl>
+      </section>
+
+      <section class={styles.hist} aria-label="history">
+        <div class={styles.titlebar}>
+          <span class={styles.fn}>{ABOUT.historyTitlebar}</span>
+          <span>{ABOUT.historyCaption}</span>
+        </div>
+        <div class={styles.tl}>
+          {
+            ABOUT.history.map((row) => (
+              <div class={styles.trow}>
+                <span class={styles.yr}>{row.year}</span>
+                <span class={styles.tx}>{row.text}</span>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <p class={styles.ps}>
+        {ABOUT.ps}<a href="/contact/">{ABOUT.psLinkLabel}</a>{ABOUT.psLinkTail}
+      </p>
+    </div>
+
+    <aside class={styles.rail}>
+      <section class={styles.resume} aria-label="resume download">
+        <a class={styles.cmdbtn} href="/resume/">{ABOUT.resumeCmd}</a>
+        <p class={styles.cmdnote}>{ABOUT.resumeNote}</p>
+      </section>
+
+      <section class={styles.stats} aria-label="stats">
+        <p class={styles.cmd}>{ABOUT.statsCmd}</p>
+        <div class={styles.win}>
+          <dl>
+            {
+              stats.map((s) => (
+                <>
+                  <dt>{s.label}</dt>
+                  <dd>{s.value}</dd>
+                </>
+              ))
+            }
+          </dl>
+          <p class={styles.note}>{ABOUT.statsNote}</p>
+        </div>
+      </section>
+
+      <section class={styles.railblock} aria-label="elsewhere">
+        <p class={styles.cmd}>{ABOUT.elsewhereCmd}</p>
+        <ul>
+          {
+            ABOUT.elsewhere.map((l) => (
+              <li>
+                <a href={l.href} rel="me noopener" target="_blank">{l.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </aside>
+  </div>
+</TerminalLayout>

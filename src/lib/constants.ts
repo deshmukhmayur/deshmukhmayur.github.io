@@ -240,7 +240,7 @@ export const HOME = {
     href: "https://example.com",
     tenure: "2022–present",
   },
-  resume: { label: "résumé.pdf", href: "/about/" },
+  resume: { label: "résumé.pdf", href: "/resume/" },
   paneLinks: {
     work: [
       { label: "github", href: "https://github.com/deshmukhmayur" },
@@ -292,4 +292,93 @@ export const PROJECTS = {
     ended ? `${started} → ${ended}` : `${started} →`,
   screenshotTitlebar: (slug: string, index: number, total: number) =>
     `${slug}.png · ${index}/${total}`,
+} as const;
+
+/*
+ * About page (ticket 29, prototype variant D). Unboxed `$ whoami --verbose`
+ * dl + `~/.history` timeline + right rail (resume, `ls content --count`
+ * stats, `ls elsewhere/`). Voice per ADR 0007.
+ */
+export const ABOUT = {
+  whoamiCommand: "whoami --verbose",
+  whoami: {
+    name: "mayur deshmukh",
+    role: "software engineer",
+    roleNote: " · web, tooling, occasional ops",
+    now: "acme corp",
+    tenure: "2022–present",
+    focus: "software · anime-style illustration · 3D printing",
+    site: "a playground",
+    siteNote: " — the three hobbies, one roof",
+  },
+  historyTitlebar: "~/.history",
+  historyCaption: "how i got here",
+  // dated rows oldest → newest; year in pink
+  history: [
+    { year: "2018", text: "wrote my first line of python. never really stopped." },
+    { year: "2020", text: "first anime-style illustration posted; clip studio paint joined the toolkit and never left." },
+    { year: "2021", text: 'bought an ender 3 to print "one bracket". it snowballed into a second printer and a shelf of PETG.' },
+    { year: "2022", text: "now → software engineer at acme corp · web, tooling, occasional ops" },
+    { year: "2026", text: "rebuilt this site as a terminal. you're inside it." },
+  ],
+  // right rail
+  resumeCmd: "curl -O resume.pdf",
+  resumeNote: "→ /resume/ · download starts automatically · counted as a pageview",
+  statsCmd: "ls content --count",
+  statsNote: "counts computed from the content collections at build time",
+  elsewhereCmd: "ls elsewhere/",
+  elsewhere: [
+    { label: "github", href: "https://github.com/deshmukhmayur" },
+    { label: "linkedin", href: "https://linkedin.com/in/deshmukhmayur" },
+    { label: "instagram", href: "https://instagram.com/deshmukhmayur" },
+    { label: "youtube", href: "https://youtube.com/@deshmukhmayur" },
+  ],
+  ps: "p.s. — want to say hi? ",
+  psLinkLabel: "the contact page",
+  psLinkTail: " is one short form away.",
+} as const;
+
+/*
+ * /resume/ interstitial (ticket 29, per ticket 08's spec). Tiny HTML page
+ * that triggers the PDF download immediately — counts the download as a
+ * pageview, and doubles as the shareable resume landing link.
+ */
+export const RESUME = {
+  filename: "resume.pdf",
+  heading: "download starting…",
+  note: "if nothing happens, grab it directly:",
+  directLabel: "resume.pdf",
+} as const;
+
+/*
+ * 404 page (ticket 29, prototype variant D). Neofetch-style: ascii-cat logo
+ * slot, host line, key/value block, `ls ~ →` nav. Static page — the real
+ * requested path is filled in client-side from location.pathname.
+ */
+export const NOT_FOUND = {
+  logoPlaceholder: `    ?
+  /\\_/\\
+ ( o.o )  ← confused but fine
+  > ^ <`,
+  cause: "the page moved, was never born, or the url has a typo",
+  os: "mayur's playground",
+  osNote: " (static edition)",
+  host: "astro on cloudflare workers",
+  uptime: "since 2026",
+  uptimeNote: " — longest-running rewrite yet",
+  status: "everything else is intact",
+  statusNote: " — see below",
+  navCmd: "ls ~",
+  // `ls ~` nav — label + href pairs
+  dirs: [
+    { label: "home/", href: "/" },
+    { label: "projects/", href: "/projects/" },
+    { label: "art/", href: "/art/" },
+    { label: "prints/", href: "/prints/" },
+    { label: "studies/", href: "/studies/" },
+    { label: "soliloquy/", href: "/soliloquy/" },
+    { label: "about/", href: "/about/" },
+    { label: "contact/", href: "/contact/" },
+  ],
+  hint: "# production renders the path you actually asked for · the logo slot swaps in a small illustration from mayur's own art later",
 } as const;

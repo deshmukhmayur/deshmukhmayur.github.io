@@ -1,0 +1,135 @@
+---
+import TerminalLayout from "../layouts/TerminalLayout.astro";
+import { NOT_FOUND, PROMPTS } from "../lib/constants";
+
+/*
+ * 404 (ticket 29, prototype variant D): neofetch-style — ascii-cat logo slot,
+ * host line, key/value info block, `ls ~ →` directory links. Astro emits
+ * this as 404.html; Cloudflare's not_found_handling serves it (ticket 31).
+ * Static page — the real requested path is filled in client-side.
+ */
+
+const dirs = NOT_FOUND.dirs;
+---
+
+<TerminalLayout title="404" description="the page you were looking for isn't here.">
+  <section class="fetch" aria-label="page not found">
+    <pre class="logo" aria-hidden="true">{NOT_FOUND.logoPlaceholder}</pre>
+    <div class="info">
+      <p class="host">
+        404<span class="at">@</span>deshmukhmayur.com
+      </p>
+      <p class="rule" aria-hidden="true">---------------------------</p>
+      <dl>
+        <dt>error</dt><dd><span class="path" id="nf-path">/…</span><span class="d"> — nothing lives here</span></dd>
+        <dt>cause</dt><dd>{NOT_FOUND.cause}</dd>
+        <dt>os</dt><dd>{NOT_FOUND.os}<span class="d">{NOT_FOUND.osNote}</span></dd>
+        <dt>host</dt><dd>{NOT_FOUND.host}</dd>
+        <dt>uptime</dt><dd>{NOT_FOUND.uptime}<span class="d">{NOT_FOUND.uptimeNote}</span></dd>
+        <dt>status</dt><dd>{NOT_FOUND.status}<span class="d">{NOT_FOUND.statusNote}</span></dd>
+      </dl>
+    </div>
+  </section>
+
+  <p class="dirs">
+    <span class="lbl">{NOT_FOUND.navCmd} →</span>
+    {
+      dirs.map((d) => (
+        <a href={d.href}>{d.label}</a>
+      ))
+    }
+  </p>
+  <p class="hint">{NOT_FOUND.hint}</p>
+
+  <!-- render the path the visitor actually asked for -->
+  <script is:inline>
+    (function () {
+      var el = document.getElementById("nf-path");
+      if (el) el.textContent = location.pathname;
+    })();
+  </script>
+
+  <style is:global>
+    .fetch {
+      display: flex;
+      gap: 48px;
+      align-items: center;
+      margin-top: 48px;
+    }
+    .logo {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--dim);
+      user-select: none;
+    }
+    .host {
+      font-size: 16px;
+    }
+    .at {
+      color: var(--pink);
+    }
+    .rule {
+      color: var(--dim);
+      margin: 2px 0 8px;
+    }
+    .fetch dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 5px 18px;
+      font-size: 13.5px;
+    }
+    .fetch dt {
+      color: var(--amber);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .fetch dd {
+      color: var(--ink);
+    }
+    .path {
+      color: var(--pink);
+    }
+    .d {
+      color: var(--dim);
+    }
+    .dirs {
+      margin-top: 36px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 18px;
+      font-size: 14px;
+      align-items: baseline;
+    }
+    .lbl {
+      color: var(--green);
+      font-size: 13px;
+    }
+    .lbl::before {
+      content: "$ ";
+      color: var(--dim);
+    }
+    .dirs a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+    .dirs a:hover,
+    .dirs a:focus-visible {
+      color: var(--pink);
+    }
+    .hint {
+      margin-top: 26px;
+      font-size: 12px;
+      color: var(--dim);
+    }
+    @media (max-width: 700px) {
+      .fetch {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+      }
+      .fetch dl {
+        grid-template-columns: auto 1fr;
+      }
+    }
+  </style>
+</TerminalLayout>

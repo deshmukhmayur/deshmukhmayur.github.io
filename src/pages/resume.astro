@@ -1,0 +1,62 @@
+---
+import TerminalLayout from "../layouts/TerminalLayout.astro";
+import { PROMPTS, RESUME } from "../lib/constants";
+
+/*
+ * /resume/ (ticket 29, per ticket 08's spec): download interstitial.
+ * Triggers /resume.pdf immediately — the pageview counts the download,
+ * and the page doubles as the shareable resume landing link.
+ */
+---
+
+<TerminalLayout title="resume" description="download mayur deshmukh's resume (pdf).">
+  <main>
+    <p class="prompt" aria-hidden="true">{PROMPTS.section("resume")} cat resume.pdf</p>
+    <p class="line">{RESUME.heading}</p>
+    <p class="note">{RESUME.note}</p>
+    <p class="direct"><a href={`/${RESUME.filename}`}>{RESUME.directLabel}</a></p>
+  </main>
+
+  <!-- trigger the download; hidden iframe keeps the interstitial on screen -->
+  <script is:inline>
+    (function () {
+      var f = document.createElement("iframe");
+      f.style.display = "none";
+      f.src = "/resume.pdf";
+      document.body.appendChild(f);
+    })();
+  </script>
+
+  <style is:global>
+    .prompt {
+      color: var(--green);
+      font-size: 13.5px;
+      margin-top: 12px;
+    }
+    .prompt::before {
+      content: "$ ";
+      color: var(--dim);
+    }
+    .line {
+      margin-top: 14px;
+      font-size: 14.5px;
+    }
+    .note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--dim);
+    }
+    .direct a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+    .direct a::before {
+      content: "→ ";
+      color: var(--dim);
+    }
+    .direct a:hover,
+    .direct a:focus-visible {
+      color: var(--pink);
+    }
+  </style>
+</TerminalLayout>
