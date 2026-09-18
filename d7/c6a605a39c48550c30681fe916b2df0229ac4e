@@ -1,0 +1,26 @@
+src/lib/constants.ts
+  s_5addad47d25d14::t_b5c443bb7a33f3 39
+src/components/Footer.astro
+  s_5addad47d25d14::t_352542b7194e4f 9-11
+src/pages/index.module.css
+  s_5addad47d25d14::t_db3dcab6f3197a 64
+.scratch/personal-site/issues/28-homepage-panes.md
+  s_5addad47d25d14::t_be6acf109a0007 3
+  s_5addad47d25d14::t_6a7ba53f3f59f9 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d7c6a605a39c48550c30681fe916b2df0229ac4e",
+  "prompts": {},
+  "sessions": {
+    "s_5addad47d25d14": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4bab084cffeQhNHfWUuc7pWXI",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
