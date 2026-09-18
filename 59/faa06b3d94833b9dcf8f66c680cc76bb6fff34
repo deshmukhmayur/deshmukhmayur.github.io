@@ -1,0 +1,27 @@
+src/components/LsFilterRow.astro
+  s_1d0acc36278933::t_34dd03abae2f10 76
+src/lib/constants.ts
+  s_1d0acc36278933::t_2eaed4b90996c5 23,25-31
+src/components/Nav.astro
+  s_1d0acc36278933::t_4c429ae9bab134 15-22
+src/styles/tokens.css
+  s_1d0acc36278933::t_1315bebb378dd7 60-61
+src/components/Nav.module.css
+  s_1d0acc36278933::t_e03fc381623942 13-15,20-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "59faa06b3d94833b9dcf8f66c680cc76bb6fff34",
+  "prompts": {},
+  "sessions": {
+    "s_1d0acc36278933": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4a461526ffeDae97mEI6EwinE",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
