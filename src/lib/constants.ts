@@ -380,5 +380,4 @@ export const NOT_FOUND = {
     { label: "about/", href: "/about/" },
     { label: "contact/", href: "/contact/" },
   ],
-  hint: "# production renders the path you actually asked for · the logo slot swaps in a small illustration from mayur's own art later",
 } as const;

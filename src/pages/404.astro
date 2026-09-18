@@ -39,7 +39,6 @@ const dirs = NOT_FOUND.dirs;
       ))
     }
   </p>
-  <p class="hint">{NOT_FOUND.hint}</p>
 
   <!-- render the path the visitor actually asked for -->
   <script is:inline>
@@ -131,11 +130,6 @@ const dirs = NOT_FOUND.dirs;
     .dirs a:hover,
     .dirs a:focus-visible {
       color: var(--pink);
-    }
-    .hint {
-      margin-top: 26px;
-      font-size: 12px;
-      color: var(--dim);
     }
     @media (max-width: 700px) {
       .fetch {
