@@ -1,0 +1,23 @@
+src/styles/tokens.css
+  s_1d0acc36278933::t_b45c40da1e17c4 89-90,95,102,109,116,123
+  s_1d0acc36278933::t_9a494428e47708 88
+src/pages/studies/detail.module.css
+  s_1d0acc36278933::t_fd0225e29ff8c8 73-75
+  s_1d0acc36278933::t_6af1f3a916a4b9 54-56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "ca260a5ba6cfa90993ebe7b8ed9970fb1e4e2329",
+  "prompts": {},
+  "sessions": {
+    "s_1d0acc36278933": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4a461526ffeDae97mEI6EwinE",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
