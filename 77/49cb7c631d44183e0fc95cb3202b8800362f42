@@ -1,0 +1,21 @@
+src/pages/soliloquy/[slug].astro
+  s_2ac268618fe951::t_f4a9f3af5a38c8 37-38,49,58
+src/pages/soliloquy/detail.module.css
+  s_2ac268618fe951::t_198c1e0d7435b4 5,7-11,14,16,18-26,29,31-32,38-41,48,66,68,85,101-103,108-109,111-112,129-131
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "7749cb7c631d44183e0fc95cb3202b8800362f42",
+  "prompts": {},
+  "sessions": {
+    "s_2ac268618fe951": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4c8fd742ffemvf3FoC5CHF7yd",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
