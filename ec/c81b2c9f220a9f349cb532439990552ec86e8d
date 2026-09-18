@@ -1,0 +1,31 @@
+src/pages/about.astro
+  s_3ac17979440527::t_a67d44b35e3a35 1-108
+src/pages/about.module.css
+  s_3ac17979440527::t_12d0b349d87891 1-231
+src/pages/resume.astro
+  s_3ac17979440527::t_8b0f226aece7c1 1-62
+src/pages/404.astro
+  s_3ac17979440527::t_9bcf2a2578fe95 133
+  s_3ac17979440527::t_cececd2075c3a9 1-132,134-135
+.scratch/personal-site/issues/29-interiors-about-resume-404.md
+  s_3ac17979440527::t_a98090478aaedd 1-12
+src/lib/constants.ts
+  s_3ac17979440527::t_cbb797383990cd 296-384
+  s_3ac17979440527::t_d31ce7acba70ef 243
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "ecc81b2c9f220a9f349cb532439990552ec86e8d",
+  "prompts": {},
+  "sessions": {
+    "s_3ac17979440527": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4b5a3fcfffekn88DqhH1kPk6b",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
