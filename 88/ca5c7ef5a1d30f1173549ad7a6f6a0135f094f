@@ -1,0 +1,104 @@
+src/pages/studies/[slug].astro
+  s_eed3a19985eeb8::t_24d23beb12b782 6-8
+  s_eed3a19985eeb8::t_0bc47e92507d1f 24-40,43-44,46-50
+  s_eed3a19985eeb8::t_f90ab7da6da28b 45
+src/content.config.ts
+  s_eed3a19985eeb8::t_d7d225ffe997ef 142-153
+  s_eed3a19985eeb8::t_c355e17ee47ea9 117-128
+src/lib/constants.ts
+  s_eed3a19985eeb8::t_6c7ab52db161e8 384-436
+src/pages/art/[id].astro
+  s_eed3a19985eeb8::t_ec116e56665fd9 40-56,59-66
+  s_eed3a19985eeb8::t_89c7809124501e 7-8
+astro.config.mjs
+  s_eed3a19985eeb8::t_a0c94baef09333 2,6-7
+src/components/BaseHead.astro
+  s_eed3a19985eeb8::t_9aead0e91d7cf7 25-27,35
+  s_eed3a19985eeb8::t_52704c6ac74338 18-19
+  s_eed3a19985eeb8::t_573d05c07edcc5 45,48-49
+  s_eed3a19985eeb8::t_b30f52d5920602 64
+  s_eed3a19985eeb8::t_ee55a6b373a078 1-8,10-17,20-21,23-24,28-34,36-44,46-47,50-63,65-79
+  s_eed3a19985eeb8::t_926461c639a6cd 9
+  s_eed3a19985eeb8::t_219d85cb274e3e 22
+scripts/generate-og-placeholders.mjs
+  s_eed3a19985eeb8::t_ac2d10c6a917bb 1-44
+src/pages/rss.xml.js
+  s_eed3a19985eeb8::t_56b0e0108e95e4 1-2,4-10,27,29-35,37-43,45-52,54-67
+  s_eed3a19985eeb8::t_d93e4b1bcf184d 3,11-26,28,36,44,53
+src/pages/about.astro
+  s_eed3a19985eeb8::t_0cdb43055e9a30 30
+src/pages/projects/index.astro
+  s_eed3a19985eeb8::t_0cdb43055e9a30 16
+src/pages/soliloquy/rss.xml.js
+  s_eed3a19985eeb8::t_e1ecd0ad53266e 1-26
+src/pages/soliloquy/index.astro
+  s_eed3a19985eeb8::t_0cdb43055e9a30 23
+src/pages/prints/[id].astro
+  s_eed3a19985eeb8::t_532b47bb8294f4 6-7
+  s_eed3a19985eeb8::t_bba7afdff5dddf 60-75,78-85
+src/pages/og/gen/[section]/[slug].png.ts
+  s_eed3a19985eeb8::t_34478801047e58 25-26
+  s_eed3a19985eeb8::t_1bdd589137a768 15,27-28
+  s_eed3a19985eeb8::t_ffaae8052565bd 1-9,12,16-24,29-87,90-107,113-114,116,124-138
+  s_eed3a19985eeb8::t_f6114cb0005449 10-11,13-14
+  s_eed3a19985eeb8::t_a6dfc758659050 88-89
+  s_eed3a19985eeb8::t_0c1c59bcc57e2f 108-112,115,117-123
+src/pages/soliloquy/[slug].astro
+  s_eed3a19985eeb8::t_004bbb30d18719 6
+  s_eed3a19985eeb8::t_0618f0158324e9 21-28,31-32,34-37
+  s_eed3a19985eeb8::t_0d0693ae126c2c 33
+src/pages/art/index.astro
+  s_eed3a19985eeb8::t_0cdb43055e9a30 17
+src/components/JsonLd.astro
+  s_eed3a19985eeb8::t_86b4235a32b97e 1-28
+src/pages/contact.astro
+  s_eed3a19985eeb8::t_0cdb43055e9a30 9
+.scratch/personal-site/issues/30-seo-layer.md
+  s_eed3a19985eeb8::t_5e0d3051bd9cca 1-13
+package.json
+  s_eed3a19985eeb8::t_0685cea2e93455 1-18,24-25
+  s_eed3a19985eeb8::t_4469c630acae22 21
+  s_eed3a19985eeb8::t_0683df47a69f0d 19-20
+  s_eed3a19985eeb8::t_67cec467e3dac1 22-23
+public/robots.txt
+  s_eed3a19985eeb8::t_33cbac40287ee6 1-4
+src/pages/studies/rss.xml.js
+  s_eed3a19985eeb8::t_0e4e9bb64d79aa 1-26
+src/pages/studies/index.astro
+  s_eed3a19985eeb8::t_0cdb43055e9a30 22
+src/layouts/TerminalLayout.astro
+  s_eed3a19985eeb8::t_b6d72a2206d83f 5,10-15,18,26-33
+src/pages/prints/index.astro
+  s_eed3a19985eeb8::t_0cdb43055e9a30 22
+src/pages/projects/[slug].astro
+  s_eed3a19985eeb8::t_23d88d8b2282eb 7
+  s_eed3a19985eeb8::t_507455f73d777f 24-26,29
+bun.lock
+  s_eed3a19985eeb8::t_38c360f9b111c4 1-1056
+tsconfig.json
+  s_25b109c057f181::t_7ecc9c23b52f3e 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "88ca5c7ef5a1d30f1173549ad7a6f6a0135f094f",
+  "prompts": {},
+  "sessions": {
+    "s_25b109c057f181": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f93829f36ffed4OxT2d30ZmAg9",
+        "model": "unknown"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_eed3a19985eeb8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4b446eb6ffec9Smm3En6Sm9m8",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
