@@ -1,0 +1,40 @@
+src/pages/about.astro
+  s_3ac17979440527::t_bd83671f0fa4c2 25
+src/pages/404.astro
+  s_3ac17979440527::t_affc3de04ceeca 68,71-85
+  s_3ac17979440527::t_226949b59afda9 29
+  s_3ac17979440527::t_e7dc9f35ace019 20
+  s_3ac17979440527::t_eb922599ab4e2e 70
+.scratch/personal-site/issues/10-spec.md
+  s_5addad47d25d14::t_2b27efe1403ca6 4,9-13
+.scratch/personal-site/spec.md
+  s_5addad47d25d14::t_e3554f7bc3cb8d 3,7,12,21-23,25,65,72,92-93,97,101,103-104,115
+CONTEXT.md
+  s_5addad47d25d14::t_9f45977b183216 16-19
+docs/adr/0006-space-mono-spectral.md
+  s_5addad47d25d14::t_02f223ea3ff729 6-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "e0c12c0337af53b09548e8765a21d3b7f157b311",
+  "prompts": {},
+  "sessions": {
+    "s_3ac17979440527": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4b5a3fcfffekn88DqhH1kPk6b",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    },
+    "s_5addad47d25d14": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f4bab084cffeQhNHfWUuc7pWXI",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
