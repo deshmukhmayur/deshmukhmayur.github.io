@@ -1,0 +1,59 @@
+src/components/Nav.module.css
+  s_4a5ca6c1b9ee03::t_2f4ca7a209ad38 103
+  s_4a5ca6c1b9ee03::t_d723ee7413dd3b 1,3-6
+  s_4a5ca6c1b9ee03::t_12c36c32058e57 63,70-72
+  s_4a5ca6c1b9ee03::t_857ad733aa0511 56-57
+  s_4a5ca6c1b9ee03::t_5f7ca788e38634 94
+  s_4a5ca6c1b9ee03::t_82bbf3f790d826 34,38-39,43,47,51-52
+  s_4a5ca6c1b9ee03::t_f8d7f4ce9fd235 16,18,23-26,30-33,35-37,40-42,44-46,48-50,53-54,73
+  s_4a5ca6c1b9ee03::t_649e4aeed70bd9 108
+  s_4a5ca6c1b9ee03::t_a3f77229812c1e 55
+  s_4a5ca6c1b9ee03::t_cf5ea59ea2ca76 74
+src/components/Nav.astro
+  s_4a5ca6c1b9ee03::t_a00dd005876b7f 15-76
+  s_4a5ca6c1b9ee03::t_620885544213e0 77
+  s_4a5ca6c1b9ee03::t_47de406b62c2f0 7
+src/lib/constants.ts
+  s_4a5ca6c1b9ee03::t_f068f529bb41d5 51
+public/img/mark-rest-light.svg
+  s_4a5ca6c1b9ee03::t_bc78d7dda1bc9b 3-5
+  s_4a5ca6c1b9ee03::t_7b528a301a76f8 1-2,6
+public/img/mark-hover-dark.svg
+  s_4a5ca6c1b9ee03::t_7b528a301a76f8 1,6
+  s_4a5ca6c1b9ee03::t_18c97357e7f929 2-5
+public/img/logo-printables.svg
+  s_4a5ca6c1b9ee03::t_8f9c51203ece6e 1
+src/components/SocialIcon.astro
+  s_4a5ca6c1b9ee03::t_2effff48896410 51
+  s_4a5ca6c1b9ee03::t_714213dd7bddcd 36-37
+  s_4a5ca6c1b9ee03::t_aba545eb6c2610 16-17,19-35,38,41
+  s_4a5ca6c1b9ee03::t_9908129687c2fd 18
+public/img/mark-rest-dark.svg
+  s_4a5ca6c1b9ee03::t_7b528a301a76f8 1-6
+public/img/mark-hover-light.svg
+  s_4a5ca6c1b9ee03::t_7b528a301a76f8 1-6
+public/img/logo-cara.svg
+  s_4a5ca6c1b9ee03::t_8f9c51203ece6e 1-3
+src/pages/about.module.css
+  s_4a5ca6c1b9ee03::t_4a157ef89f4235 224,226
+src/pages/index.module.css
+  s_4a5ca6c1b9ee03::t_aa48292e6c2419 169
+  s_4a5ca6c1b9ee03::t_0c941f50246e82 166
+  s_4a5ca6c1b9ee03::t_0c0e8fe94e941b 107-111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "1e849d6940774f99b731762fe1094885c1c4aec7",
+  "prompts": {},
+  "sessions": {
+    "s_4a5ca6c1b9ee03": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f47ec757bffeGYOmNQuzWv28VA",
+        "model": "z-ai/glm-5.3-flash"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
