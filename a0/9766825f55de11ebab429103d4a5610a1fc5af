@@ -1,0 +1,19 @@
+docs/agents/issue-tracker.md
+  s_a3e7235d65a285::t_7c0a7e774c0ea7 1-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "a09766825f55de11ebab429103d4a5610a1fc5af",
+  "prompts": {},
+  "sessions": {
+    "s_a3e7235d65a285": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f956d84dcffeFmeoUpgNq3blmm",
+        "model": "unknown"
+      },
+      "human_author": "Mayur Deshmukh <deshmukhmayur@outlook.com>"
+    }
+  }
+}
