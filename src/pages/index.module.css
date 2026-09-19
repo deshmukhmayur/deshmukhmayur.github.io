@@ -104,6 +104,11 @@
 
 .pane ul {
   list-style: none;
+  padding: 0;
+}
+
+.pane dl {
+  padding: 0;
 }
 
 .pane li a {
@@ -158,9 +163,10 @@
 
 .paneLinks {
   position: absolute;
-  top: 20px;
+  top: 27px;
   right: 24px;
   display: flex;
+  align-items: center;
   gap: 14px;
   font-size: 0.7813rem;
 }

@@ -4,6 +4,7 @@ import ThemeToggle from "./ThemeToggle.astro";
 import styles from "./Nav.module.css";
 
 /* logo mark home link (ticket 12): extracted from img/logo.svg → /img/mark.svg */
+/* 4-variant interactive mark: rest/hover pairs per theme, crossfaded in CSS */
 const active = NAV.find(
   (item) =>
     Astro.url.pathname === item.href || Astro.url.pathname.startsWith(item.href),
@@ -11,40 +12,67 @@ const active = NAV.find(
 ---
 
 <header class={styles.nav}>
-  <a href="/" class={styles.mark} aria-label="home">
-    <img
-      src="/img/mark.svg"
-      alt=""
-      width="24"
-      height="24"
-      loading="eager"
-      fetchpriority="high"
-    />
-  </a>
-  <nav aria-label="primary">
-    <ul>
-      {
-        NAV.map((item) => {
-          const isActive = active?.href === item.href;
-          return (
-            <li>
-              <a
-                href={item.href}
-                class:list={[isActive && styles.active]}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {isActive && (
-                  <span class={styles.prefix} aria-hidden="true">
-                    {"> "}
-                  </span>
-                )}
-                {item.label}
-              </a>
-            </li>
-          );
-        })
-      }
-    </ul>
-  </nav>
-  <ThemeToggle />
+    <div class={styles.inner}>
+      <a href="/" class={styles.mark} aria-label="home">
+      <img
+        class:list={[styles.face, styles.restDark]}
+        src="/img/mark-rest-dark.svg"
+        alt=""
+        width="24"
+        height="24"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <img
+        class:list={[styles.face, styles.hoverDark]}
+        src="/img/mark-hover-dark.svg"
+        alt=""
+        width="24"
+        height="24"
+        loading="eager"
+      />
+      <img
+        class:list={[styles.face, styles.restLight]}
+        src="/img/mark-rest-light.svg"
+        alt=""
+        width="24"
+        height="24"
+        loading="eager"
+      />
+      <img
+        class:list={[styles.face, styles.hoverLight]}
+        src="/img/mark-hover-light.svg"
+        alt=""
+        width="24"
+        height="24"
+        loading="eager"
+      />
+    </a>
+    <nav aria-label="primary">
+      <ul>
+        {
+          NAV.map((item) => {
+            const isActive = active?.href === item.href;
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  class:list={[isActive && styles.active]}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {isActive && (
+                    <span class={styles.prefix} aria-hidden="true">
+                      {"> "}
+                    </span>
+                  )}
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+    <ThemeToggle />
+  </div>
 </header>

@@ -47,8 +47,8 @@ export const FOOTER = {
 export const SOCIALS = [
   { brand: "github", label: "github", href: "https://github.com/deshmukhmayur" },
   { brand: "linkedin", label: "linkedin", href: "https://linkedin.com/in/deshmukhmayur" },
-  { brand: "cara", label: "cara", href: "https://cara.app/deshmukhmayur" },
   { brand: "instagram", label: "instagram", href: "https://instagram.com/deshmukhmayur" },
+  { brand: "cara", label: "cara", href: "https://cara.app/deshmukhmayur" },
   { brand: "printables", label: "printables", href: "https://printables.com/@mayur" },
 ] as const;
 

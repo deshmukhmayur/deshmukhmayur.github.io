@@ -1,4 +1,9 @@
+/* header bar spans the full viewport; content aligns to the main column */
 .nav {
+  width: 100%;
+}
+
+.inner {
   max-width: 1160px;
   margin: 0 auto;
   padding: 20px 40px 0;
@@ -8,28 +13,63 @@
 }
 
 .mark {
+  position: relative;
   display: inline-flex;
-  border-radius: 5px;
-  /* hard-reserve the box so nothing reflows while the svg loads */
+  /* hard-reserve the box so nothing reflows while the svgs load */
   width: 24px;
   height: 24px;
 }
 
-.mark img {
+/* all four faces stacked; visibility driven by theme + hover */
+.face {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 24px;
   height: 24px;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.restDark {
+  opacity: 1;
+}
+
+.mark:hover .hoverDark,
+.mark:focus-visible .hoverDark {
+  opacity: 1;
+}
+
+:global([data-theme="light"]) .restLight {
+  opacity: 1;
+}
+
+:global([data-theme="light"]) .restDark {
+  opacity: 0;
+}
+
+:global([data-theme="light"]) .mark:hover .hoverLight,
+:global([data-theme="light"]) .mark:focus-visible .hoverLight {
+  opacity: 1;
+}
+
+.inner nav {
+  display: flex;
 }
 
 .nav ul {
   display: flex;
-  flex: 1;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 4px 18px;
   list-style: none;
   padding: 0;
   font-size: 0.8125rem;
+}
+
+/* toggle alone on the right */
+.inner > :global([data-theme-toggle]) {
+  margin-left: auto;
 }
 
 .nav a {
@@ -51,7 +91,7 @@
 }
 
 @media (max-width: 760px) {
-  .nav {
+  .inner {
     padding: 16px 20px 0;
     flex-wrap: wrap;
     row-gap: 10px;
@@ -60,12 +100,12 @@
     order: 1;
   }
   /* toggle joins row 1, right-aligned */
-  .nav > :global([data-theme-toggle]) {
+  .inner > :global([data-theme-toggle]) {
     order: 2;
     margin-left: auto;
   }
   /* links wrap onto their own readable row */
-  .nav nav {
+  .inner nav {
     order: 3;
     flex-basis: 100%;
   }

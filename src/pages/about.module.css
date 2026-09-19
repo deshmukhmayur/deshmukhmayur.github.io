@@ -221,8 +221,9 @@
 }
 
 .railblock a::before {
-  content: "→ ";
+  content: "↗ ";
   color: var(--dim);
+  font-size: 0.75rem;
 }
 
 .railblock a:hover,
