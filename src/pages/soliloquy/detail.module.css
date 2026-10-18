@@ -34,7 +34,7 @@
   font-size: 0.75rem;
 }
 
-/* editorial prose — Spectral, per ADR 0006 */
+/* editorial prose — Libron, per ADR 0008 */
 .body {
   margin-top: 14px;
 }

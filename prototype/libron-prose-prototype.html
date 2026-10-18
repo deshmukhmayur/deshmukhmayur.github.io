@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PROTOTYPE — Libron vs Spectral for prose</title>
+<!--
+  PROTOTYPE (throwaway). Question: does Libron replace Spectral for article
+  prose — everywhere, or just as body text under Spectral headings?
+  Three variants on one article page, switchable via ?variant= or the bottom bar.
+    A — Spectral everywhere (status quo)
+    B — Libron everywhere
+    C — hybrid: Spectral headings, Libron body
+    D — Libron body + Space Mono chrome (meta, captions, code, timestamps)
+  Fonts: prototype/fonts/Libron-*.woff2 (v0.31, OFL) + Google Fonts Spectral/Space Mono.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Libron';
+    src: url('./fonts/Libron-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Libron';
+    src: url('./fonts/Libron-Italic.woff2') format('woff2');
+    font-weight: 400; font-style: italic; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Libron';
+    src: url('./fonts/Libron-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Libron';
+    src: url('./fonts/Libron-BoldItalic.woff2') format('woff2');
+    font-weight: 700; font-style: italic; font-display: swap;
+  }
+
+  :root {
+    --bg: #16181d;
+    --bg-raised: #1d2027;
+    --fg: #cdd2da;
+    --dim: #7b8290;
+    --green: #7fd18c;
+    --cyan: #6ec7d8;
+    --pink: #d97fa6;
+    --border: #2a2e37;
+    --head: 'Spectral', serif;
+    --body: 'Spectral', serif;
+    --mono: 'Space Mono', monospace;
+  }
+  html[data-theme="light"] {
+    --bg: #f4f3ef;
+    --bg-raised: #eae8e1;
+    --fg: #2b2f36;
+    --dim: #6b7180;
+    --green: #2e7d43;
+    --cyan: #1f6e80;
+    --pink: #b04a72;
+    --border: #d5d2c8;
+  }
+  html[data-variant="B"] { --head: 'Libron', serif; --body: 'Libron', serif; }
+  html[data-variant="C"] { --head: 'Spectral', serif; --body: 'Libron', serif; }
+  html[data-variant="D"] { --head: 'Libron', serif; --body: 'Libron', serif; }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); padding: 3rem 1.5rem 6rem; transition: background .2s, color .2s; }
+  .wrap { max-width: 700px; margin: 0 auto; }
+
+  article { font-family: var(--body); font-size: 1.18rem; line-height: 1.65; }
+  article h1 { font-family: var(--head); font-size: 2rem; font-weight: 500; line-height: 1.2; margin: 0 0 .5rem; }
+  article .summary { font-style: italic; color: var(--dim); font-size: 1.05rem; margin: 0 0 2.5rem; }
+  article .meta { font-family: var(--mono); color: var(--dim); font-size: .78rem; margin: 0 0 1rem; letter-spacing: .02em; }
+  article .meta b { color: var(--green); font-weight: 400; }
+  article .meta .stamp { color: var(--pink); }
+  html[data-variant="D"] article .meta { font-size: .82rem; }
+  html[data-variant="D"] article blockquote::before { content: '~/prose $ cat quote.txt'; display: block; font-family: var(--mono); font-style: normal; font-size: .72rem; color: var(--green); margin-bottom: .5rem; }
+  article h2 { font-family: var(--head); font-size: 1.4rem; font-weight: 500; margin: 2.5rem 0 .8rem; line-height: 1.25; }
+  article p { margin: 0 0 1.2rem; }
+  article a { color: var(--cyan); text-decoration-color: color-mix(in srgb, var(--cyan) 40%, transparent); text-underline-offset: 3px; }
+  article blockquote {
+    margin: 1.5rem 0; padding-left: 1.25rem;
+    border-left: 2px solid var(--border); color: var(--dim); font-style: italic;
+  }
+  article code { font-family: var(--mono); font-size: .78em; background: var(--bg-raised); border: 1px solid var(--border); padding: .08em .35em; border-radius: 3px; }
+  article figure { margin: 1.5rem 0; }
+  article figcaption { font-family: var(--mono); font-size: .78rem; color: var(--dim); margin-top: .5rem; }
+  article .dropcap::first-letter {
+    font-family: var(--head); font-size: 3.1em; line-height: .85;
+    float: left; padding-right: .12em; color: var(--cyan);
+  }
+
+  .bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg-raised); border-top: 1px solid var(--border);
+    display: flex; gap: .5rem; align-items: center;
+    padding: .6rem 1rem; font-size: .78rem; z-index: 10;
+    font-family: monospace;
+  }
+  .bar button {
+    font-family: inherit; font-size: .78rem;
+    background: none; color: var(--fg);
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: .3rem .7rem; cursor: pointer;
+  }
+  .bar .label { color: var(--cyan); }
+  .bar .tag { color: var(--pink); margin-left: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <article>
+    <p class="meta"><b>$ ls studies/texture-of-long-pages</b> · 2026-08-14 <span class="stamp">· 6 min read</span></p>
+    <h1>The quiet texture of long pages</h1>
+    <p class="summary">A serif faces its real test not in a specimen sheet but in the fifteenth paragraph, where every kerning wobble compounds into a reading texture you can feel.</p>
+    <p class="dropcap">Most type decisions are made in the first screenful, but the honest verdict arrives much later. A face that looks lively at one hundred words can turn fussy at one thousand. The serifs you admired in the headline start to flicker at the edges of your attention, and you find yourself reading the font instead of the sentence.</p>
+    <p>What makes a body face calm is not the absence of personality — it's the <em>repetition</em> of it. When the letterforms repeat evenly, the eye stops counting them. The words become a texture, like fabric seen from across the room: you notice the weave only when you lean in. Good prose type is the weave, and the argument is the room.</p>
+    <h2>Where the details live</h2>
+    <p>The details that matter at reading size are small ones: the <a href="#">terminal of an italic 'e'</a>, whether figures share the lowercase height, how tightly the space after a period collapses. At 16&ndash;19px, a serif that was drawn for print at 9pt behaves differently than one tuned for a screen — hints rasterize, counters fill, and thin strokes drop below the pixel grid.</p>
+    <blockquote>"The reader should not notice the type. If they notice it, it has already begun to compete with the text."</blockquote>
+    <p>That competition is subtle. It shows up as a low-grade fatigue: you reach the bottom of a long page and feel like you read it, rather than having moved through it. The fix is rarely a redesign — it's usually a change of <code>font-family</code>, a nudge to <code>line-height</code>, a slightly wider measure.</p>
+    <figure>
+      <div style="height: 180px; background: linear-gradient(135deg, #2b3140, #3d3348); border: 1px solid var(--border);"></div>
+      <figcaption>Fig. 1 — the same paragraph, set at 1.65 and 1.8 line-height. Only one invites you back.</figcaption>
+    </figure>
+    <p>So the test is simple and unglamorous: read this whole page twice, once in each face, and notice where your eye snagged. The winner is the one you forget.</p>
+  </article>
+</div>
+
+<div class="bar">
+  <button id="prevBtn">&larr;</button>
+  <span class="label" id="variantLabel"></span>
+  <button id="nextBtn">&rarr;</button>
+  <button id="themeBtn">light</button>
+  <span class="tag">PROTOTYPE — throwaway</span>
+</div>
+<script>
+  const NAMES = {
+    A: 'A — Spectral everywhere (status quo)',
+    B: 'B — Libron everywhere',
+    C: 'C — hybrid: Spectral heads, Libron body',
+    D: 'D — Libron body + Space Mono chrome',
+  };
+  const KEYS = Object.keys(NAMES);
+
+  function current() {
+    const v = new URLSearchParams(location.search).get('variant');
+    return KEYS.includes(v) ? v : 'A';
+  }
+  function setVariant(v, push) {
+    document.documentElement.dataset.variant = v;
+    document.getElementById('variantLabel').textContent = NAMES[v];
+    if (push !== false) {
+      const url = new URL(location);
+      url.searchParams.set('variant', v);
+      history.replaceState(null, '', url);
+    }
+  }
+  function cycle(dir) {
+    const i = KEYS.indexOf(current());
+    setVariant(KEYS[(i + dir + KEYS.length) % KEYS.length]);
+  }
+
+  setVariant(current(), false);
+  document.getElementById('prevBtn').addEventListener('click', () => cycle(-1));
+  document.getElementById('nextBtn').addEventListener('click', () => cycle(1));
+  document.addEventListener('keydown', (e) => {
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    const light = document.documentElement.dataset.theme === 'light';
+    document.documentElement.dataset.theme = light ? '' : 'light';
+    this.textContent = light ? 'light' : 'dark';
+  });
+</script>
+</body>
+</html>

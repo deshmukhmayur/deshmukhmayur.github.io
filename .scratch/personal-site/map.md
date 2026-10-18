@@ -61,3 +61,4 @@ A fully rebuilt personal website for Mayur Deshmukh at deshmukhmayur.com, hosted
 ## Build tickets (post-spec)
 
 - [To-tickets on the spec](issues/10-spec.md): Spec synthesized into 12 tracer-bullet build tickets, **21–32** in `issues/`, numbered past the wayfinder tickets to avoid collision. Chain: 21 shell → 22 projects / 23 art / 24 prints / 26 soliloquy / 27 contact (parallel) → 25 studies (join, needs 22) → 28 homepage → 29 interiors (parallel with 27+) → 30 SEO → 31 deploy → 32 content import. All `ready-for-agent`; 31 and 32 carry HITL steps for Mayur.
+- [Swap prose face to Libron](issues/33-libron-prose-font.md): Prose voice moves Spectral → Libron (ADR 0008, superseding ADR 0006's prose half). Verdict from `prototype/libron-prose-prototype.html`: variant B (Libron everywhere, Space Mono chrome unchanged) won; hybrid rejected. Ticket `ready-for-agent`.

@@ -18,7 +18,7 @@
 
   /* type */
   --mono: "Space Mono", ui-monospace, monospace;
-  --serif: "Spectral", Georgia, serif;
+  --serif: "Libron", Georgia, serif;
 
   /* hairline dotted underline used by footer/nav links */
   --dotted: #3a464f;
@@ -85,7 +85,7 @@ button:focus-visible {
   border-radius: 2px;
 }
 
-/* self-hosted typefaces, latin subset, ADR 0006. font-display: block
+/* self-hosted typefaces, latin subset, ADR 0006/0008. font-display: block
    (with the head preloads in BaseHead) — text waits invisibly for the real
    face instead of re-rendering from fallback metrics — no snap, ever. */
 @font-face {
@@ -103,23 +103,31 @@ button:focus-visible {
   src: url("/fonts/space-mono-700.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Spectral";
+  font-family: "Libron";
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("/fonts/spectral-400.woff2") format("woff2");
+  src: url("/fonts/Libron-Regular.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Spectral";
+  font-family: "Libron";
   font-style: italic;
   font-weight: 400;
   font-display: block;
-  src: url("/fonts/spectral-400-italic.woff2") format("woff2");
+  src: url("/fonts/Libron-Italic.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Spectral";
+  font-family: "Libron";
   font-style: normal;
   font-weight: 700;
   font-display: block;
-  src: url("/fonts/spectral-700.woff2") format("woff2");
+  src: url("/fonts/Libron-Bold.woff2") format("woff2");
 }
+@font-face {
+  font-family: "Libron";
+  font-style: italic;
+  font-weight: 700;
+  font-display: block;
+  src: url("/fonts/Libron-BoldItalic.woff2") format("woff2");
+}
+
