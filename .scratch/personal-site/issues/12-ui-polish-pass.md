@@ -1,7 +1,7 @@
 # UI polish pass: nav, footer, social icons, prompt lines, type scale
 
 Type: spec
-Status: ready-for-agent
+Status: done
 
 Origin: grilling session (grill-with-docs), Sep 2026. All decisions were settled interactively; CONTEXT.md and ADR 0007 were amended in-session to permit the `show` verb.
 
@@ -64,3 +64,5 @@ A single polish pass that: rebuilds the nav (logo mark home link, active-state m
 
 - The `show` verb and the amended command-verb rule are already recorded in CONTEXT.md and ADR 0007 — no further doc work needed for that.
 - If the rem migration reveals scope creep (e.g. dozens of one-off px values in inline styles), stop at font sizes + line-heights and defer spacing to a follow-up ticket rather than rushing the same PR.
+
+**Resolution:** Done in commit `0efbdd8` on `astro-revamp` — nav mark + active state + two-row mobile layout, compact `[theme]` chip, SocialIcon (homepage panes + footer row), PromptLine replacing Breadcrumb, one ls filter row per listing with always-visible flag labels, rem type scale at an 18px base with a 12px chrome floor, fonts preloaded with `font-display: block`.

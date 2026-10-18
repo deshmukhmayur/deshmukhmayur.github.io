@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** done
 
 - [ ] Libron WOFF2 files (4 styles) added to the repo's fonts and served as static assets
 - [ ] `@font-face` declarations for Libron 400/400i/700/700i added to `src/styles/tokens.css`; the prose/serif token resolves to Libron with Spectral fallback
@@ -14,3 +14,5 @@
 - [ ] No other tokens/fonts changed; site still passes lint/build
 
 **Update:** Spectral removed completely on follow-up — no fallback in the `--serif` token, no `@font-face`, no WOFF2 files (ADR 0008 amended).
+
+**Resolution:** Done on `astro-revamp` — Spectral fallback removed (`b65db87`), Libron subset in place (`6701182`), currency-symbols block added (`f099091`), page-aware preloads (`83947ab`). Pushed to origin.
