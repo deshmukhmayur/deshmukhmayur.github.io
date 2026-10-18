@@ -3,7 +3,7 @@
 Self-hosted typefaces (ADR 0006 / 0008). Two faces total:
 
 - `space-mono-*.woff2` — terminal chrome, 400/700 (latin subset, ~16 KB each)
-- `Libron-*.woff2` — editorial prose, 400/400i/700/700i (~29–33 KB each after subsetting; full files were ~85–89 KB)
+- `Libron-*.woff2` — editorial prose, 400/400i/700/700i (~31–35 KB each after subsetting; full files were ~85–89 KB)
 
 All files are preloaded in `src/components/BaseHead.astro` with `font-display: block`
 (see `src/styles/tokens.css`) so prose never paints in a fallback face and never snaps.
@@ -11,7 +11,7 @@ All files are preloaded in `src/components/BaseHead.astro` with `font-display: b
 ## Subsetting Libron
 
 The Libron WOFF2 files are subset in place to keep the preloaded critical path small
-(~345 KB → ~124 KB for all four styles). Subsetting is one-off and manually re-run —
+(~345 KB → ~132 KB for all four styles). Subsetting is one-off and manually re-run —
 the site is en-only and the prose is curated, so there is no build-time pipeline.
 
 ```sh

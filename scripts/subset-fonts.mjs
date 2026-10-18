@@ -31,8 +31,8 @@ const DEFAULT_RANGES = [
   "U+02DA",
   "U+02DC",
   "U+2000-206F", // general punctuation: em/en dash, curly quotes, ellipsis, bullets
+  "U+20A0-20BF", // currency symbols: ₹ ₽ ₩ ₺ ₴ ₦ ₱ … (₿ is not in Libron's full font)
   "U+2074",
-  "U+20AC", // euro
   "U+2122", // trademark
   "U+2212", // minus
   "U+FEFF",
