@@ -17,9 +17,21 @@ interface Props {
   ogImage?: string;
   // detail pages emit og:type article (spec §8)
   type?: "article" | "website";
+  // Libron preloads, page-aware: only pages that render prose preload serif
+  // faces. "listing" = inline prose (regular + italic); "detail" = full body
+  // content, which can also use bold inline and in headings. Everything else
+  // (chrome-only pages) skips serif preloads; @font-face still fetches on demand.
+  prose?: "none" | "listing" | "detail";
 }
 
-const { title, section, description, publishedTime, ogImage, type = "website" } = Astro.props;
+const { title, section, description, publishedTime, ogImage, type = "website", prose = "none" } = Astro.props;
+
+// serif preloads by prose level; BoldItalic is never preloaded (currently unused)
+const serifPreloads: Record<NonNullable<Props["prose"]>, string[]> = {
+  none: [],
+  listing: ["Libron-Regular.woff2", "Libron-Italic.woff2"],
+  detail: ["Libron-Regular.woff2", "Libron-Italic.woff2", "Libron-Bold.woff2"],
+};
 
 // title cascade
 const sectionLabel = section ? section.charAt(0).toUpperCase() + section.slice(1) : undefined;
@@ -59,10 +71,9 @@ const feeds = [
 <!-- self-hosted faces, preloaded so the swap happens before first paint -->
 <link rel="preload" href="/fonts/space-mono-400.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/fonts/space-mono-700.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/Libron-Regular.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/Libron-Italic.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/Libron-Bold.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/Libron-BoldItalic.woff2" as="font" type="font/woff2" crossorigin />
+{serifPreloads[prose].map((file) => (
+  <link rel="preload" href={`/fonts/${file}`} as="font" type="font/woff2" crossorigin />
+))}
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#16181d" />
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f2ec" />
 

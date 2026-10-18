@@ -13,9 +13,11 @@ interface Props {
   publishedTime?: Date | string;
   ogImage?: string;
   type?: "article" | "website";
+  // forwarded to BaseHead: which serif (Libron) preloads this page needs
+  prose?: "none" | "listing" | "detail";
 }
 
-const { title, description, section, publishedTime, ogImage, type } = Astro.props;
+const { title, description, section, publishedTime, ogImage, type, prose } = Astro.props;
 ---
 
 <!doctype html>
@@ -30,6 +32,7 @@ const { title, description, section, publishedTime, ogImage, type } = Astro.prop
       publishedTime={publishedTime}
       ogImage={ogImage}
       type={type}
+      prose={prose}
     />
 
     <!-- analytics beacon slot: token wired later (spec §7) -->
